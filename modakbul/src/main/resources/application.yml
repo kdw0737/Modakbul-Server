@@ -1,0 +1,9 @@
+spring:
+  spring:
+    application:
+      name: modakbul
+  datasource:
+    driver-class-name:
+    url:
+    username:
+    password:
