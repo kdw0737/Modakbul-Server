@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CommitMessageTemplateConfig">
-    <option name="manualTemplate" value="################&#10;  # &lt;타입&gt;: &lt;제목&gt; 의 형식으로 제목을 아래 공백줄에 작성&#10;  # 제목은 50자 이내, 변경사항 명확히 작성, 끝에 마침표 금지&#10;&#10;  # 바로 아래 공백은 지우지 마세요 (제목과 본문의 분리를 위함)&#10;&#10;  ################&#10;  # 본문(구체적인 내용)을 아랫줄에 작성&#10;&#10;  ################&#10;  # 꼬리말(footer)을 아랫줄에 작성&#10;&#10;  ################&#10;  # FEAT : 새로운 기능 추가&#10;  # FIX : 버그 수정&#10;  # DOCS : 문서 수정&#10;  # TEST : 테스트 코드 추가&#10;  # REFACTOR : 코드 리팩토링&#10;  # STYLE : 코드 의미에 영향을 주지 않는 변경사항&#10;  # CHORE : 빌드 부분 혹은 패키지 매니저 수정사항&#10;  # CONTENT : 글 업데이트&#10;  # DEPLOY : 배포&#10;  # BUILD : 빌드&#10;  ################" />
+    <option name="radioState" value="false" />
+    <option name="templateFilePath" value="$PROJECT_DIR$/modakbul/.gitmessage.txt" />
   </component>
 </project>
