@@ -25,5 +25,6 @@ public class UserChatRoom extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User userId;
 
+    @Enumerated(EnumType.STRING)
     private UserChatRoomStatus userChatRoomStatus; // ACTIVE, LEFT ( 사용자가 방에 있는 상태, 방을 떠난 상태 )
 }

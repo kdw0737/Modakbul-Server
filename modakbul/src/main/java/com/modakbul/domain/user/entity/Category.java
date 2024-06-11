@@ -2,10 +2,7 @@ package com.modakbul.domain.user.entity;
 
 import com.modakbul.domain.user.enums.CategoryName;
 import com.modakbul.global.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -19,5 +16,6 @@ public class Category extends BaseEntity {
     @Column(name = "category_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private CategoryName categoryName;
 }
