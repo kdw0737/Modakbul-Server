@@ -19,11 +19,12 @@ public class Match extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id")
-    private User senderId;
+    private User senderID;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "receiver_id")
     private User receiverId;
 
+    @Enumerated(EnumType.STRING)
     private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL
 }

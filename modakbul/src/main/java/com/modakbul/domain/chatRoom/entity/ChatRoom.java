@@ -2,10 +2,7 @@ package com.modakbul.domain.chatRoom.entity;
 
 import com.modakbul.domain.chatRoom.enums.ChatRoomStatus;
 import com.modakbul.global.common.entity.BaseEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -21,5 +18,6 @@ public class ChatRoom extends BaseEntity {
 
     private Integer userCount; // 방 인원
 
+    @Enumerated(EnumType.STRING)
     private ChatRoomStatus chatRoomStatus; // ACTIVE, DELETED
 }
