@@ -22,18 +22,18 @@ public enum BaseResponseStatus {
     INQUIRY_REGISTRATION_SUCCESS(true,1009,"문의 등록에 성공했습니다."),
 
     //cafe
-    SEARCH_CAFE_SUCCESS(true, 1010, "신규 카페 정보 저장에 성공했습니다."),
-    CAFE_DUPLICATED(true, 1011, "이미 등록되어 있는 카페 입니다."),
-    REGISTRATION_WAITING_SUCCESS(true, 1011, "매칭 대기 등록에 성공했습니다."),
-    DELETE_WAITING_SUCCESS(true, 1012, "매칭 대기 취소가 완료되었습니다."),
-    SEARCH_WAITING_SUCCESS(true, 1013, "매칭 대기 목록 조회에 성공했습니다."),
-    APPLICATION_MATCHING_SUCCESS(true, 1014,"매칭 신청에 성공했습니다."),
-    DELETE_MATCHING_SUCCESS(true, 1015,"매칭 신청 취소에 성공했습니다."),
-    REFUSE_MATCHING_SUCCESS(true, 1016,"매칭 신청을 거절했습니다."),
-    CREATE_CHAT_SUCCESS(true, 1017,"채팅방 생성에 성공했습니다"),
-    SEARCH_MATCHING_SUCCESS(true,1018,"보낸/받은 매칭 목록 조회에 성공했습니다."),
-    WAITING_PROFILE_SUCCESS(true,1019,"대기 등록 유저 프로필 조회에 성공했습니다."),
-    MATCHING_PROFILE_SUCCESS(true,1020,"매칭 신청 유저 프로필 조회에 성공했습니다."),
+    SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
+    CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
+    REGISTRATION_WAITING_SUCCESS(true, 1102, "매칭 대기 등록에 성공했습니다."),
+    DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
+    SEARCH_WAITING_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
+    APPLICATION_MATCHING_SUCCESS(true, 1105,"매칭 신청에 성공했습니다."),
+    DELETE_MATCHING_SUCCESS(true, 1106,"매칭 신청 취소에 성공했습니다."),
+    REFUSE_MATCHING_SUCCESS(true, 1107,"매칭 신청을 거절했습니다."),
+    CREATE_CHAT_SUCCESS(true, 1108,"채팅방 생성에 성공했습니다"),
+    SEARCH_MATCHING_SUCCESS(true,1109,"보낸/받은 매칭 목록 조회에 성공했습니다."),
+    WAITING_PROFILE_SUCCESS(true,1110,"대기 등록 유저 프로필 조회에 성공했습니다."),
+    MATCHING_PROFILE_SUCCESS(true,1111,"매칭 신청 유저 프로필 조회에 성공했습니다."),
 
     /**
      * 2000 : request 오류
@@ -58,22 +58,26 @@ public enum BaseResponseStatus {
     INQUIRY_REGISTRATION_FAILED(false,2016,"문의 등록에 실패했습니다."),
 
     //cafe
-    REGISTRATION_WAITING_FAILED(false, 2017, "매칭 대기 등록에 실패했습니다."),
-    APPLICATION_MATCHING_FAILED(false, 2018,"매칭 신청에 실패했습니다."),
-    DELETE_MATCHING_FAILED(false, 2019,"매칭 신청 취소에 실패했습니다."),
-    REFUSE_MATCHING_FAILED(false, 2020,"매칭 신청 거절에 실패했습니다."),
-    CREATE_CHAT_FAILED(false, 2021,"채팅방 생성에 실패했습니다."),
+    REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
+    APPLICATION_MATCHING_FAILED(false, 2101,"매칭 신청에 실패했습니다."),
+    DELETE_MATCHING_FAILED(false, 2102,"매칭 신청 취소에 실패했습니다."),
+    REFUSE_MATCHING_FAILED(false, 2103,"매칭 신청 거절에 실패했습니다."),
+    CREATE_CHAT_FAILED(false, 2104,"채팅방 생성에 실패했습니다."),
 
     /**
      * 3000 : response 오류
      */
     RESPONSE_ERROR(false, 3000, "값을 불러오는데 실패했습니다."),
+
+    //user
     SEARCH_BLOCKLIST_FAILED(false,3001,"차단된 회원 조회에 실패했습니다."),
-    SEARCH_CAFE_FAILED(false, 3002, "카페 조회에 오류가 발생했습니다."),
-    SEARCH_WAITING_FAILED(false, 3003, "매칭 대기 목록 조회에 실패했습니다."),
-    SEARCH_MATCHING_FAILED(false,3004,"보낸/받은 매칭 조회에 실패했습니다."),
-    WAITING_PROFILE_FAILED(false,3005,"대기 등록 유저 프로필 조회에 실패했습니다."),
-    MATCHING_PROFILE_FAILED(false,3006,"매칭 신청 유저 프로필 조회에 실패했습니다."),
+
+    //cafe
+    SEARCH_CAFE_FAILED(false, 3100, "카페 조회에 오류가 발생했습니다."),
+    SEARCH_WAITING_FAILED(false, 3101, "매칭 대기 목록 조회에 실패했습니다."),
+    SEARCH_MATCHING_FAILED(false,3102,"보낸/받은 매칭 조회에 실패했습니다."),
+    WAITING_PROFILE_FAILED(false,3103,"대기 등록 유저 프로필 조회에 실패했습니다."),
+    MATCHING_PROFILE_FAILED(false,3104,"매칭 신청 유저 프로필 조회에 실패했습니다."),
 
     /**
      * 4000 : database, server 오류

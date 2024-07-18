@@ -11,7 +11,7 @@ import lombok.*;
 @Getter
 @Entity
 @Builder
-public class Match extends BaseEntity {
+public class Matches extends BaseEntity {
     @Id
     @GeneratedValue
     @Column(name = "match_id")
