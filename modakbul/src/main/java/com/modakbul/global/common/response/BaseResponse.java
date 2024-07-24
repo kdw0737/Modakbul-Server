@@ -1,34 +1,43 @@
 package com.modakbul.global.common.response;
 
+import org.springframework.http.HttpHeaders;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import lombok.*;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@JsonPropertyOrder({"status","code","message","result"})
+@JsonPropertyOrder({"httpHeaders", "status", "code", "message", "result"})
 public class BaseResponse<T> {
-    @JsonProperty("status")
-    private boolean isSuccess;
-    private int code;
-    private String message;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private T result;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private HttpHeaders httpHeaders;
+	private boolean status;
+	private int code;
+	private String message;
+	@JsonInclude(JsonInclude.Include.NON_NULL)
+	private T result;
 
-    // 요청에 성공한 경우
-    public BaseResponse(T result) {
-        this.isSuccess = BaseResponseStatus.SUCCESS.isSuccess();
-        this.message = BaseResponseStatus.SUCCESS.getMessage();
-        this.code = BaseResponseStatus.SUCCESS.getCode();
-        this.result = result;
-    }
+	public BaseResponse(BaseResponseStatus responseStatus) {
+		this.status = responseStatus.isStatus();
+		this.message = responseStatus.getMessage();
+		this.code = responseStatus.getCode();
+	}
 
-    // 요청에 실패한 경우
-    public BaseResponse(BaseResponseStatus responseStatus) {
-        this.isSuccess = responseStatus.isSuccess();
-        this.message = responseStatus.getMessage();
-        this.code = responseStatus.getCode();
-    }
+	public BaseResponse(BaseResponseStatus responseStatus, T result) {
+		this.status = responseStatus.isStatus();
+		this.message = responseStatus.getMessage();
+		this.code = responseStatus.getCode();
+		this.result = result;
+	}
+
+	public BaseResponse(HttpHeaders httpHeaders, BaseResponseStatus responseStatus) {
+		this.status = responseStatus.isStatus();
+		this.message = responseStatus.getMessage();
+		this.code = responseStatus.getCode();
+		this.httpHeaders = httpHeaders;
+	}
 
 }

@@ -5,63 +5,64 @@ import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserRole;
 import com.modakbul.domain.user.enums.UserStatus;
 import com.modakbul.global.common.entity.BaseEntity;
-import jakarta.persistence.*;
-import lombok.*;
 
-import java.util.List;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@AllArgsConstructor 
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Setter
 @Entity
 @Builder
 public class User extends BaseEntity {
-    @Id
-    @GeneratedValue
-    @Column(name = "user_id")
-    private Long id;
+	@Id
+	@GeneratedValue
+	@Column(name = "user_id")
+	private Long id;
 
-    //@Column(nullable = false)
-    private String password;
+	@Column(nullable = false)
+	private String email;
 
-    @Column(nullable = false)
-    private String email;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Provider provider; // APPLE, KAKAO
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Provider provider; // APPLE, KAKAO
+	// @Column(nullable = false)
+	// private String providerId;
 
-    //@Column(nullable = false)
-    private String provideId;
+	@Column(nullable = false, length = 30)
+	private String name;
 
-    @Column(nullable = false, length = 30)
-    private String name;
+	@Column(nullable = false, length = 8)
+	private String birth;
 
-    @Column(nullable = false, length = 8)
-    private String birth;
+	@Column(nullable = false, length = 15, unique = true)
+	private String nickname;
 
-    @Column(nullable = false, length = 15)
-    private String nickname;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private Gender gender; // MALE, FEMALE
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private Gender gender; // MALE, FEMALE
+	@Column(name = "is_gender_visible")
+	private Boolean isVisible; // default = true
 
-    @Column(name = "is_gender_visible")
-    private Boolean isVisible; // default = true
+	@Column(columnDefinition = "TEXT")
+	private String image;
 
-    @Column(columnDefinition = "TEXT")
-    private String image;
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserRole userRole;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole userRole;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
-
-    /*@Column(nullable = false)
-    private String refreshToken;*/
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserStatus userStatus;
 }

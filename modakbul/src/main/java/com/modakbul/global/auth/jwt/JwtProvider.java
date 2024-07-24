@@ -3,19 +3,30 @@ package com.modakbul.global.auth.jwt;
 import java.time.Duration;
 import java.util.Base64;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
+import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.enums.Provider;
+import com.modakbul.global.common.response.BaseResponseStatus;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +35,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtProvider {
 
-	@Value("jwt.secret")
+	@Value("${jwt.secret}")
 	private String secretKey;
 	private final LogoutTokenRepository logoutTokenRepository;
+	@Value("${jwt.access-token.expiration-time}")
+	private Long accessTokenExpirationTime;
+	@Value("${jwt.refresh-token.expiration-time}")
+	private Long refreshTokenExpirationTime;
 
 	@PostConstruct
 	protected void init() {
@@ -51,11 +66,11 @@ public class JwtProvider {
 	}
 
 	public String createAccessToken(Provider provider, String email, String nickname) {
-		return createJwt(provider, email, nickname, Duration.ofSeconds(30).toMillis());
+		return createJwt(provider, email, nickname, Duration.ofSeconds(accessTokenExpirationTime).toMillis());
 	}
 
 	public String createRefreshToken(Provider provider, String email, String nickname) {
-		return createJwt(provider, email, nickname, Duration.ofSeconds(60).toMillis());
+		return createJwt(provider, email, nickname, Duration.ofSeconds(refreshTokenExpirationTime).toMillis());
 	}
 
 	public String createJwt(Provider provider, String email, String nickname, Long tokenValidTime) {
@@ -78,10 +93,7 @@ public class JwtProvider {
 
 	public boolean isTokenBlacklist(String token) {
 		Optional<LogoutToken> findLogoutToken = logoutTokenRepository.findById(token);
-		if (findLogoutToken.isPresent()) {
-			throw new RuntimeException("블랙리스트에 있는 토큰 입니다.");
-		}
-		return false;
+		return findLogoutToken.isPresent();
 	}
 
 	public String resolveToken(HttpServletRequest httpServletRequest) {
@@ -93,5 +105,31 @@ public class JwtProvider {
 
 		Long now = new Date().getTime();
 		return (expiration.getTime() - now);
+	}
+
+	public Authentication getAuthentication(User user) {
+		return new UsernamePasswordAuthenticationToken(user, "",
+			List.of(new SimpleGrantedAuthority(String.valueOf(user.getUserRole()))));
+	}
+
+	public boolean validateToken(String token) {
+		try {
+			if (isTokenBlacklist(token)) {
+				throw new IllegalArgumentException();
+			}
+			return !isExpired(token);
+		} catch (SignatureException e) {
+			throw new JwtException(BaseResponseStatus.WRONG_TYPE_TOKEN.getMessage());
+		} catch (MalformedJwtException e) {
+			throw new JwtException(BaseResponseStatus.DAMAGED_TOKEN.getMessage());
+		} catch (ExpiredJwtException e) {
+			throw new JwtException(BaseResponseStatus.ACCESSTOKEN_EXPIRED.getMessage());
+		} catch (UnsupportedJwtException e) {
+			throw new JwtException(BaseResponseStatus.UNSUPPORTED_TOKEN.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new JwtException(BaseResponseStatus.BLACKLIST_TOKEN.getMessage());
+		} catch (NullPointerException e) {
+			throw new JwtException(BaseResponseStatus.USER_NOT_EXIST.getMessage());
+		}
 	}
 }

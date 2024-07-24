@@ -1,11 +1,9 @@
 package com.modakbul.domain.auth.service;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.modakbul.domain.auth.dto.AuthDto;
 import com.modakbul.domain.auth.dto.AuthRequestDto;
 import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
@@ -16,6 +14,9 @@ import com.modakbul.domain.user.enums.UserRole;
 import com.modakbul.domain.user.enums.UserStatus;
 import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.auth.jwt.JwtProvider;
+import com.modakbul.global.common.response.BaseException;
+import com.modakbul.global.common.response.BaseResponse;
+import com.modakbul.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,12 +30,15 @@ public class AuthService {
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final LogoutTokenRepository logoutTokenRepository;
 	private final JwtProvider jwtProvider;
+	@Value("${jwt.refresh-token.expiration-time}")
+	private Long refreshTokenExpirationTime;
 
-	public ResponseEntity<?> login(AuthRequestDto.loginDto request) {
-		User findUser = userRepository.findByEmailAndProvider(request.getEmail(), request.getProvider()).orElse(null);
+	public BaseResponse<Void> login(AuthRequestDto.loginDto request) {
+		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
+			request.getProvider()).orElse(null);
 
 		if (findUser == null) {
-			return new ResponseEntity<>("회원가입이 되어있지 않습니다.", HttpStatus.OK);
+			throw new BaseException(BaseResponseStatus.USER_NOT_EXIST);
 		} else {
 			HttpHeaders httpHeaders = new HttpHeaders();
 
@@ -43,17 +47,17 @@ public class AuthService {
 			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getEmail(),
 				findUser.getNickname());
 
-			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken);
+			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
 			refreshTokenRepository.save(addRefreshToken);
 
 			httpHeaders.add("Authorization", accessToken);
 			httpHeaders.add("Authorization_refresh", refreshToken);
 
-			return new ResponseEntity<>(findUser, httpHeaders, HttpStatus.OK);
+			return new BaseResponse<>(httpHeaders, BaseResponseStatus.LOGIN_SUCCESS);
 		}
 	}
 
-	public ResponseEntity<?> signUp(AuthRequestDto.signUpDto request) {
+	public BaseResponse<Void> signUp(AuthRequestDto.signUpDto request) {
 		String accessToken = jwtProvider.createAccessToken(request.getProvider(), request.getEmail(),
 			request.getNickname());
 		String refreshToken = jwtProvider.createRefreshToken(request.getProvider(), request.getEmail(),
@@ -61,8 +65,6 @@ public class AuthService {
 
 		User addUser = User.builder()
 			.email(request.getEmail())
-			//.password("123")
-			//.provideId("2")
 			.provider(request.getProvider())
 			.birth(request.getBirth())
 			.name(request.getName())
@@ -75,37 +77,37 @@ public class AuthService {
 			.build();
 		userRepository.save(addUser);
 
-		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken);
+		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.add("Authorization", accessToken);
 		httpHeaders.add("Authorization_refresh", refreshToken);
 
-		return new ResponseEntity<>(addUser.getId(), httpHeaders, HttpStatus.CREATED);
+		return new BaseResponse<>(httpHeaders, BaseResponseStatus.REGISTER_SUCCESS);
 	}
 
-	public ResponseEntity<?> logout(String accessToken, AuthDto authDto) {
+	public BaseResponse<Void> logout(String accessToken, User user) {
 		Long expiration = jwtProvider.getExpiration(accessToken);
 
-		refreshTokenRepository.deleteById(authDto.getUserId());
+		refreshTokenRepository.deleteById(user.getId());
 		logoutTokenRepository.save(new LogoutToken(accessToken, expiration / 1000));
 
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new BaseResponse<>(BaseResponseStatus.LOGOUT_SUCCESS);
 	}
 
-	public ResponseEntity<?> reissue(RefreshToken refreshToken) {
+	public BaseResponse<Void> reissue(RefreshToken refreshToken) {
 		RefreshToken findToken = refreshTokenRepository.findByRefreshToken(refreshToken.getRefreshToken())
-			.orElseThrow(() -> new RuntimeException("유효하지 않은 RefreshToken입니다."));
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
 
 		User findUser = userRepository.findById(findToken.getId())
-			.orElseThrow(() -> new RuntimeException("회원을 찾을 수 없습니다."));
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
 			findUser.getNickname());
 
 		httpHeaders.add("Authorization", accessToken);
-		return new ResponseEntity<>(findUser, httpHeaders, HttpStatus.OK);
+		return new BaseResponse<>(httpHeaders, BaseResponseStatus.REISSUE_TOKEN_SUCCESS);
 	}
 }

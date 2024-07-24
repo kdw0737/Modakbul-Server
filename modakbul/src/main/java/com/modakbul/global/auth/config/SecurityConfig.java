@@ -8,7 +8,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.modakbul.global.auth.jwt.JwtAuthFilter;
+import com.modakbul.global.auth.jwt.JwtAuthenticationFilter;
+import com.modakbul.global.auth.jwt.JwtExceptionFilter;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,18 +17,17 @@ import lombok.RequiredArgsConstructor;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-	private final JwtAuthFilter jwtAuthFilter;
+	private final JwtExceptionFilter jwtExceptionFilter;
+	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf((csrfConfig) -> csrfConfig.disable())
-			.httpBasic(httpBasic -> httpBasic.disable()) // HTTP 기본 인증을 비활성화
+			.httpBasic(httpBasic -> httpBasic.disable())
 			.cors(cors -> cors.disable())
 			.sessionManagement(
 				sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-				// 세션관리 정책을 STATELESS(세션이 있으면 쓰지도 않고, 없으면 만들지도 않는다)
-
 			)
 			.formLogin(formLogin -> formLogin.disable())
 			.logout(logout -> logout.disable())
@@ -39,11 +39,8 @@ public class SecurityConfig {
 					"/js/**", "/favicon.ico").permitAll()
 				.anyRequest().authenticated()
 			)
-			// JWT 인증 필터를 UsernamePasswordAuthenticationFilter 앞에 추가한다.
-			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-
+			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(jwtExceptionFilter, JwtAuthenticationFilter.class);
 		return http.build();
-
 	}
-
 }

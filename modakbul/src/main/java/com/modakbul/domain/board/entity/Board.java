@@ -1,8 +1,11 @@
-package com.modakbul.domain.match.entity;
+package com.modakbul.domain.board.entity;
 
-import com.modakbul.domain.board.entity.Board;
-import com.modakbul.domain.match.enums.MatchStatus;
-import com.modakbul.domain.user.entity.User;
+import java.time.LocalDateTime;
+
+import com.modakbul.domain.board.enums.BoardStatus;
+import com.modakbul.domain.board.enums.BoardType;
+import com.modakbul.domain.cafe.entity.Cafe;
+import com.modakbul.domain.user.entity.Category;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -25,20 +28,31 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class Matches extends BaseEntity {
+public class Board extends BaseEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "matches_id")
+	@Column(name = "cafe_waiting_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "sender_id")
-	private User sender;
+	@JoinColumn(name = "category_id")
+	private Category category;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "board_id")
-	private Board board;
+	@JoinColumn(name = "cafe_id")
+	private Cafe cafe;
+
+	private int recruitCount; //모집 인원
+
+	private String title;
+
+	private String content;
 
 	@Enumerated(EnumType.STRING)
-	private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL
+	private BoardStatus status; // CONTINUE, COMPLETE, DELETED
+
+	@Enumerated(EnumType.STRING)
+	private BoardType type; // ONE, REGULAR
+
+	private LocalDateTime meetingDate; // 모임 날짜
 }
