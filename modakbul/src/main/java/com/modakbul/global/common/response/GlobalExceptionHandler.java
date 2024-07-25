@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
 	@ExceptionHandler(BaseException.class)
 	protected BaseResponse<BaseResponseStatus> baseException(BaseException e) {
 		return new BaseResponse<>(e.getStatus());

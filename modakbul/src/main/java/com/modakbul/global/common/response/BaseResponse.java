@@ -39,5 +39,4 @@ public class BaseResponse<T> {
 		this.code = responseStatus.getCode();
 		this.httpHeaders = httpHeaders;
 	}
-
 }

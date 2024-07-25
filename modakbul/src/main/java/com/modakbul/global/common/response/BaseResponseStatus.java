@@ -22,6 +22,8 @@ public enum BaseResponseStatus {
 	INQUIRY_REGISTRATION_SUCCESS(true, 1009, "문의 등록에 성공했습니다."),
 	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
+	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
+
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
 	CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
@@ -56,6 +58,7 @@ public enum BaseResponseStatus {
 	UPDATE_BLOCK_FAILED(false, 2014, "회원 차단 해제에 실패했습니다."),
 	WITHDRAWAL_FAILED(false, 2015, "회원 탈퇴에 실패했습니다."),
 	INQUIRY_REGISTRATION_FAILED(false, 2016, "문의 등록에 실패했습니다."),
+	CATEGORY_NOT_EXIST(false, 2017, "존재하지 않는 카테고리입니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
