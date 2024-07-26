@@ -1,4 +1,4 @@
-package com.modakbul.domain.block.entity;
+package com.modakbul.domain.report.entity;
 
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
@@ -21,17 +21,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class Block extends BaseEntity {
+public class UserReport extends BaseEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "block_id")
+	@Column(name = "user_report_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocker_id")
-	private User blockerId;
+	@JoinColumn(name = "reporter_id")
+	private User reporter;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocked_id")
-	private User blockedId;
+	@JoinColumn(name = "reported_id")
+	private User reported;
+
+	@Column(columnDefinition = "TEXT")
+	private String content; // 신고 내용
+
 }

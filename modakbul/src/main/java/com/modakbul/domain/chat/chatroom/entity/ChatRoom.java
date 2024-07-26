@@ -1,10 +1,13 @@
-package com.modakbul.domain.block.entity;
+package com.modakbul.domain.chat.chatroom.entity;
 
-import com.modakbul.domain.user.entity.User;
+import com.modakbul.domain.board.entity.Board;
+import com.modakbul.domain.chat.chatroom.enums.ChatRoomType;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,17 +24,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class Block extends BaseEntity {
+public class ChatRoom extends BaseEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "block_id")
+	@Column(name = "chat_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocker_id")
-	private User blockerId;
+	@JoinColumn(name = "board_id")
+	private Board board;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocked_id")
-	private User blockedId;
+	private Integer userCount; // 방 인원
+
+	private int roomHashCode; // 단체채팅의 경우 0, 일대일 채팅에 사용
+
+	@Enumerated(EnumType.STRING)
+	private ChatRoomType chatRoomType; // GROUP, ONE_TO_ONE
 }

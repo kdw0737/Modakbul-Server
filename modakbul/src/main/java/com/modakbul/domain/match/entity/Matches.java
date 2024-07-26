@@ -1,10 +1,14 @@
-package com.modakbul.domain.block.entity;
+package com.modakbul.domain.match.entity;
 
+import com.modakbul.domain.board.entity.Board;
+import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -21,17 +25,20 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class Block extends BaseEntity {
+public class Matches extends BaseEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "block_id")
+	@Column(name = "matches_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocker_id")
-	private User blockerId;
+	@JoinColumn(name = "sender_id")
+	private User sender;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "blocked_id")
-	private User blockedId;
+	@JoinColumn(name = "board_id")
+	private Board board;
+
+	@Enumerated(EnumType.STRING)
+	private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL
 }
