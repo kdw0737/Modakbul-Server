@@ -44,4 +44,16 @@ public class UserChatRoom extends BaseEntity {
 	private UserChatRoomStatus userChatRoomStatus; // ACTIVE, INACTIVE ( 사용자가 방에 있는 상태, 방을 떠난 상태 )
 
 	private LocalDateTime lastExitedAt; // 마지막에 방을 나간 시간
+
+	// 채팅방 나가기
+	public UserChatRoom inActive() {
+		this.userChatRoomStatus = UserChatRoomStatus.INACTIVE;
+		this.lastExitedAt = LocalDateTime.now();
+		return this;
+	}
+
+	public UserChatRoom active() {
+		this.userChatRoomStatus = UserChatRoomStatus.ACTIVE;
+		return this;
+	}
 }

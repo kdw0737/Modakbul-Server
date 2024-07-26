@@ -3,6 +3,7 @@ package com.modakbul.domain.chat.chatmessage.entity;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Builder
-//@Document(collection = "chatMessage")
+@Document(collection = "chatMessage")
 public class ChatMessage {
 	@Id
 	private String id;
@@ -22,7 +23,7 @@ public class ChatMessage {
 	private Long userId;
 
 	private Long chatRoomId;
-
+	
 	private String content; // 메세지 내용
 
 	private LocalDateTime sendDate; // 보낸 시간

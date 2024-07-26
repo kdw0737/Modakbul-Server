@@ -2,6 +2,7 @@ package com.modakbul.domain.user.entity;
 
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
+import com.modakbul.domain.user.enums.UserJob;
 import com.modakbul.domain.user.enums.UserRole;
 import com.modakbul.domain.user.enums.UserStatus;
 import com.modakbul.global.common.entity.BaseEntity;
@@ -29,15 +30,15 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Provider provider; // APPLE, KAKAO
 
-	// @Column(nullable = false)
-	// private String providerId;
+	@Column(nullable = false)
+	private String providerId;
 
 	@Column(nullable = false, length = 30)
 	private String name;
@@ -57,6 +58,9 @@ public class User extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT")
 	private String image;
+
+	@Enumerated(EnumType.STRING)
+	private UserJob userJob;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
