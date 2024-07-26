@@ -1,5 +1,6 @@
-package com.modakbul.domain.user.entity;
+package com.modakbul.domain.report.entity;
 
+import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -20,17 +21,21 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class UserCategory extends BaseEntity {
+public class UserReport extends BaseEntity {
 	@Id
 	@GeneratedValue
-	@Column(name = "user_category_id")
+	@Column(name = "user_report_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "reporter_id")
+	private User reporter;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	private Category category;
+	@JoinColumn(name = "reported_id")
+	private User reported;
+
+	@Column(columnDefinition = "TEXT")
+	private String content; // 신고 내용
+
 }

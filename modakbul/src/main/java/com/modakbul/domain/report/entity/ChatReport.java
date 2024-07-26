@@ -1,6 +1,7 @@
-package com.modakbul.domain.user.entity;
+package com.modakbul.domain.report.entity;
 
-import com.modakbul.global.common.entity.BaseEntity;
+import com.modakbul.domain.chat.chatroom.entity.ChatRoom;
+import com.modakbul.domain.user.entity.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,17 +21,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class UserCategory extends BaseEntity {
+public class ChatReport {
 	@Id
 	@GeneratedValue
-	@Column(name = "user_category_id")
+	@Column(name = "chat_report_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id")
-	private User user;
+	@JoinColumn(name = "reporter_id")
+	private User reporter;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id")
-	private Category category;
+	@JoinColumn(name = "reported_id")
+	private User reported;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "chat_room_id")
+	private ChatRoom chatRoom;
+
+	@Column(columnDefinition = "TEXT")
+	private String content;
 }
