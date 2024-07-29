@@ -9,4 +9,9 @@ public class GlobalExceptionHandler {
 	protected BaseResponse<BaseResponseStatus> baseException(BaseException e) {
 		return new BaseResponse<>(e.getStatus());
 	}
+
+	@ExceptionHandler(Exception.class)
+	protected BaseResponse<BaseResponseStatus> exception(BaseException e) {
+		return new BaseResponse<>(e.getStatus());
+	}
 }

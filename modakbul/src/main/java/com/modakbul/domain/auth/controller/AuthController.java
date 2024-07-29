@@ -1,13 +1,16 @@
 package com.modakbul.domain.auth.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.modakbul.domain.auth.dto.AuthRequestDto;
@@ -62,5 +65,18 @@ public class AuthController {
 		httpHeaders.add("Authorization", token.get("accessToken"));
 
 		return new BaseResponse<>(httpHeaders, BaseResponseStatus.REISSUE_TOKEN_SUCCESS);
+	}
+
+	@GetMapping("/users")
+	public BaseResponse<Map<String, Boolean>> isOverlapped(@RequestParam String nickname) {
+		Map<String, Boolean> isOverlapped = new HashMap<>();
+
+		if (authService.isOverlapped(nickname)) {
+			isOverlapped.put("is_overlapped", true);
+			return new BaseResponse<>(BaseResponseStatus.NICKNAME_DUPLICATED, isOverlapped);
+		}
+
+		isOverlapped.put("is_overlapped", false);
+		return new BaseResponse<>(BaseResponseStatus.NICKNAME_NOT_DUPLICATED, isOverlapped);
 	}
 }

@@ -11,4 +11,6 @@ import com.modakbul.domain.user.enums.Provider;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmailAndProvider(String email, Provider provider);
+
+	Optional<User> findByNickname(String nickname);
 }

@@ -23,6 +23,7 @@ public enum BaseResponseStatus {
 	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
+	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
@@ -38,6 +39,10 @@ public enum BaseResponseStatus {
 	WAITING_PROFILE_SUCCESS(true, 1110, "대기 등록 유저 프로필 조회에 성공했습니다."),
 	MATCHING_PROFILE_SUCCESS(true, 1111, "매칭 신청 유저 프로필 조회에 성공했습니다."),
 
+	//chat
+	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
+	EXIT_CHATROOM_SUCCESS(true, 1201, "채팅방 나가기에 성공했습니다."),
+
 	/**
 	 * 2000 : request 오류
 	 */
@@ -47,9 +52,10 @@ public enum BaseResponseStatus {
 	//user
 	PASSWORD_FAILED(false, 2003, "비밀번호 인증에 실패했습니다."),
 	USER_NOT_EXIST(false, 2004, "존재하지 않는 회원입니다."),
+	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
-	NICKNAME_DUPLICATED(false, 2008, "닉네임 중복 확인에 실패했습니다."),
+	NICKNAME_DUPLICATED(false, 2008, "중복된 닉네임입니다."),
 	REGISTER_FAILED(false, 2009, "회원가입에 실패했습니다."),
 	UPDATE_PROFILE_FAILED(false, 2010, "프로필 수정에 실패했습니다."),
 	ACCESS_DENIED(false, 2011, "API 접근 권한이 없습니다."),
@@ -58,22 +64,33 @@ public enum BaseResponseStatus {
 	UPDATE_BLOCK_FAILED(false, 2014, "회원 차단 해제에 실패했습니다."),
 	WITHDRAWAL_FAILED(false, 2015, "회원 탈퇴에 실패했습니다."),
 	INQUIRY_REGISTRATION_FAILED(false, 2016, "문의 등록에 실패했습니다."),
-	CATEGORY_NOT_EXIST(false, 2017, "존재하지 않는 카테고리입니다."),
+	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
+	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
 	APPLICATION_MATCHING_FAILED(false, 2101, "매칭 신청에 실패했습니다."),
 	DELETE_MATCHING_FAILED(false, 2102, "매칭 신청 취소에 실패했습니다."),
 	REFUSE_MATCHING_FAILED(false, 2103, "매칭 신청 거절에 실패했습니다."),
-	CREATE_CHAT_FAILED(false, 2104, "채팅방 생성에 실패했습니다."),
+	CHAT_MESSAGE_NOT_FOUND(false, 2104, "채팅 메세지를 찾을 수 없습니다."),
+
+	//chat
+	MESSAGE_NOT_FOUND(false, 2200, "메세지가 존재하지 않습니다."),
+	CHATROOM_NOT_FOUND(false, 2201, "해당 채팅방이 존재하지 않습니다."),
+	DUPLICATE_CHAT_ROOM_USER(false, 2202, "사용자가 이미 다른 채팅방에 포함되어 있습니다."),
+	CREATE_CHAT_FAILED(false, 2203, "채팅방 생성에 실패했습니다."),
+	USER_CANNOT_MAKE_CHATROOM_ALONE(false, 2204, "내 게시글에는 채팅방을 생성할 수 없습니다."),
+
+	//board
+	BOARD_NOT_FOUND(false, 2300, "해당 게시글이 존재하지 않습니다."),
 
 	//token
-	ACCESSTOKEN_EXPIRED(false, 2201, "AccessToken이 만료되었습니다."),
-	BLACKLIST_TOKEN(false, 2202, "블랙리스트에 있는 토큰입니다."),
-	REFRESHTOKEN_EXPIRED(false, 2203, "유효하지 않은 Refresh Token입니다."),
-	UNSUPPORTED_TOKEN(false, 2204, "지원하지 않는 Token 입니다."),
-	WRONG_TYPE_TOKEN(false, 2205, "시그니처 검증에 실패한 Token 입니다."),
-	DAMAGED_TOKEN(false, 2206, "손상된 Token 입니다."),
+	ACCESSTOKEN_EXPIRED(false, 2401, "AccessToken이 만료되었습니다."),
+	BLACKLIST_TOKEN(false, 2402, "블랙리스트에 있는 토큰입니다."),
+	REFRESHTOKEN_EXPIRED(false, 2403, "유효하지 않은 Refresh Token입니다."),
+	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
+	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
+	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
 
 	/**
 	 * 3000 : response 오류
@@ -101,7 +118,6 @@ public enum BaseResponseStatus {
 	private final String message;
 
 	private BaseResponseStatus(boolean status, int code, String message) {
-		//BaseResponseStatus에서 각 해당하는 코드를 생성자로 맵핑
 		this.status = status;
 		this.code = code;
 		this.message = message;

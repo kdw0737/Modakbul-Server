@@ -1,7 +1,9 @@
 package com.modakbul.domain.user.entity;
 
+import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
+import com.modakbul.domain.user.enums.UserJob;
 import com.modakbul.domain.user.enums.UserRole;
 import com.modakbul.domain.user.enums.UserStatus;
 import com.modakbul.global.common.entity.BaseEntity;
@@ -11,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User extends BaseEntity {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long id;
 
@@ -35,9 +38,6 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private Provider provider; // APPLE, KAKAO
-
-	// @Column(nullable = false)
-	// private String providerId;
 
 	@Column(nullable = false, length = 30)
 	private String name;
@@ -52,6 +52,10 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Gender gender; // MALE, FEMALE
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
+	private UserJob userJob; // COLLEGIAN, JOB_SEEKER, OFFICE_WORKER, ELSE
+
 	@Column(name = "is_gender_visible")
 	private Boolean isVisible; // default = true
 
@@ -65,4 +69,11 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
+
+	public void update(UserRequestDto.profileDto request) {
+		this.isVisible = request.getIsVisible();
+		this.nickname = request.getNickname();
+		this.image = request.getImage();
+		this.userJob = request.getUserJob();
+	}
 }

@@ -2,6 +2,7 @@ package com.modakbul.domain.auth.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -12,8 +13,11 @@ import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
 import com.modakbul.domain.auth.repository.RefreshTokenRepository;
 import com.modakbul.domain.user.entity.User;
+import com.modakbul.domain.user.entity.UserCategory;
 import com.modakbul.domain.user.enums.UserRole;
 import com.modakbul.domain.user.enums.UserStatus;
+import com.modakbul.domain.user.repository.CategoryRepository;
+import com.modakbul.domain.user.repository.UserCategoryRepository;
 import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.auth.jwt.JwtProvider;
 import com.modakbul.global.common.response.BaseException;
@@ -26,6 +30,8 @@ import lombok.RequiredArgsConstructor;
 public class AuthService {
 
 	private final UserRepository userRepository;
+	private final UserCategoryRepository userCategoryRepository;
+	private final CategoryRepository categoryRepository;
 	private final RefreshTokenRepository refreshTokenRepository;
 	private final LogoutTokenRepository logoutTokenRepository;
 	private final JwtProvider jwtProvider;
@@ -70,13 +76,28 @@ public class AuthService {
 			.name(request.getName())
 			.nickname(request.getNickname())
 			.gender(request.getGender())
-			.job(request.getJob())
+			.userJob(request.getUserJob())
 			.isVisible(true)
 			.image(request.getImage())
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
 			.build();
 		userRepository.save(addUser);
+
+		request.getCategoryNames().forEach(categoryName ->
+			categoryRepository.findByCategoryName(categoryName)
+				.ifPresentOrElse(
+					category -> userCategoryRepository.save(
+						UserCategory.builder()
+							.user(addUser)
+							.category(category)
+							.build()
+					),
+					() -> {
+						throw new BaseException(BaseResponseStatus.CATEGORY_NOT_EXIST);
+					}
+				)
+		);
 
 		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
@@ -108,5 +129,14 @@ public class AuthService {
 		token.put("accessToken", accessToken);
 
 		return token;
+	}
+
+	public boolean isOverlapped(String nickname) {
+		Optional<User> findNickname = userRepository.findByNickname(nickname);
+
+		if (findNickname.isPresent()) {
+			return true;
+		}
+		return false;
 	}
 }
