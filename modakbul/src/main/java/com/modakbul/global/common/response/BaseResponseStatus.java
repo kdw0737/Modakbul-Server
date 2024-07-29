@@ -34,10 +34,9 @@ public enum BaseResponseStatus {
 	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 신청에 성공했습니다."),
 	DELETE_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
 	REFUSE_MATCHING_SUCCESS(true, 1107, "매칭 신청을 거절했습니다."),
-	CREATE_CHAT_SUCCESS(true, 1108, "채팅방 생성에 성공했습니다"),
-	SEARCH_MATCHING_SUCCESS(true, 1109, "보낸/받은 매칭 목록 조회에 성공했습니다."),
-	WAITING_PROFILE_SUCCESS(true, 1110, "대기 등록 유저 프로필 조회에 성공했습니다."),
-	MATCHING_PROFILE_SUCCESS(true, 1111, "매칭 신청 유저 프로필 조회에 성공했습니다."),
+	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
+	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
+	MATCHING_PROFILE_SUCCESS(true, 1110, "매칭 신청 유저 프로필 조회에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
@@ -55,7 +54,7 @@ public enum BaseResponseStatus {
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
-	NICKNAME_DUPLICATED(false, 2008, "중복된 닉네임입니다."),
+	NICKNAME_DUPLICATED(false, 2008, "닉네임 중복 확인에 실패했습니다."),
 	REGISTER_FAILED(false, 2009, "회원가입에 실패했습니다."),
 	UPDATE_PROFILE_FAILED(false, 2010, "프로필 수정에 실패했습니다."),
 	ACCESS_DENIED(false, 2011, "API 접근 권한이 없습니다."),

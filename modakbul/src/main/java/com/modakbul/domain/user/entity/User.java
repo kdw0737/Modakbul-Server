@@ -32,7 +32,7 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false)
@@ -52,15 +52,14 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Gender gender; // MALE, FEMALE
 
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private UserJob userJob; // COLLEGIAN, JOB_SEEKER, OFFICE_WORKER, ELSE
-
 	@Column(name = "is_gender_visible")
 	private Boolean isVisible; // default = true
 
 	@Column(columnDefinition = "TEXT")
 	private String image;
+
+	@Enumerated(EnumType.STRING)
+	private UserJob userJob;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)

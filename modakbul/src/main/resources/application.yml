@@ -1,4 +1,8 @@
 spring:
+  data:
+    mongodb:
+      uri: mongodb://root:1234@localhost:27017/test
+
   redis:
     host: localhost
     port: 6379
@@ -6,6 +10,13 @@ spring:
   output:
     ansi:
       enabled: always
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+  #    consumer:
+  #      group-id: test # Consumer 그룹 ID
+  #      auto-offset-reset: latest # 오프셋 초기화 정책
+  #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # 키 역직렬화 방법
+  #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # 값 역직렬화 방법
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
