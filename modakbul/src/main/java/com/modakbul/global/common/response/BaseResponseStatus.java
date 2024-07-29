@@ -50,6 +50,7 @@ public enum BaseResponseStatus {
 
 	//user
 	PASSWORD_FAILED(false, 2003, "비밀번호 인증에 실패했습니다."),
+	ID_NOT_EXIST(false, 2004, "존재하지 않는 아이디입니다."),
 	USER_NOT_EXIST(false, 2004, "존재하지 않는 회원입니다."),
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
