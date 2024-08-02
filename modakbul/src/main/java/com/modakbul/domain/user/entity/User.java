@@ -32,7 +32,7 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = false)
@@ -69,7 +69,7 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
 
-	public void update(UserRequestDto.profileDto request) {
+	public void update(UserRequestDto.ProfileDto request) {
 		this.isVisible = request.getIsVisible();
 		this.nickname = request.getNickname();
 		this.image = request.getImage();

@@ -30,17 +30,28 @@ public enum BaseResponseStatus {
 	CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
 	REGISTRATION_WAITING_SUCCESS(true, 1102, "매칭 대기 등록에 성공했습니다."),
 	DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
-	SEARCH_WAITING_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
-	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 신청에 성공했습니다."),
+	SEARCH_MATCH_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
+	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 요청 수락에 성공했습니다."),
 	DELETE_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
 	REFUSE_MATCHING_SUCCESS(true, 1107, "매칭 신청을 거절했습니다."),
 	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
 	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
 	MATCHING_PROFILE_SUCCESS(true, 1110, "매칭 신청 유저 프로필 조회에 성공했습니다."),
+	SEARCH_CAFE_LIST(true, 1111, "카페 목록 조회에 성공했습니다."),
+	SORT_CAFE_MEETING_COUNT(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_MEETING_LIST_SUCCESS(true, 1113, "해당 카페의 모임 목록 조회에 성공했습니다."),
+	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
 	EXIT_CHATROOM_SUCCESS(true, 1201, "채팅방 나가기에 성공했습니다."),
+
+	//board
+	CREATE_BOARD_SUCCESS(true, 1311, "모집글 작성에 성공했습니다."),
+	SEARCH_UPDATE_BOARD_SUCCESS(true, 1312, "모집글 수정 정보 조회에 성공했습니다."),
+	UPDATE_BOARD_SUCCESS(true, 1313, "모집글 수정에 성공했습니다."),
+	SEARCH_BOARD_LIST_SUCCESS(true, 1314, "모집글 목록 조회에 성공했습니다."),
+	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
 
 	/**
 	 * 2000 : request 오류
@@ -73,6 +84,8 @@ public enum BaseResponseStatus {
 	DELETE_MATCHING_FAILED(false, 2102, "매칭 신청 취소에 실패했습니다."),
 	REFUSE_MATCHING_FAILED(false, 2103, "매칭 신청 거절에 실패했습니다."),
 	CHAT_MESSAGE_NOT_FOUND(false, 2104, "채팅 메세지를 찾을 수 없습니다."),
+	CAFE_NOT_EXIST(false, 2105, "존재하지 않는 카페입니다."),
+	MATCH_NOT_EXIST(false, 2106, "존재하지 않는 매칭입니다."),
 
 	//chat
 	MESSAGE_NOT_FOUND(false, 2200, "메세지가 존재하지 않습니다."),

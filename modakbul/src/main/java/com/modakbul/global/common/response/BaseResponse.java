@@ -33,11 +33,11 @@ public class BaseResponse<T> {
 		this.result = result;
 	}
 
-	public BaseResponse(HttpHeaders httpHeaders, BaseResponseStatus responseStatus) {
+	/*public BaseResponse(HttpHeaders httpHeaders, BaseResponseStatus responseStatus) {
 		this.status = responseStatus.isStatus();
 		this.message = responseStatus.getMessage();
 		this.code = responseStatus.getCode();
 		this.httpHeaders = httpHeaders;
-	}
+	}*/
 
 }
