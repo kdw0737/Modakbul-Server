@@ -28,14 +28,14 @@ public class UserService {
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
 
-	public UserResponseDto.profileDto findProfile(User user) {
+	public UserResponseDto.ProfileDto findProfile(User user) {
 		List<UserCategory> findUserCategories = userCategoryRepository.findCategoryByUser(user);
 
 		List<CategoryName> findCategories = findUserCategories.stream()
 			.map(userCategory -> userCategory.getCategory().getCategoryName())
 			.collect(Collectors.toList());
 
-		return UserResponseDto.profileDto.builder()
+		return UserResponseDto.ProfileDto.builder()
 			.image(user.getImage())
 			.nickname(user.getNickname())
 			.isVisible(user.getIsVisible())
@@ -45,7 +45,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void modifyProfile(User user, UserRequestDto.profileDto request) {
+	public void modifyProfile(User user, UserRequestDto.ProfileDto request) {
 		userCategoryRepository.deleteAllByUser(user);
 
 		List<UserCategory> userCategories = request.getCategories().stream()

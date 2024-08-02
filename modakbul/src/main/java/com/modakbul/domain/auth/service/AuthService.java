@@ -38,7 +38,7 @@ public class AuthService {
 	@Value("${jwt.refresh-token.expiration-time}")
 	private Long refreshTokenExpirationTime;
 
-	public Map<String, String> login(AuthRequestDto.loginDto request) {
+	public Map<String, String> login(AuthRequestDto.LoginDto request) {
 		Map<String, String> token = new HashMap<>();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
@@ -61,7 +61,7 @@ public class AuthService {
 		}
 	}
 
-	public Map<String, String> signUp(AuthRequestDto.signUpDto request) {
+	public Map<String, String> signUp(AuthRequestDto.SignUpDto request) {
 		Map<String, String> token = new HashMap<>();
 
 		String accessToken = jwtProvider.createAccessToken(request.getProvider(), request.getEmail(),
@@ -115,9 +115,9 @@ public class AuthService {
 		logoutTokenRepository.save(new LogoutToken(accessToken, expiration / 1000));
 	}
 
-	public Map<String, String> reissue(RefreshToken refreshToken) {
+	public Map<String, String> reissue(String refreshToken) {
 		Map<String, String> token = new HashMap<>();
-		RefreshToken findToken = refreshTokenRepository.findByRefreshToken(refreshToken.getRefreshToken())
+		RefreshToken findToken = refreshTokenRepository.findByRefreshToken(refreshToken)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
 
 		User findUser = userRepository.findById(findToken.getId())

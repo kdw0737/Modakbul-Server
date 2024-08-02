@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.modakbul.domain.auth.dto.AuthRequestDto;
-import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.service.AuthService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -29,25 +30,19 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/users/login")
-	public BaseResponse<HttpHeaders> login(@RequestBody AuthRequestDto.loginDto request) {
-		Map<String, String> token = authService.login(request);
-
+	public ResponseEntity<BaseResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", token.get("accessToken"));
-		httpHeaders.add("Authorization_refresh", token.get("refreshToken"));
+		httpHeaders.setAll(authService.login(request));
 
-		return new BaseResponse<>(httpHeaders, BaseResponseStatus.LOGIN_SUCCESS);
+		return new ResponseEntity(new BaseResponse<>(BaseResponseStatus.LOGIN_SUCCESS), httpHeaders, HttpStatus.OK);
 	}
 
 	@PostMapping("/users/register")
-	public BaseResponse<HttpHeaders> signUp(@RequestBody AuthRequestDto.signUpDto request) {
-		Map<String, String> token = authService.signUp(request);
-
+	public ResponseEntity<BaseResponse> signUp(@RequestBody AuthRequestDto.SignUpDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", token.get("accessToken"));
-		httpHeaders.add("Authorization_refresh", token.get("refreshToken"));
+		httpHeaders.setAll(authService.signUp(request));
 
-		return new BaseResponse<>(httpHeaders, BaseResponseStatus.REGISTER_SUCCESS);
+		return new ResponseEntity(new BaseResponse<>(BaseResponseStatus.REGISTER_SUCCESS), httpHeaders, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/users/logout")
@@ -58,13 +53,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/token/reissue")
-	public BaseResponse<HttpHeaders> reissue(@RequestBody RefreshToken refreshToken) {
-		Map<String, String> token = authService.reissue(refreshToken);
-
+	public ResponseEntity<BaseResponse> reissue(@RequestHeader("Authorization_refresh") String refreshToken) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.add("Authorization", token.get("accessToken"));
+		httpHeaders.setAll(authService.reissue(refreshToken));
 
-		return new BaseResponse<>(httpHeaders, BaseResponseStatus.REISSUE_TOKEN_SUCCESS);
+		return new ResponseEntity(new BaseResponse<>(BaseResponseStatus.REISSUE_TOKEN_SUCCESS), httpHeaders,
+			HttpStatus.OK);
 	}
 
 	@GetMapping("/users")

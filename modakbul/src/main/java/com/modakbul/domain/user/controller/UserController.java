@@ -22,13 +22,13 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/users/mypage/profile")
-	public BaseResponse<UserResponseDto.profileDto> profileDetails(@AuthenticationPrincipal User user) {
+	public BaseResponse<UserResponseDto.ProfileDto> profileDetails(@AuthenticationPrincipal User user) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_PROFILE_SUCCESS, userService.findProfile(user));
 	}
 
 	@PatchMapping("/users/profile")
 	public BaseResponse<Void> profileModify(@AuthenticationPrincipal User user,
-		@RequestBody UserRequestDto.profileDto request) {
+		@RequestBody UserRequestDto.ProfileDto request) {
 		userService.modifyProfile(user, request);
 		return new BaseResponse<>(BaseResponseStatus.UPDATE_PROFILE_SUCCESS);
 	}

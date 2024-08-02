@@ -7,10 +7,13 @@ import org.springframework.stereotype.Repository;
 
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
+import com.modakbul.domain.user.enums.CategoryName;
 
 @Repository
 public interface UserCategoryRepository extends JpaRepository<UserCategory, Long> {
 	List<UserCategory> findCategoryByUser(User user);
 
 	void deleteAllByUser(User user);
+
+	List<CategoryName> findCategoryNamesByUser(User user);
 }

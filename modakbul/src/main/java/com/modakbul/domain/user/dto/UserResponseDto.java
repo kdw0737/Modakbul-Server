@@ -16,7 +16,7 @@ public class UserResponseDto {
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class profileDto {
+	public static class ProfileDto {
 		private String nickname;
 		private String image;
 		private Boolean isVisible;
