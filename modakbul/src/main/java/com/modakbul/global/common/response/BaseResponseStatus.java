@@ -20,23 +20,38 @@ public enum BaseResponseStatus {
 	UPDATE_BLOCK_SUCCESS(true, 1007, "회원 차단 해제에 성공했습니다."),
 	WITHDRAWAL_SUCCESS(true, 1008, "회원 탈퇴에 성공했습니다."),
 	INQUIRY_REGISTRATION_SUCCESS(true, 1009, "문의 등록에 성공했습니다."),
+	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
+	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
+	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
+	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
 	CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
 	REGISTRATION_WAITING_SUCCESS(true, 1102, "매칭 대기 등록에 성공했습니다."),
 	DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
-	SEARCH_WAITING_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
-	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 신청에 성공했습니다."),
+	SEARCH_MATCH_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
+	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 요청 수락에 성공했습니다."),
 	DELETE_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
 	REFUSE_MATCHING_SUCCESS(true, 1107, "매칭 신청을 거절했습니다."),
 	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
 	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
 	MATCHING_PROFILE_SUCCESS(true, 1110, "매칭 신청 유저 프로필 조회에 성공했습니다."),
+	SEARCH_CAFE_LIST(true, 1111, "카페 목록 조회에 성공했습니다."),
+	SORT_CAFE_MEETING_COUNT(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_MEETING_LIST_SUCCESS(true, 1113, "해당 카페의 모임 목록 조회에 성공했습니다."),
+	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
 	EXIT_CHATROOM_SUCCESS(true, 1201, "채팅방 나가기에 성공했습니다."),
+
+	//board
+	CREATE_BOARD_SUCCESS(true, 1311, "모집글 작성에 성공했습니다."),
+	SEARCH_UPDATE_BOARD_SUCCESS(true, 1312, "모집글 수정 정보 조회에 성공했습니다."),
+	UPDATE_BOARD_SUCCESS(true, 1313, "모집글 수정에 성공했습니다."),
+	SEARCH_BOARD_LIST_SUCCESS(true, 1314, "모집글 목록 조회에 성공했습니다."),
+	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
 
 	/**
 	 * 2000 : request 오류
@@ -47,6 +62,7 @@ public enum BaseResponseStatus {
 	//user
 	PASSWORD_FAILED(false, 2003, "비밀번호 인증에 실패했습니다."),
 	ID_NOT_EXIST(false, 2004, "존재하지 않는 아이디입니다."),
+	USER_NOT_EXIST(false, 2004, "존재하지 않는 회원입니다."),
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
@@ -60,6 +76,7 @@ public enum BaseResponseStatus {
 	WITHDRAWAL_FAILED(false, 2015, "회원 탈퇴에 실패했습니다."),
 	INQUIRY_REGISTRATION_FAILED(false, 2016, "문의 등록에 실패했습니다."),
 	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
+	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
@@ -67,6 +84,8 @@ public enum BaseResponseStatus {
 	DELETE_MATCHING_FAILED(false, 2102, "매칭 신청 취소에 실패했습니다."),
 	REFUSE_MATCHING_FAILED(false, 2103, "매칭 신청 거절에 실패했습니다."),
 	CHAT_MESSAGE_NOT_FOUND(false, 2104, "채팅 메세지를 찾을 수 없습니다."),
+	CAFE_NOT_EXIST(false, 2105, "존재하지 않는 카페입니다."),
+	MATCH_NOT_EXIST(false, 2106, "존재하지 않는 매칭입니다."),
 
 	//chat
 	MESSAGE_NOT_FOUND(false, 2200, "메세지가 존재하지 않습니다."),
@@ -77,6 +96,14 @@ public enum BaseResponseStatus {
 
 	//board
 	BOARD_NOT_FOUND(false, 2300, "해당 게시글이 존재하지 않습니다."),
+
+	//token
+	ACCESSTOKEN_EXPIRED(false, 2401, "AccessToken이 만료되었습니다."),
+	BLACKLIST_TOKEN(false, 2402, "블랙리스트에 있는 토큰입니다."),
+	REFRESHTOKEN_EXPIRED(false, 2403, "유효하지 않은 Refresh Token입니다."),
+	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
+	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
+	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
 
 	/**
 	 * 3000 : response 오류
@@ -104,7 +131,6 @@ public enum BaseResponseStatus {
 	private final String message;
 
 	private BaseResponseStatus(boolean status, int code, String message) {
-		//BaseResponseStatus에서 각 해당하는 코드를 생성자로 맵핑
 		this.status = status;
 		this.code = code;
 		this.message = message;
