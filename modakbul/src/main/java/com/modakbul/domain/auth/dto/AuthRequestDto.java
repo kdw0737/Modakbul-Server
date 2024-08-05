@@ -3,8 +3,8 @@ package com.modakbul.domain.auth.dto;
 import java.util.List;
 
 import com.modakbul.domain.user.enums.Gender;
-import com.modakbul.domain.user.enums.Job;
 import com.modakbul.domain.user.enums.Provider;
+import com.modakbul.domain.user.enums.UserJob;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,7 +38,7 @@ public class AuthRequestDto {
 		private Gender gender;
 		private String image;
 		private String nickname;
-		private Job job;
+		private UserJob job;
 		private List<String> categoryNames;
 	}
 }

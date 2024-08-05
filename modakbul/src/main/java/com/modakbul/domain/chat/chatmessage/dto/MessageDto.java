@@ -20,6 +20,14 @@ public class MessageDto implements Serializable {
 	private String senderNickname;
 	private String content;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-	private LocalDateTime sendTime; // LocalDateTime으로 변경
+	private LocalDateTime sendTime;
 	private Integer readCount;
+
+	public void setSenderAndSendTime(LocalDateTime localDateTime, Long senderId, String senderNickname,
+		Integer readCount) {
+		this.senderId = senderId;
+		this.senderNickname = senderNickname;
+		this.readCount = readCount;
+		this.sendTime = localDateTime;
+	}
 }

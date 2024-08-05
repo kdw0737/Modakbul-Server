@@ -37,9 +37,6 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private Provider provider; // APPLE, KAKAO
 
-	@Column(nullable = false)
-	private String providerId;
-
 	@Column(nullable = false, length = 30)
 	private String name;
 

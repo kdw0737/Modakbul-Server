@@ -70,7 +70,7 @@ public class AuthService {
 			.name(request.getName())
 			.nickname(request.getNickname())
 			.gender(request.getGender())
-			.job(request.getJob())
+			.userJob(request.getJob())
 			.isVisible(true)
 			.image(request.getImage())
 			.userRole(UserRole.NORMAL)

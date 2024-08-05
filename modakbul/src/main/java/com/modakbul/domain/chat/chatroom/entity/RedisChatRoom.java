@@ -1,5 +1,8 @@
 package com.modakbul.domain.chat.chatroom.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
@@ -21,6 +24,5 @@ public class RedisChatRoom {
 	@Indexed
 	private Long chatRoomId;
 
-	@Indexed
-	private String nickname;
+	private Set<String> connectedUsers = new HashSet<>();
 }

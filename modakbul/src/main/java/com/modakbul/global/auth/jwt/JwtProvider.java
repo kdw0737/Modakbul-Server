@@ -65,6 +65,10 @@ public class JwtProvider {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email", String.class);
 	}
 
+	public String getNickName(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+	}
+
 	public String createAccessToken(Provider provider, String email, String nickname) {
 		return createJwt(provider, email, nickname, Duration.ofSeconds(accessTokenExpirationTime).toMillis());
 	}
