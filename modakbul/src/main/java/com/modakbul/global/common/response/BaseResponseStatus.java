@@ -45,6 +45,8 @@ public enum BaseResponseStatus {
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
 	EXIT_CHATROOM_SUCCESS(true, 1201, "채팅방 나가기에 성공했습니다."),
+	GET_CHATROOM_LIST_SUCCESS(true, 1202, "채팅방 목록 불러오기에 성공했습니다."),
+	GET_NEW_MESSAGE_SUCCESS(true, 1203, "새로운 메세지 불러오기에 성공했습니다."),
 
 	//board
 	CREATE_BOARD_SUCCESS(true, 1311, "모집글 작성에 성공했습니다."),
@@ -66,7 +68,7 @@ public enum BaseResponseStatus {
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
-	NICKNAME_DUPLICATED(false, 2008, "닉네임 중복 확인에 실패했습니다."),
+	NICKNAME_DUPLICATED(false, 2008, "중복된 닉네임입니다."),
 	REGISTER_FAILED(false, 2009, "회원가입에 실패했습니다."),
 	UPDATE_PROFILE_FAILED(false, 2010, "프로필 수정에 실패했습니다."),
 	ACCESS_DENIED(false, 2011, "API 접근 권한이 없습니다."),
@@ -104,6 +106,9 @@ public enum BaseResponseStatus {
 	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
 	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
 	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
+
+	//category
+	CATEGORY_NOT_FOUND(false, 2500, "해당 카테고리가 존재하지 않습니다."),
 
 	/**
 	 * 3000 : response 오류

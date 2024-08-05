@@ -23,8 +23,10 @@ public class ChatMessage {
 	private Long userId;
 
 	private Long chatRoomId;
-	
+
 	private String content; // 메세지 내용
 
 	private LocalDateTime sendDate; // 보낸 시간
+
+	private Integer readCount; // 읽은 수
 }

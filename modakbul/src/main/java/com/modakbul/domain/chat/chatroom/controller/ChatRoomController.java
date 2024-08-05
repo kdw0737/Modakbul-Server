@@ -1,6 +1,9 @@
 package com.modakbul.domain.chat.chatroom.controller;
 
+import java.util.List;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.modakbul.domain.chat.chatroom.dto.CreateOneToOneChatReq;
+import com.modakbul.domain.chat.chatroom.dto.GetMessageHistoryRes;
+import com.modakbul.domain.chat.chatroom.dto.GetOneToOneChatRoomListRes;
 import com.modakbul.domain.chat.chatroom.service.ChatRoomService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseException;
@@ -41,5 +46,24 @@ public class ChatRoomController {
 		chatRoomService.exitChatRoom(chatRoomId, user);
 
 		return new BaseResponse<>(BaseResponseStatus.EXIT_CHATROOM_SUCCESS);
+	}
+
+	@GetMapping("/chatrooms")
+	public BaseResponse<List<GetOneToOneChatRoomListRes>> getOneToOneChatRoomList(@AuthenticationPrincipal User user) {
+		List<GetOneToOneChatRoomListRes> chatRoomList = chatRoomService.getOneToOneChatRoomList(user);
+
+		if (chatRoomList.isEmpty()) {
+			return new BaseResponse<>(BaseResponseStatus.GET_CHATROOM_LIST_SUCCESS, null);
+		} else {
+			return new BaseResponse<>(BaseResponseStatus.GET_CHATROOM_LIST_SUCCESS, chatRoomList);
+		}
+	}
+
+	@GetMapping("/chatrooms/{chatroomId}/{boardId}") //TODO: 채팅방에 접속해 있는 경우 상대방이 들어와서 읽으면 내 화면에도 동기화 필요
+	public BaseResponse<GetMessageHistoryRes> getMessageHistory(@AuthenticationPrincipal User user,
+		@PathVariable Long chatroomId,
+		@PathVariable Long boardId) {
+		GetMessageHistoryRes messageHistory = chatRoomService.getMessageHistory(user, chatroomId, boardId);
+		return new BaseResponse<>(BaseResponseStatus.GET_NEW_MESSAGE_SUCCESS, messageHistory);
 	}
 }
