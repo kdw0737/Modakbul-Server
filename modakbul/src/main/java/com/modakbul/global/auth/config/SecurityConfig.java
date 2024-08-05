@@ -35,8 +35,9 @@ public class SecurityConfig {
 				.frameOptions(frameOptions -> frameOptions.disable())
 			)
 			.authorizeHttpRequests((authorizeRequests) -> authorizeRequests
-				.requestMatchers("/users/register/**", "/users/login/**", "/token/**", "/", "/css/**", "/images/**",
-					"/js/**", "/favicon.ico").permitAll()
+				.requestMatchers("/users/register/**", "/users/login/**", "/token/**", "/users", "/css/**",
+					"/images/**",
+					"/js/**", "/favicon.ico", "/error").permitAll()
 				.anyRequest().authenticated()
 			)
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

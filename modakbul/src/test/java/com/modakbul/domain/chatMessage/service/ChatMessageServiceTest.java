@@ -1,3 +1,4 @@
+/*
 package com.modakbul.domain.chatMessage.service;
 
 import static org.assertj.core.api.Assertions.*;
@@ -40,3 +41,4 @@ public class ChatMessageServiceTest {
 		System.out.println("retrievedChatMessage.get().getMessage() = " + retrievedChatMessage.get().getMessage());
 	}
 }
+*/

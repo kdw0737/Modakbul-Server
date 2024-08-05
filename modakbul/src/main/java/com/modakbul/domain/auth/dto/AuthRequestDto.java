@@ -2,6 +2,7 @@ package com.modakbul.domain.auth.dto;
 
 import java.util.List;
 
+import com.modakbul.domain.user.enums.CategoryName;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserJob;
@@ -19,7 +20,7 @@ public class AuthRequestDto {
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class loginDto {
+	public static class LoginDto {
 		private String email;
 		@Enumerated(EnumType.STRING)
 		private Provider provider;
@@ -29,7 +30,7 @@ public class AuthRequestDto {
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
-	public static class signUpDto {
+	public static class SignUpDto {
 		private String email;
 		@Enumerated(EnumType.STRING)
 		private Provider provider;
@@ -38,7 +39,8 @@ public class AuthRequestDto {
 		private Gender gender;
 		private String image;
 		private String nickname;
-		private UserJob job;
-		private List<String> categoryNames;
+		private UserJob userJob;
+		@Enumerated(EnumType.STRING)
+		private List<CategoryName> categoryNames;
 	}
 }

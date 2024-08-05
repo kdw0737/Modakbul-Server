@@ -1,5 +1,6 @@
 package com.modakbul.domain.user.entity;
 
+import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserJob;
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,11 +28,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class User extends BaseEntity {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String email;
 
 	@Column(nullable = false)
@@ -66,4 +68,11 @@ public class User extends BaseEntity {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
+
+	public void update(UserRequestDto.ProfileDto request) {
+		this.isVisible = request.getIsVisible();
+		this.nickname = request.getNickname();
+		this.image = request.getImage();
+		this.userJob = request.getUserJob();
+	}
 }

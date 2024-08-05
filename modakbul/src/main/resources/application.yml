@@ -25,17 +25,21 @@ spring:
     password: ${DB_PASSWORD}
 
   jpa:
-    show-sql: true
-    database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    generate-ddl: true
+    database: mysql
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
-  logging:
-    level:
-      root: debug
+
+logging:
+  level:
+    org.hibernate: info
+    org.hibernate.SQL: debug
+    org.hibernate.type: debug
 
 jwt:
   secret: ${SECRET_KEY}
