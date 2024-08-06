@@ -45,6 +45,8 @@ public enum BaseResponseStatus {
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
 	EXIT_CHATROOM_SUCCESS(true, 1201, "채팅방 나가기에 성공했습니다."),
+	GET_CHATROOM_LIST_SUCCESS(true, 1202, "채팅방 목록 불러오기에 성공했습니다."),
+	GET_NEW_MESSAGE_SUCCESS(true, 1203, "새로운 메세지 불러오기에 성공했습니다."),
 
 	//board
 	CREATE_BOARD_SUCCESS(true, 1311, "모집글 작성에 성공했습니다."),
@@ -61,8 +63,8 @@ public enum BaseResponseStatus {
 
 	//user
 	PASSWORD_FAILED(false, 2003, "비밀번호 인증에 실패했습니다."),
-	ID_NOT_EXIST(false, 2004, "존재하지 않는 아이디입니다."),
 	USER_NOT_EXIST(false, 2004, "존재하지 않는 회원입니다."),
+	ID_NOT_EXIST(false, 2004, "존재하지 않는 아이디 입니다."),
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
@@ -104,6 +106,14 @@ public enum BaseResponseStatus {
 	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
 	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
 	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
+
+	//image
+	EMPTY_IMAGE_FILE(false, 2501, "이미지가 없습니다."),
+	IO_EXCEPTION_ON_IMAGE_UPLOAD(false, 2502, "파일 확장자가 올바르지 않습니다."),
+	NO_FILE_EXTENTION(false, 2503, "파일 확장자가 없습니다."),
+	INVALID_FILE_EXTENTION(false, 2504, "잘못된 파일 확장자 입니다."),
+	PUT_OBJECT_EXCEPTION(false, 2505, "이미지 저장에 실패했습니다."),
+	IO_EXCEPTION_ON_IMAGE_DELETE(false, 2506, "이미지 삭제에 실패했습니다."),
 
 	/**
 	 * 3000 : response 오류

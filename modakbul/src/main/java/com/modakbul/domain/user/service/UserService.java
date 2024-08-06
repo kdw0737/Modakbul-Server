@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.dto.UserResponseDto;
@@ -17,6 +18,7 @@ import com.modakbul.domain.user.repository.UserCategoryRepository;
 import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
+import com.modakbul.global.s3.service.S3ImageService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +29,7 @@ public class UserService {
 	private final UserCategoryRepository userCategoryRepository;
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
+	private final S3ImageService s3ImageService;
 
 	public UserResponseDto.ProfileDto findProfile(User user) {
 		List<UserCategory> findUserCategories = userCategoryRepository.findCategoryByUser(user);
@@ -45,7 +48,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void modifyProfile(User user, UserRequestDto.ProfileDto request) {
+	public void modifyProfile(User user, MultipartFile image, UserRequestDto.ProfileDto request) {
 		userCategoryRepository.deleteAllByUser(user);
 
 		List<UserCategory> userCategories = request.getCategories().stream()
@@ -59,7 +62,9 @@ public class UserService {
 			}).collect(Collectors.toList());
 		userCategoryRepository.saveAll(userCategories);
 
-		user.update(request);
+		s3ImageService.deleteImageFromS3(user.getImage());
+
+		user.update(s3ImageService.upload(image), request);
 		userRepository.save(user);
 	}
 }

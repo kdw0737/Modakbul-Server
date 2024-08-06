@@ -3,8 +3,9 @@ package com.modakbul.domain.user.controller;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.dto.UserResponseDto;
@@ -28,8 +29,9 @@ public class UserController {
 
 	@PatchMapping("/users/profile")
 	public BaseResponse<Void> profileModify(@AuthenticationPrincipal User user,
-		@RequestBody UserRequestDto.ProfileDto request) {
-		userService.modifyProfile(user, request);
+		@RequestPart(value = "image", required = false) MultipartFile image,
+		@RequestPart(value = "user") UserRequestDto.ProfileDto request) {
+		userService.modifyProfile(user, image, request);
 		return new BaseResponse<>(BaseResponseStatus.UPDATE_PROFILE_SUCCESS);
 	}
 }

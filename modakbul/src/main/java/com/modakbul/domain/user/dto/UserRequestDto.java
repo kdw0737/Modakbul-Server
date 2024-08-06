@@ -18,7 +18,6 @@ public class UserRequestDto {
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ProfileDto {
 		private String nickname;
-		private String image;
 		private Boolean isVisible;
 		private UserJob userJob;
 		private List<CategoryName> categories;

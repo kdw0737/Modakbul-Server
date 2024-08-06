@@ -42,7 +42,7 @@ public class User extends BaseEntity {
 	@Column(nullable = false, length = 30)
 	private String name;
 
-	@Column(nullable = false, length = 8)
+	@Column(nullable = false, length = 10)
 	private String birth;
 
 	@Column(nullable = false, length = 15, unique = true)
@@ -69,10 +69,10 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
 
-	public void update(UserRequestDto.ProfileDto request) {
+	public void update(String image, UserRequestDto.ProfileDto request) {
 		this.isVisible = request.getIsVisible();
 		this.nickname = request.getNickname();
-		this.image = request.getImage();
+		this.image = image;
 		this.userJob = request.getUserJob();
 	}
 }

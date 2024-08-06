@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.auth.dto.AuthRequestDto;
 import com.modakbul.domain.auth.service.AuthService;
@@ -38,9 +40,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/users/register")
-	public ResponseEntity<BaseResponse> signUp(@RequestBody AuthRequestDto.SignUpDto request) {
+	public ResponseEntity<BaseResponse> signUp(@RequestPart(value = "image", required = false) MultipartFile image,
+		@RequestPart(value = "user") AuthRequestDto.SignUpDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setAll(authService.signUp(request));
+		httpHeaders.setAll(authService.signUp(image, request));
 
 		return new ResponseEntity(new BaseResponse<>(BaseResponseStatus.REGISTER_SUCCESS), httpHeaders, HttpStatus.OK);
 	}
