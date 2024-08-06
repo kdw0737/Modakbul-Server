@@ -1,5 +1,6 @@
 package com.modakbul.domain.board.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -96,7 +97,7 @@ public class BoardService {
 		BoardResponseDto.CafeDto addCafe = BoardResponseDto.CafeDto.builder()
 			.cafeName(findCafe.getName())
 			.streetAddress(findCafe.getAddress().getStreetAddress())
-			//.image(findCafe.getImageUrls().get(0))
+			.image(findCafe.getImageUrls().get(0))
 			.openingHour(findCafe.getOpeningHours())
 			.outlet(findCafe.getOutlet())
 			.groupSeat(findCafe.getGroupSeat())
@@ -142,5 +143,15 @@ public class BoardService {
 			.endTime(findBoard.getEndTime())
 			.content(findBoard.getContent())
 			.build();
+	}
+
+	@Transactional
+	public void updateStatusIfDatePassed() {
+		LocalDate today = LocalDate.now();
+		List<Board> findBoards = boardRepository.findByMeetingDateBeforeAndStatus(today, BoardStatus.CONTINUE);
+
+		for (Board findBoard : findBoards) {
+			findBoard.updateStatus(BoardStatus.COMPLETE);
+		}
 	}
 }

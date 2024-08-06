@@ -77,4 +77,8 @@ public class Board extends BaseEntity {
 		this.startTime = request.getStartTime();
 		this.endTime = request.getEndTime();
 	}
+
+	public void updateStatus(BoardStatus boardStatus) {
+		this.status = boardStatus;
+	}
 }
