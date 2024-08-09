@@ -19,6 +19,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
 	Integer countUnreadMessages(Long chatRoomId, Long userId);
 
 	// 1대1 채팅방에서 읽지 않은 메시지들을 시간순서대로 정렬하여 조회
-	List<ChatMessage> findByChatRoomIdAndSenderIdNotAndReadCountOrderBySendDateAsc(Long chatRoomId, Long userId,
+	List<ChatMessage> findByChatRoomIdAndUserIdNotAndReadCountOrderBySendDateAsc(Long chatRoomId, Long userId,
 		int readCount);
 }

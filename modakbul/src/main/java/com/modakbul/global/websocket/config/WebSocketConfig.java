@@ -28,9 +28,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/stomp/chat") // ex ) ws://localhost:9000/stomp/chat
-			.setAllowedOriginPatterns("*") // 일단 모두 허용
-			.withSockJS(); // 웹 소켓 사용 ( 구형 핸드폰의 경우에는 sockJs 를 사용해야됨
+		registry.addEndpoint("/ws") // ex ) ws://localhost:8080/ws
+			.setAllowedOriginPatterns("*"); // 일단 모두 허용
 	}
 
 	// socket 연결이 성공 후 실제 메세지가 송수신될 때 동작

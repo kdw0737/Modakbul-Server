@@ -31,26 +31,15 @@ public class StompHandler implements ChannelInterceptor {
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-		// StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출한다.
-		String accessToken = getAccessToken(accessor);
-		if (accessToken == null) {
-			throw new BaseException(BaseResponseStatus.TOKEN_NOT_FOUND);
-		}
-		String nickname = verifyAccessToken(accessToken);
 		log.info("StompAccessor = {}", accessor);
-		handleMessage(accessor.getCommand(), accessor, nickname);
-		return message;
-	}
-
-	private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String nickname) {
-		switch (stompCommand) {
-			case CONNECT:
-				connectToChatRoom(accessor, nickname);
-				break;
-			case DISCONNECT:
-				chatRoomService.disconnectChatRoom(getChatRoomId(accessor), nickname);
-				break;
+		if (StompCommand.CONNECT == accessor.getCommand()) {
+			String accessToken = getAccessToken(accessor);
+			String nickname = verifyAccessToken(accessToken);
+			// connectToChatRoom(accessor, nickname);
+		} else if (StompCommand.DISCONNECT == accessor.getCommand()) { // 웹 소켓 연결 종료
+			// chatRoomService.disconnectChatRoom(getChatRoomId(accessor), nickname);
 		}
+		return message;
 	}
 
 	private void connectToChatRoom(StompHeaderAccessor accessor, String nickname) {
@@ -63,7 +52,13 @@ public class StompHandler implements ChannelInterceptor {
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
-		return accessor.getFirstNativeHeader("Authorization");
+		String accessToken = accessor.getFirstNativeHeader("Authorization");
+		log.info("Authorization Header: {}", accessToken); // 헤더 값 로깅
+		if (accessToken == null) {
+			throw new BaseException(BaseResponseStatus.TOKEN_NOT_FOUND);
+		} else {
+			return accessToken.substring(7);
+		}
 	}
 
 	private String verifyAccessToken(String accessToken) {
