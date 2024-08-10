@@ -1,21 +1,51 @@
 spring:
+  data:
+    mongodb:
+      uri: mongodb://root:1234@localhost:27017/test
+
   redis:
     host: localhost
     port: 6379
+
   output:
     ansi:
       enabled: always
+  kafka:
+    bootstrap-servers: ${KAFKA_SERVER}
+  #    consumer:
+  #      group-id: test # Consumer 그룹 ID
+  #      auto-offset-reset: latest # 오프셋 초기화 정책
+  #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # 키 역직렬화 방법
+  #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer # 값 역직렬화 방법
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${DB_URL}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
   jpa:
-    show-sql: true
-    database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    generate-ddl: true
+    database: mysql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+
+logging:
+  level:
+    org.hibernate: info
+    org.hibernate.SQL: debug
+    org.hibernate.type: debug
+
+jwt:
+  secret: ${SECRET_KEY}
+  access-token:
+    header: Authorization
+    expiration-time: 30
+  refresh-token:
+    header: Authorization_refresh
+    expiration-time: 60
