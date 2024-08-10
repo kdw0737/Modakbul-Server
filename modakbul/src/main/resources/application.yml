@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      uri: mongodb://root:1234@localhost:27017/test
+      uri: ${MONGODB_SERVER}
 
   redis:
     host: localhost
@@ -45,7 +45,7 @@ jwt:
   secret: ${SECRET_KEY}
   access-token:
     header: Authorization
-    expiration-time: 30
+    expiration-time: 300000
   refresh-token:
     header: Authorization_refresh
-    expiration-time: 60
+    expiration-time: 600000

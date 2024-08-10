@@ -30,14 +30,15 @@ public class StompHandler implements ChannelInterceptor {
 
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
+		log.info("preSend 작동");
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-		log.info("StompAccessor = {}", accessor);
+
 		if (StompCommand.CONNECT == accessor.getCommand()) {
 			String accessToken = getAccessToken(accessor);
 			String nickname = verifyAccessToken(accessToken);
-			// connectToChatRoom(accessor, nickname);
+			connectToChatRoom(accessor, nickname);
 		} else if (StompCommand.DISCONNECT == accessor.getCommand()) { // 웹 소켓 연결 종료
-			// chatRoomService.disconnectChatRoom(getChatRoomId(accessor), nickname);
+			chatRoomService.disconnectChatRoom(getChatRoomId(accessor), getNickName(accessor));
 		}
 		return message;
 	}
@@ -45,15 +46,17 @@ public class StompHandler implements ChannelInterceptor {
 	private void connectToChatRoom(StompHeaderAccessor accessor, String nickname) {
 		// 채팅방 번호를 가져온다.
 		Long chatRoomId = getChatRoomId(accessor);
+		log.info("chatRoomId : {}", chatRoomId);
+
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
 		chatRoomService.connectChatRoom(chatRoomId, nickname);
+		
 		// 읽지 않은 채팅을 전부 읽음 처리
-		chatRoomService.updateReadCount(chatRoomId, getUserId(accessor));
+		// chatRoomService.updateReadCount(chatRoomId, getUserId(accessor));
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
 		String accessToken = accessor.getFirstNativeHeader("Authorization");
-		log.info("Authorization Header: {}", accessToken); // 헤더 값 로깅
 		if (accessToken == null) {
 			throw new BaseException(BaseResponseStatus.TOKEN_NOT_FOUND);
 		} else {
@@ -71,5 +74,9 @@ public class StompHandler implements ChannelInterceptor {
 
 	private Long getUserId(StompHeaderAccessor accessor) {
 		return Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
+	}
+
+	private String getNickName(StompHeaderAccessor accessor) {
+		return String.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("nickname")));
 	}
 }

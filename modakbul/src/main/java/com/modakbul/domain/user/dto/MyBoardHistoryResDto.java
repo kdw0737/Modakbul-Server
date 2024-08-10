@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MyBoardHistoryResDto {
 	private String title;
+	private Long boardId;
 	private CategoryName categoryName;
 	private Integer recruitCount;
 	private Integer currentCount;

@@ -119,6 +119,7 @@ public class UserService {
 		return findBoardList.stream()
 			.map(findBoard -> MyBoardHistoryResDto.builder()
 				.title(findBoard.getTitle())
+				.boardId(findBoard.getId())
 				.categoryName(findBoard.getCategory().getCategoryName())
 				.recruitCount(findBoard.getRecruitCount())
 				.currentCount(currentCount)

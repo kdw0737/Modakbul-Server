@@ -87,6 +87,7 @@ public class ChatRoomService {
 				.roomHashCode(roomHashCode)
 				.chatRoomType(ChatRoomType.ONE_TO_ONE)
 				.build();
+			chatRoom.setChatRoomUsers();
 
 			UserChatRoom userChatRoom = UserChatRoom.builder()
 				.user(user)
@@ -102,8 +103,8 @@ public class ChatRoomService {
 				.lastExitedAt(LocalDateTime.now())
 				.build();
 
-			chatRoom.getChatRoomUsers().add(userChatRoom);
-			chatRoom.getChatRoomUsers().add(theOtherUserChatRoom);
+			chatRoom.addChatUser(userChatRoom);
+			chatRoom.addChatUser(theOtherUserChatRoom);
 
 			chatRoomRepository.save(chatRoom);
 			userChatRoomRepository.save(userChatRoom);

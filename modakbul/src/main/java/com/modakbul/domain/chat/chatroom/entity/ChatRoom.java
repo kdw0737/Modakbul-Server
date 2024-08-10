@@ -47,4 +47,12 @@ public class ChatRoom extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private ChatRoomType chatRoomType; // GROUP, ONE_TO_ONE
+
+	public void addChatUser(UserChatRoom chatRoomUser) {
+		this.getChatRoomUsers().add(chatRoomUser);
+	}
+
+	public void setChatRoomUsers() {
+		this.chatRoomUsers = new ArrayList<>();
+	}
 }
