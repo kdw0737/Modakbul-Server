@@ -18,7 +18,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class BoardResponseDto {
+public class BoardResDto {
 	@Builder
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -43,7 +43,7 @@ public class BoardResponseDto {
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class MeetingDto {
-		private BoardResponseDto.CafeDto cafe;
+		private BoardResDto.CafeDto cafe;
 		private List<BoardDto> boards;
 	}
 
@@ -52,6 +52,7 @@ public class BoardResponseDto {
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class BoardDto {
+		private long boardId;
 		private String title;
 		private CategoryName categoryName;
 		private int recruitCount;

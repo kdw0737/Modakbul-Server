@@ -13,7 +13,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class BoardRequestDto {
+public class BoardReqDto {
 	@Builder
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)

@@ -3,6 +3,9 @@ package com.modakbul.domain.cafe.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import com.modakbul.domain.cafe.enums.Congestion;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
@@ -25,6 +28,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@DynamicInsert
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -50,6 +54,9 @@ public class Cafe extends BaseEntity {
 	@CollectionTable(name = "cafe_opening_hour", joinColumns = @JoinColumn(name = "cafe_Id"))
 	private final List<OpeningHour> openingHours = new ArrayList<>();
 
+	@ColumnDefault("0")
+	private int meetingCount;
+
 	@Enumerated(EnumType.STRING)
 	private Outlet outlet; // 콘센트
 
@@ -58,4 +65,8 @@ public class Cafe extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private Congestion congestion; // 혼잡도
+
+	public void countMeeting() {
+		this.meetingCount++;
+	}
 }

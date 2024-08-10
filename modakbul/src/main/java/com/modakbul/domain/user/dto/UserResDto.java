@@ -11,15 +11,28 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class UserRequestDto {
+public class UserResDto {
 	@Builder
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)
 	@NoArgsConstructor(access = AccessLevel.PROTECTED)
 	public static class ProfileDto {
 		private String nickname;
+		private String image;
 		private Boolean isVisible;
 		private UserJob userJob;
 		private List<CategoryName> categories;
+	}
+
+	@Builder
+	@Getter
+	@AllArgsConstructor(access = AccessLevel.PROTECTED)
+	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	public static class UserCafeDto {
+		private long cafeId;
+		private String image;
+		private String name;
+		private String streetAddress;
+
 	}
 }

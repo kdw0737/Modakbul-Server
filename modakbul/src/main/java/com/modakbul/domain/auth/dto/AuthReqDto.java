@@ -15,7 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-public class AuthRequestDto {
+public class AuthReqDto {
 	@Builder
 	@Getter
 	@AllArgsConstructor(access = AccessLevel.PROTECTED)

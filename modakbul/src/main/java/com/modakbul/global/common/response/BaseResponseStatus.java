@@ -24,9 +24,13 @@ public enum BaseResponseStatus {
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
 	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
+	SEARCH_REQUEST_SUCCESS(true, 1014, "나의 참여 요청 목록 조회에 성공했습니다."),
+	SEARCH_USER_CAFE_SUCCESS(true, 1015, "모임에 참여했던 카페 목록 조회에 성공했습니다."),
+	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
+	CREATE_INFORMATION(true, 1017, "카페 제보 작성에 성공했습니다"),
 
 	//cafe
-	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
+	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
 	CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
 	REGISTRATION_WAITING_SUCCESS(true, 1102, "매칭 대기 등록에 성공했습니다."),
 	DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
@@ -37,8 +41,8 @@ public enum BaseResponseStatus {
 	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
 	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
 	MATCHING_PROFILE_SUCCESS(true, 1110, "매칭 신청 유저 프로필 조회에 성공했습니다."),
-	SEARCH_CAFE_LIST(true, 1111, "카페 목록 조회에 성공했습니다."),
-	SORT_CAFE_MEETING_COUNT(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_SORT_BY_DISTANCE_SUCCESS(true, 1111, "거리순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_SORT_BY_MEETING_COUNT_SUCCESS(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
 	SEARCH_MEETING_LIST_SUCCESS(true, 1113, "해당 카페의 모임 목록 조회에 성공했습니다."),
 	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
 
@@ -54,6 +58,7 @@ public enum BaseResponseStatus {
 	UPDATE_BOARD_SUCCESS(true, 1313, "모집글 수정에 성공했습니다."),
 	SEARCH_BOARD_LIST_SUCCESS(true, 1314, "모집글 목록 조회에 성공했습니다."),
 	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
+	DELETE_BOARD_SUCCESS(true, 1316, "모집글 삭제에 성공했습니다."),
 
 	/**
 	 * 2000 : request 오류
@@ -64,11 +69,10 @@ public enum BaseResponseStatus {
 	//user
 	PASSWORD_FAILED(false, 2003, "비밀번호 인증에 실패했습니다."),
 	USER_NOT_EXIST(false, 2004, "존재하지 않는 회원입니다."),
-	ID_NOT_EXIST(false, 2004, "존재하지 않는 아이디 입니다."),
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
-	NICKNAME_DUPLICATED(false, 2008, "닉네임 중복 확인에 실패했습니다."),
+	NICKNAME_DUPLICATED(false, 2008, "중복된 닉네임입니다."),
 	REGISTER_FAILED(false, 2009, "회원가입에 실패했습니다."),
 	UPDATE_PROFILE_FAILED(false, 2010, "프로필 수정에 실패했습니다."),
 	ACCESS_DENIED(false, 2011, "API 접근 권한이 없습니다."),
@@ -98,6 +102,7 @@ public enum BaseResponseStatus {
 
 	//board
 	BOARD_NOT_FOUND(false, 2300, "해당 게시글이 존재하지 않습니다."),
+	PARTICIPANT_EXIST(false, 2301, "모임 참여자가 존재합니다."),
 
 	//token
 	ACCESSTOKEN_EXPIRED(false, 2401, "AccessToken이 만료되었습니다."),
@@ -106,6 +111,9 @@ public enum BaseResponseStatus {
 	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
 	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
 	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
+
+	//category
+	CATEGORY_NOT_FOUND(false, 2500, "해당 카테고리가 존재하지 않습니다."),
 
 	//image
 	EMPTY_IMAGE_FILE(false, 2501, "이미지가 없습니다."),

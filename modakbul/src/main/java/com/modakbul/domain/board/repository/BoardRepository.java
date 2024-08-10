@@ -14,7 +14,5 @@ import com.modakbul.domain.cafe.entity.Cafe;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	List<Board> findAllByCafeAndStatusOrderByCreatedAtDesc(Cafe cafe, BoardStatus status);
 
-	List<Board> findAllByCafeIdAndStatusOrderByCreatedAtDesc(Long cafeId, BoardStatus status);
-
 	List<Board> findByMeetingDateBeforeAndStatus(LocalDate meetingDate, BoardStatus status);
 }

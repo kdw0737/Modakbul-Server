@@ -7,8 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.user.dto.UserRequestDto;
-import com.modakbul.domain.user.dto.UserResponseDto;
+import com.modakbul.domain.board.repository.BoardRepository;
+import com.modakbul.domain.match.entity.Matches;
+import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.user.dto.UserReqDto;
+import com.modakbul.domain.user.dto.UserResDto;
 import com.modakbul.domain.user.entity.Category;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
@@ -30,15 +33,17 @@ public class UserService {
 	private final CategoryRepository categoryRepository;
 	private final UserRepository userRepository;
 	private final S3ImageService s3ImageService;
+	private final MatchRepository matchRepository;
+	private final BoardRepository boardRepository;
 
-	public UserResponseDto.ProfileDto findProfile(User user) {
-		List<UserCategory> findUserCategories = userCategoryRepository.findCategoryByUser(user);
+	public UserResDto.ProfileDto getProfileDetails(User user) {
+		List<UserCategory> findUserCategories = userCategoryRepository.findUserCategoryByUser(user);
 
 		List<CategoryName> findCategories = findUserCategories.stream()
 			.map(userCategory -> userCategory.getCategory().getCategoryName())
 			.collect(Collectors.toList());
 
-		return UserResponseDto.ProfileDto.builder()
+		return UserResDto.ProfileDto.builder()
 			.image(user.getImage())
 			.nickname(user.getNickname())
 			.isVisible(user.getIsVisible())
@@ -48,7 +53,7 @@ public class UserService {
 	}
 
 	@Transactional
-	public void modifyProfile(User user, MultipartFile image, UserRequestDto.ProfileDto request) {
+	public void updateProfile(User user, MultipartFile image, UserReqDto.ProfileDto request) {
 		userCategoryRepository.deleteAllByUser(user);
 
 		List<UserCategory> userCategories = request.getCategories().stream()
@@ -67,4 +72,26 @@ public class UserService {
 		user.update(s3ImageService.upload(image), request);
 		userRepository.save(user);
 	}
+
+	public List<UserResDto.UserCafeDto> getUserCafeList(User user) {
+		List<Matches> findMatches = matchRepository.findAllBySender(user);
+
+		return findMatches.stream()
+			.map(findMatch -> UserResDto.UserCafeDto.builder()
+				.cafeId(findMatch.getBoard().getCafe().getId())
+				.name(findMatch.getBoard().getCafe().getName())
+				.image(findMatch.getBoard().getCafe().getImageUrls().get(0))
+				.streetAddress(findMatch.getBoard().getCafe().getAddress().getStreetAddress())
+				.build())
+			.collect(Collectors.toList());
+	}
+
+	public void createReview(long cafeId, UserReqDto.ReviewDto request) {
+
+	}
+
+	public void createInformation(long cafeId, UserReqDto.InformationDto request) {
+
+	}
+
 }

@@ -8,10 +8,13 @@ import org.springframework.stereotype.Repository;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
+import com.modakbul.domain.user.entity.User;
 
 @Repository
 public interface MatchRepository extends JpaRepository<Matches, Long> {
 	int countAllByBoardAndMatchStatus(Board board, MatchStatus matchStatus);
 
 	List<Matches> findAllByBoard(Board board);
+
+	List<Matches> findAllBySender(User user);
 }

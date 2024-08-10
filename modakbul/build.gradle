@@ -39,6 +39,9 @@ dependencies {
     implementation 'org.webjars:bootstrap:5.2.3'
     implementation 'org.webjars:jquery:3.6.4'
     implementation "com.google.guava:guava:31.1-jre"
+    implementation 'io.jsonwebtoken:jjwt:0.9.1'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0-b170201.1204'
+    
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
