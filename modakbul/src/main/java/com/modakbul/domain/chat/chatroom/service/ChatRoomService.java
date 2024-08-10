@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,6 @@ import com.modakbul.domain.cafe.repository.CafeRepository;
 import com.modakbul.domain.chat.chatmessage.entity.ChatMessage;
 import com.modakbul.domain.chat.chatmessage.repository.ChatMessageRepository;
 import com.modakbul.domain.chat.chatmessage.repository.CustomChatMessageRepository;
-import com.modakbul.domain.chat.chatmessage.service.ChatMessageService;
 import com.modakbul.domain.chat.chatroom.dto.CreateOneToOneChatReq;
 import com.modakbul.domain.chat.chatroom.dto.GetMessageHistoryRes;
 import com.modakbul.domain.chat.chatroom.dto.GetOneToOneChatRoomListRes;
@@ -52,9 +50,7 @@ public class ChatRoomService {
 	private final BoardRepository boardRepository;
 	private final UserChatRoomRepository userChatRoomRepository;
 	private final ConnectedChatUserRepository connectedChatUserRepository;
-	private final ChatMessageService chatMessageService;
 	private final ChatMessageRepository chatMessageRepository;
-	private final MongoTemplate mongoTemplate;
 	private final CustomChatMessageRepository customChatMessageRepository;
 	private final CategoryRepository categoryRepository;
 	private final CafeRepository cafeRepository;
@@ -207,7 +203,7 @@ public class ChatRoomService {
 	}
 
 	public GetMessageHistoryRes getMessageHistory(User user, Long chatRoomId, Long boardId) {
-		List<ChatMessage> findUnreadMessages = chatMessageRepository.findByChatRoomIdAndSenderIdNotAndReadCountOrderBySendDateAsc(
+		List<ChatMessage> findUnreadMessages = chatMessageRepository.findByChatRoomIdAndUserIdNotAndReadCountOrderBySendDateAsc(
 			chatRoomId,
 			user.getId(), 1);
 

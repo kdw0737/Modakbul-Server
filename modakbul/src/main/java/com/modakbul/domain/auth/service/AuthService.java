@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.auth.dto.AuthRequestDto;
+import com.modakbul.domain.auth.dto.AuthReqDto;
 import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
@@ -41,7 +41,7 @@ public class AuthService {
 	private Long refreshTokenExpirationTime;
 	private final S3ImageService s3ImageService;
 
-	public Map<String, String> login(AuthRequestDto.LoginDto request) {
+	public Map<String, String> login(AuthReqDto.LoginDto request) {
 		Map<String, String> token = new HashMap<>();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
@@ -64,7 +64,7 @@ public class AuthService {
 		}
 	}
 
-	public Map<String, String> signUp(MultipartFile image, AuthRequestDto.SignUpDto request) {
+	public Map<String, String> signUp(MultipartFile image, AuthReqDto.SignUpDto request) {
 		Map<String, String> token = new HashMap<>();
 
 		String accessToken = jwtProvider.createAccessToken(request.getProvider(), request.getEmail(),

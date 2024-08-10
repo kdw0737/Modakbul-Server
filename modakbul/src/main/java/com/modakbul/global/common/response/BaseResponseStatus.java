@@ -24,7 +24,6 @@ public enum BaseResponseStatus {
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
 	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
-	SEARCH_REQUEST_SUCCESS(true, 1014, "나의 참여 요청 목록 조회에 성공했습니다."),
 	SEARCH_USER_CAFE_SUCCESS(true, 1015, "모임에 참여했던 카페 목록 조회에 성공했습니다."),
 	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
 	CREATE_INFORMATION(true, 1017, "카페 제보 작성에 성공했습니다"),
@@ -90,7 +89,7 @@ public enum BaseResponseStatus {
 	DELETE_MATCHING_FAILED(false, 2102, "매칭 신청 취소에 실패했습니다."),
 	REFUSE_MATCHING_FAILED(false, 2103, "매칭 신청 거절에 실패했습니다."),
 	CHAT_MESSAGE_NOT_FOUND(false, 2104, "채팅 메세지를 찾을 수 없습니다."),
-	CAFE_NOT_EXIST(false, 2105, "존재하지 않는 카페입니다."),
+	CAFE_NOT_FOUND(false, 2105, "존재하지 않는 카페입니다."),
 	MATCH_NOT_EXIST(false, 2106, "존재하지 않는 매칭입니다."),
 
 	//chat

@@ -41,7 +41,7 @@ public class BoardService {
 				BaseResponseStatus.CATEGORY_NOT_EXIST));
 
 		Cafe findCafe = cafeRepository.findById(cafeId).orElseThrow(() -> new BaseException(
-			BaseResponseStatus.CAFE_NOT_EXIST));
+			BaseResponseStatus.CAFE_NOT_FOUND));
 
 		Board board = Board.builder()
 			.category(findCategory)
@@ -92,7 +92,7 @@ public class BoardService {
 
 	public BoardResDto.MeetingDto getBoardList(Long cafeId) {
 		Cafe findCafe = cafeRepository.findById(cafeId)
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_EXIST));
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_FOUND));
 		List<Board> findBoardList = boardRepository.findAllByCafeAndStatusOrderByCreatedAtDesc(findCafe,
 			BoardStatus.CONTINUE);
 
