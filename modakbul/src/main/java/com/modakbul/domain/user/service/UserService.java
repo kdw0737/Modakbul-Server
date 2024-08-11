@@ -1,7 +1,9 @@
 package com.modakbul.domain.user.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,13 @@ import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.repository.MatchRepository;
 import com.modakbul.domain.user.dto.UserReqDto;
 import com.modakbul.domain.user.dto.UserResDto;
+import com.modakbul.domain.board.entity.Board;
+import com.modakbul.domain.board.repository.BoardRepository;
+import com.modakbul.domain.match.entity.Matches;
+import com.modakbul.domain.match.enums.MatchStatus;
+import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
+import com.modakbul.domain.user.dto.MyBoardHistoryResDto;
 import com.modakbul.domain.user.entity.Category;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
@@ -94,4 +103,60 @@ public class UserService {
 
 	}
 
+
+	@Transactional(readOnly = true)
+	public List<MeetingsHistoryResDto> getMeetingsHistory(User user) {
+		List<Board> findOwnBoardList = boardRepository.findAllByUserIdWithCategory(user.getId());
+		List<Matches> findParticipantBoardList = matchRepository.findAllByParticipantIdWithBoard(user.getId(),
+			MatchStatus.ACCEPTED);
+		if (findOwnBoardList.isEmpty() && findParticipantBoardList.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		return Stream.concat(
+			findOwnBoardList.stream().map(board -> MeetingsHistoryResDto.builder()
+				.title(board.getTitle())
+				.cafeName(board.getCafe().getName())
+				.roadName(board.getCafe().getAddress().getStreetAddress())
+				.categoryName(board.getCategory().getCategoryName())
+				.meetingDate(board.getMeetingDate())
+				.startTime(board.getStartTime())
+				.endTime(board.getEndTime())
+				.boardStatus(board.getStatus())
+				.build()
+			),
+			findParticipantBoardList.stream().map(match -> {
+				Board board = match.getBoard();
+				return MeetingsHistoryResDto.builder()
+					.title(board.getTitle())
+					.cafeName(board.getCafe().getName())
+					.roadName(board.getCafe().getAddress().getStreetAddress())
+					.categoryName(board.getCategory().getCategoryName())
+					.meetingDate(board.getMeetingDate())
+					.startTime(board.getStartTime())
+					.endTime(board.getEndTime())
+					.boardStatus(board.getStatus())
+					.build();
+			})
+		).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<MyBoardHistoryResDto> getMyBoardHistory(User user) {
+		List<Board> findBoardList = boardRepository.findAllByUserIdWithCategory(user.getId());
+		Integer currentCount = matchRepository.countByUserIdAndStatus(user.getId(), MatchStatus.ACCEPTED) + 1;
+
+		return findBoardList.stream()
+			.map(findBoard -> MyBoardHistoryResDto.builder()
+				.title(findBoard.getTitle())
+				.boardId(findBoard.getId())
+				.categoryName(findBoard.getCategory().getCategoryName())
+				.recruitCount(findBoard.getRecruitCount())
+				.currentCount(currentCount)
+				.dayOfWeek(findBoard.getMeetingDate().getDayOfWeek())
+				.startTime(findBoard.getStartTime())
+				.endTime(findBoard.getEndTime())
+				.boardStatus(findBoard.getStatus())
+				.build()).collect(Collectors.toList());
+	}
 }

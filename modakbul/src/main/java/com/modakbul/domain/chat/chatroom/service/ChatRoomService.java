@@ -20,9 +20,9 @@ import com.modakbul.domain.cafe.repository.CafeRepository;
 import com.modakbul.domain.chat.chatmessage.entity.ChatMessage;
 import com.modakbul.domain.chat.chatmessage.repository.ChatMessageRepository;
 import com.modakbul.domain.chat.chatmessage.repository.CustomChatMessageRepository;
-import com.modakbul.domain.chat.chatroom.dto.CreateOneToOneChatReq;
-import com.modakbul.domain.chat.chatroom.dto.GetMessageHistoryRes;
-import com.modakbul.domain.chat.chatroom.dto.GetOneToOneChatRoomListRes;
+import com.modakbul.domain.chat.chatroom.dto.CreateOneToOneChatReqDto;
+import com.modakbul.domain.chat.chatroom.dto.GetMessageHistoryResDto;
+import com.modakbul.domain.chat.chatroom.dto.GetOneToOneChatRoomListResDto;
 import com.modakbul.domain.chat.chatroom.entity.ChatRoom;
 import com.modakbul.domain.chat.chatroom.entity.RedisChatRoom;
 import com.modakbul.domain.chat.chatroom.entity.UserChatRoom;
@@ -56,9 +56,9 @@ public class ChatRoomService {
 	private final CafeRepository cafeRepository;
 
 	@Transactional
-	public Long createOneToOneChatRoom(CreateOneToOneChatReq createOneToOneChatReq, User user) {
+	public Long createOneToOneChatRoom(CreateOneToOneChatReqDto createOneToOneChatReqDto, User user) {
 		// 상대방 조회
-		User findTheOtherUser = userRepository.findByIdAndUserStatus(createOneToOneChatReq.getTheOtherUserId(),
+		User findTheOtherUser = userRepository.findByIdAndUserStatus(createOneToOneChatReqDto.getTheOtherUserId(),
 				UserStatus.ACTIVE)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
 
@@ -78,7 +78,7 @@ public class ChatRoomService {
 			return findChatRoom.getId();
 		} else {
 			// 게시글 조회
-			Board findBoard = boardRepository.findById(createOneToOneChatReq.getBoardId())
+			Board findBoard = boardRepository.findById(createOneToOneChatReqDto.getBoardId())
 				.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
 			// 채팅방 생성
@@ -87,6 +87,7 @@ public class ChatRoomService {
 				.roomHashCode(roomHashCode)
 				.chatRoomType(ChatRoomType.ONE_TO_ONE)
 				.build();
+			chatRoom.setChatRoomUsers();
 
 			UserChatRoom userChatRoom = UserChatRoom.builder()
 				.user(user)
@@ -102,8 +103,8 @@ public class ChatRoomService {
 				.lastExitedAt(LocalDateTime.now())
 				.build();
 
-			chatRoom.getChatRoomUsers().add(userChatRoom);
-			chatRoom.getChatRoomUsers().add(theOtherUserChatRoom);
+			chatRoom.addChatUser(userChatRoom);
+			chatRoom.addChatUser(theOtherUserChatRoom);
 
 			chatRoomRepository.save(chatRoom);
 			userChatRoomRepository.save(userChatRoom);
@@ -144,8 +145,7 @@ public class ChatRoomService {
 		}
 	}
 
-	@Transactional
-	public List<GetOneToOneChatRoomListRes> getOneToOneChatRoomList(User user) {
+	public List<GetOneToOneChatRoomListResDto> getOneToOneChatRoomList(User user) {
 		List<UserChatRoom> findChatRoomList = userChatRoomRepository.findAllByUserIdAndUserChatRoomStatus(user.getId(),
 			UserChatRoomStatus.ACTIVE);
 
@@ -170,7 +170,7 @@ public class ChatRoomService {
 
 			Integer unReadCount = chatMessageRepository.countUnreadMessages(findChatRoom.getId(), user.getId());
 
-			return GetOneToOneChatRoomListRes.builder()
+			return GetOneToOneChatRoomListResDto.builder()
 				.roomTitle(findTheOtherUser.getNickname())
 				.chatRoomId(findChatRoom.getId())
 				.boardId(findChatRoom.getBoard().getId())
@@ -202,7 +202,7 @@ public class ChatRoomService {
 		return findChatRoom.getChatRoomUsers().size() - findRedisChatRoom.getConnectedUsers().size();
 	}
 
-	public GetMessageHistoryRes getMessageHistory(User user, Long chatRoomId, Long boardId) {
+	public GetMessageHistoryResDto getMessageHistory(User user, Long chatRoomId, Long boardId) {
 		List<ChatMessage> findUnreadMessages = chatMessageRepository.findByChatRoomIdAndUserIdNotAndReadCountOrderBySendDateAsc(
 			chatRoomId,
 			user.getId(), 1);
@@ -220,12 +220,12 @@ public class ChatRoomService {
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
 		Category findCategory = categoryRepository.findById(findBoard.getCategory().getId())
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.CATEGORY_NOT_FOUND));
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.CATEGORY_NOT_EXIST));
 
 		Cafe findCafe = cafeRepository.findById(findBoard.getCafe().getId())
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_FOUND));
 
-		return new GetMessageHistoryRes().builder()
+		return new GetMessageHistoryResDto().builder()
 			.contents(contents)
 			.sendTimes(sendTimes)
 			.cafeName(findCafe.getName())
@@ -235,7 +235,7 @@ public class ChatRoomService {
 	}
 
 	//메세지 읽음 처리
-
+	@Transactional
 	public void updateReadCount(Long chatRoomId, Long userId) {
 		customChatMessageRepository.updateReadCount(chatRoomId, userId);
 	}

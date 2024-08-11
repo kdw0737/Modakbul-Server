@@ -30,40 +30,38 @@ public class StompHandler implements ChannelInterceptor {
 
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
+		log.info("preSend 작동");
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-		// StompCommand에 따라서 로직을 분기해서 처리하는 메서드를 호출한다.
-		String accessToken = getAccessToken(accessor);
-		if (accessToken == null) {
-			throw new BaseException(BaseResponseStatus.TOKEN_NOT_FOUND);
-		}
-		String nickname = verifyAccessToken(accessToken);
-		log.info("StompAccessor = {}", accessor);
-		handleMessage(accessor.getCommand(), accessor, nickname);
-		return message;
-	}
 
-	private void handleMessage(StompCommand stompCommand, StompHeaderAccessor accessor, String nickname) {
-		switch (stompCommand) {
-			case CONNECT:
-				connectToChatRoom(accessor, nickname);
-				break;
-			case DISCONNECT:
-				chatRoomService.disconnectChatRoom(getChatRoomId(accessor), nickname);
-				break;
+		if (StompCommand.CONNECT == accessor.getCommand()) {
+			String accessToken = getAccessToken(accessor);
+			String nickname = verifyAccessToken(accessToken);
+			connectToChatRoom(accessor, nickname);
+		} else if (StompCommand.DISCONNECT == accessor.getCommand()) { // 웹 소켓 연결 종료
+			chatRoomService.disconnectChatRoom(getChatRoomId(accessor), getNickName(accessor));
 		}
+		return message;
 	}
 
 	private void connectToChatRoom(StompHeaderAccessor accessor, String nickname) {
 		// 채팅방 번호를 가져온다.
 		Long chatRoomId = getChatRoomId(accessor);
+		log.info("chatRoomId : {}", chatRoomId);
+
 		// 채팅방 입장 처리 -> Redis에 입장 내역 저장
 		chatRoomService.connectChatRoom(chatRoomId, nickname);
+		
 		// 읽지 않은 채팅을 전부 읽음 처리
-		chatRoomService.updateReadCount(chatRoomId, getUserId(accessor));
+		// chatRoomService.updateReadCount(chatRoomId, getUserId(accessor));
 	}
 
 	private String getAccessToken(StompHeaderAccessor accessor) {
-		return accessor.getFirstNativeHeader("Authorization");
+		String accessToken = accessor.getFirstNativeHeader("Authorization");
+		if (accessToken == null) {
+			throw new BaseException(BaseResponseStatus.TOKEN_NOT_FOUND);
+		} else {
+			return accessToken.substring(7);
+		}
 	}
 
 	private String verifyAccessToken(String accessToken) {
@@ -76,5 +74,9 @@ public class StompHandler implements ChannelInterceptor {
 
 	private Long getUserId(StompHeaderAccessor accessor) {
 		return Long.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("userId")));
+	}
+
+	private String getNickName(StompHeaderAccessor accessor) {
+		return String.valueOf(Objects.requireNonNull(accessor.getFirstNativeHeader("nickname")));
 	}
 }

@@ -26,9 +26,11 @@ import com.modakbul.global.common.response.BaseResponseStatus;
 import com.modakbul.global.s3.service.S3ImageService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
 
 	private final UserRepository userRepository;

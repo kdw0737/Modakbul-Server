@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetMessageHistoryRes {
+public class GetMessageHistoryResDto {
 	private List<String> contents;
 	private List<LocalDateTime> sendTimes;
 	private String cafeName;

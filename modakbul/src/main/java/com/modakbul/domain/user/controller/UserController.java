@@ -14,7 +14,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.user.dto.UserReqDto;
 import com.modakbul.domain.user.dto.UserResDto;
+import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
+import com.modakbul.domain.user.dto.MyBoardHistoryResDto;
 import com.modakbul.domain.user.entity.User;
+import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.domain.user.service.UserService;
 import com.modakbul.global.common.response.BaseResponse;
 import com.modakbul.global.common.response.BaseResponseStatus;
@@ -26,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
+	private final UserRepository userRepository;
 
 	@GetMapping("/users/mypage/profile")
 	public BaseResponse<UserResDto.ProfileDto> getProfileDetails(@AuthenticationPrincipal User user) {
@@ -59,4 +63,14 @@ public class UserController {
 		return new BaseResponse<>(BaseResponseStatus.CREATE_INFORMATION);
 	}
 
+
+	@GetMapping("/users/meetings")
+	public BaseResponse<List<MeetingsHistoryResDto>> getMeetingsHistory(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_MATCHES_HISTORY_SUCCESS, userService.getMeetingsHistory(user));
+	}
+
+	@GetMapping("/users/boards")
+	public BaseResponse<List<MyBoardHistoryResDto>> getMyBoardHistory(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_MY_BOARD_HISTORY_SUCCESS, userService.getMyBoardHistory(user));
+	}
 }

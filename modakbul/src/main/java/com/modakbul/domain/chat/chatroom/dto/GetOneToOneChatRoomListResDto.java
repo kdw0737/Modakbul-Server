@@ -13,7 +13,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetOneToOneChatRoomListRes {
+public class GetOneToOneChatRoomListResDto {
 	private String roomTitle;
 	private String lastMessage;
 	private LocalDateTime lastMessageTime;
