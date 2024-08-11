@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOneToOneChatReq {
+public class CreateOneToOneChatReqDto {
 	private Long theOtherUserId;
 	private Long boardId;
 }
