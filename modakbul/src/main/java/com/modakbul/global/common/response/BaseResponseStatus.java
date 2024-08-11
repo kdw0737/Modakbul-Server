@@ -37,7 +37,7 @@ public enum BaseResponseStatus {
 	DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
 	SEARCH_WAITING_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
 	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 신청에 성공했습니다."),
-	DELETE_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
+	CANCEL_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
 	REFUSE_MATCHING_SUCCESS(true, 1107, "매칭 신청을 거절했습니다."),
 	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
 	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
@@ -46,6 +46,8 @@ public enum BaseResponseStatus {
 	SEARCH_SORT_BY_MEETING_COUNT_SUCCESS(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
 	SEARCH_MEETING_LIST_SUCCESS(true, 1113, "해당 카페의 모임 목록 조회에 성공했습니다."),
 	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
+	SEARCH_MATCH_SUCCESS(true, 1115, "모임 참여 요청 목록 조회에 성공했습니다."),
+	EXIT_MATCHING_SUCCESS(true, 1116, "모임 나가기에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),

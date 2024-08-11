@@ -162,11 +162,11 @@ public class BoardService {
 
 	@Transactional
 	public void updateStatusIfDatePassed() {
-		LocalDate today = LocalDate.now();
-		List<Board> findBoards = boardRepository.findByMeetingDateBeforeAndStatus(today, BoardStatus.CONTINUE);
+		List<Board> findBoards = boardRepository.findByMeetingDateBeforeAndStatus(LocalDate.now(),
+			BoardStatus.CONTINUE);
 
 		for (Board findBoard : findBoards) {
-			findBoard.updateStatus(BoardStatus.COMPLETE);
+			findBoard.updateStatus(BoardStatus.COMPLETED);
 		}
 	}
 }

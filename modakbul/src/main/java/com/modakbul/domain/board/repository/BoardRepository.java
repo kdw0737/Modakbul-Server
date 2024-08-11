@@ -16,13 +16,11 @@ import com.modakbul.domain.cafe.entity.Cafe;
 public interface BoardRepository extends JpaRepository<Board, Long> {
 	List<Board> findAllByCafeAndStatusOrderByCreatedAtDesc(Cafe cafe, BoardStatus status);
 
-	List<Board> findAllByCafeIdAndStatusOrderByCreatedAtDesc(Long cafeId, BoardStatus status);
-
 	@Query("SELECT DISTINCT b FROM Board b "
 		+ "JOIN FETCH b.cafe c "
 		+ "JOIN FETCH b.category cat "
 		+ "WHERE b.user.id = :userId ")
 	List<Board> findAllByUserIdWithCategory(@Param("userId") Long userId);
 
-	List<Board> findByMeetingDateBeforeAndStatus(LocalDate meetingDate, BoardStatus status);
+	List<Board> findByMeetingDateBeforeAndStatus(LocalDate today, BoardStatus status);
 }

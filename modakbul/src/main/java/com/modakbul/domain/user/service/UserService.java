@@ -1,5 +1,6 @@
 package com.modakbul.domain.user.service;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,11 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.board.repository.BoardRepository;
-import com.modakbul.domain.match.entity.Matches;
-import com.modakbul.domain.match.repository.MatchRepository;
-import com.modakbul.domain.user.dto.UserReqDto;
-import com.modakbul.domain.user.dto.UserResDto;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.entity.Matches;
@@ -21,6 +17,8 @@ import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.MyBoardHistoryResDto;
+import com.modakbul.domain.user.dto.UserReqDto;
+import com.modakbul.domain.user.dto.UserResDto;
 import com.modakbul.domain.user.entity.Category;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
@@ -82,8 +80,9 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public List<UserResDto.UserCafeDto> getUserCafeList(User user) {
-		List<Matches> findMatches = matchRepository.findAllBySender(user);
+	public List<UserResDto.UserCafeDto> getCafesHistory(User user) {
+		List<Matches> findMatches = matchRepository.findMatchesByUserAndStatusAndDate(user.getId(),
+			MatchStatus.ACCEPTED, LocalDate.now());
 
 		return findMatches.stream()
 			.map(findMatch -> UserResDto.UserCafeDto.builder()
@@ -94,15 +93,6 @@ public class UserService {
 				.build())
 			.collect(Collectors.toList());
 	}
-
-	public void createReview(long cafeId, UserReqDto.ReviewDto request) {
-
-	}
-
-	public void createInformation(long cafeId, UserReqDto.InformationDto request) {
-
-	}
-
 
 	@Transactional(readOnly = true)
 	public List<MeetingsHistoryResDto> getMeetingsHistory(User user) {
