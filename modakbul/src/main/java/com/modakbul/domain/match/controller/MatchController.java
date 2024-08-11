@@ -51,4 +51,16 @@ public class MatchController {
 		matchService.updateMatchRejection(matchesId);
 		return new BaseResponse<>(BaseResponseStatus.REFUSE_MATCHING_SUCCESS);
 	}
+
+	@PatchMapping("/matches/{matchesId}/cancel")
+	public BaseResponse<Void> updateMatchCancel(@PathVariable(name = "matchesId") Long matchesId) {
+		matchService.updateMatchCancel(matchesId);
+		return new BaseResponse<>(BaseResponseStatus.CANCEL_MATCHING_SUCCESS);
+	}
+
+	@PatchMapping("/matches/{matchesId}/exit")
+	public BaseResponse<Void> updateMatchExit(@PathVariable(name = "matchesId") Long matchesId) {
+		matchService.updateMatchExit(matchesId);
+		return new BaseResponse<>(BaseResponseStatus.EXIT_MATCHING_SUCCESS);
+	}
 }

@@ -86,4 +86,20 @@ public class MatchService {
 
 		findMatch.update(MatchStatus.REJECTED);
 	}
+
+	@Transactional
+	public void updateMatchCancel(Long matchesId) {
+		Matches findMatch = matchRepository.findById(matchesId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
+
+		findMatch.update(MatchStatus.CANCEL);
+	}
+
+	@Transactional
+	public void updateMatchExit(Long matchesId) {
+		Matches findMatch = matchRepository.findById(matchesId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
+
+		findMatch.update(MatchStatus.EXIT);
+	}
 }

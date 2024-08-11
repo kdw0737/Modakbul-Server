@@ -1,5 +1,6 @@
 package com.modakbul.domain.match.repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,16 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 	Integer countByUserIdAndStatus(@Param("userId") Long userId, @Param("status") MatchStatus status);
 
 	List<Matches> findAllBySender(User user);
+
+	@Query("SELECT m FROM Matches m "
+		+ "JOIN FETCH m.board b "
+		+ "JOIN FETCH m.sender u "
+		+ "WHERE u.id = :userId "
+		+ "AND m.matchStatus = :status "
+		+ "AND b.meetingDate < :currentDate "
+		+ "ORDER BY b.meetingDate ASC")
+	List<Matches> findMatchesByUserAndStatusAndDate(@Param("userId") Long userId,
+		@Param("status") MatchStatus status,
+		@Param("currentDate") LocalDate currentDate);
+
 }
