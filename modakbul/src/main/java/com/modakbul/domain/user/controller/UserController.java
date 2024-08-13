@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.modakbul.domain.user.dto.BoardInfoDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
-import com.modakbul.domain.user.dto.MyBoardHistoryResDto;
+import com.modakbul.domain.user.dto.UserProfileResDto;
 import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.dto.UserResponseDto;
 import com.modakbul.domain.user.entity.User;
@@ -41,11 +43,23 @@ public class UserController {
 
 	@GetMapping("/users/meetings")
 	public BaseResponse<List<MeetingsHistoryResDto>> getMeetingsHistory(@AuthenticationPrincipal User user) {
-		return new BaseResponse<>(BaseResponseStatus.GET_MATCHES_HISTORY_SUCCESS, userService.getMeetingsHistory(user));
+		return new BaseResponse<>(BaseResponseStatus.GET_MEETINGS_HISTORY_SUCCESS,
+			userService.getMeetingsHistory(user));
 	}
 
 	@GetMapping("/users/boards")
-	public BaseResponse<List<MyBoardHistoryResDto>> getMyBoardHistory(@AuthenticationPrincipal User user) {
+	public BaseResponse<List<BoardInfoDto>> getMyBoardHistory(@AuthenticationPrincipal User user) {
 		return new BaseResponse<>(BaseResponseStatus.GET_MY_BOARD_HISTORY_SUCCESS, userService.getMyBoardHistory(user));
+	}
+
+	@GetMapping("/users/matches/requests")
+	public BaseResponse<List<BoardInfoDto>> getMyMatchesRequestHistory(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_MATCHES_REQUEST_HISTORY_SUCCESS,
+			userService.getMyMatchesRequestHistory(user));
+	}
+
+	@GetMapping("/users/profile/{userId}")
+	public BaseResponse<UserProfileResDto> getUserProfile(@PathVariable Long userId) {
+		return new BaseResponse<>(BaseResponseStatus.GET_USER_PROFILE_SUCCESS, userService.getUserProfile(userId));
 	}
 }
