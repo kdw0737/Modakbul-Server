@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyBoardHistoryResDto {
+public class BoardInfoDto {
 	private String title;
 	private Long boardId;
 	private CategoryName categoryName;

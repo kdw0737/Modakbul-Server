@@ -24,8 +24,14 @@ public enum BaseResponseStatus {
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
 	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
-	GET_MATCHES_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
+	GET_MEETINGS_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
 	GET_MY_BOARD_HISTORY_SUCCESS(true, 1015, "나의 모집글 조회에 성공했습니다"),
+	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
+	CREATE_INFORMATION(true, 1017, "카페 제보 작성에 성공했습니다"),
+	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1018, "나의 참여 요청 목록 조회에 성공했습니다"),
+	GET_USER_PROFILE_SUCCESS(true, 1019, "해당 사용자 프로필 정보 조회에 성공했습니다"),
+	REPORT_PROFILE_SUCCESS(true, 1020, "사용자 프로필 신고에 성공했습니다."),
+	REPORT_CHATROOM_SECCESS(true, 1021, "채팅방 신고에 성공했습니다"),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
@@ -56,6 +62,7 @@ public enum BaseResponseStatus {
 	UPDATE_BOARD_SUCCESS(true, 1313, "모집글 수정에 성공했습니다."),
 	SEARCH_BOARD_LIST_SUCCESS(true, 1314, "모집글 목록 조회에 성공했습니다."),
 	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
+	DELETE_BOARD_SUCCESS(true, 1316, "모집글 삭제에 성공했습니다."),
 
 	/**
 	 * 2000 : request 오류
@@ -99,6 +106,7 @@ public enum BaseResponseStatus {
 
 	//board
 	BOARD_NOT_FOUND(false, 2300, "해당 게시글이 존재하지 않습니다."),
+	PARTICIPANT_EXIST(false, 2301, "모임 참여자가 존재합니다."),
 
 	//token
 	ACCESSTOKEN_EXPIRED(false, 2401, "AccessToken이 만료되었습니다."),

@@ -29,4 +29,14 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 		+ "WHERE m.sender.id = :userId "
 		+ "AND m.matchStatus = :status")
 	Integer countByUserIdAndStatus(@Param("userId") Long userId, @Param("status") MatchStatus status);
+
+	@Query("SELECT m FROM Matches m "
+		+ "JOIN FETCH m.board b "
+		+ "JOIN FETCH b.cafe c "
+		+ "JOIN FETCH b.category cat "
+		+ "WHERE m.sender.id = :userId "
+		+ "AND m.isDeleted = :isDeleted")
+	List<Matches> findAllMatchesByUserIdWithBoardDetails(@Param("userId") Long userId,
+		@Param("isDeleted") boolean isDeleted);
+
 }

@@ -13,14 +13,16 @@ import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.user.dto.BoardInfoDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
-import com.modakbul.domain.user.dto.MyBoardHistoryResDto;
+import com.modakbul.domain.user.dto.UserProfileResDto;
 import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.dto.UserResponseDto;
 import com.modakbul.domain.user.entity.Category;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
 import com.modakbul.domain.user.enums.CategoryName;
+import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.repository.CategoryRepository;
 import com.modakbul.domain.user.repository.UserCategoryRepository;
 import com.modakbul.domain.user.repository.UserRepository;
@@ -112,12 +114,12 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<MyBoardHistoryResDto> getMyBoardHistory(User user) {
+	public List<BoardInfoDto> getMyBoardHistory(User user) {
 		List<Board> findBoardList = boardRepository.findAllByUserIdWithCategory(user.getId());
 		Integer currentCount = matchRepository.countByUserIdAndStatus(user.getId(), MatchStatus.ACCEPTED) + 1;
 
 		return findBoardList.stream()
-			.map(findBoard -> MyBoardHistoryResDto.builder()
+			.map(findBoard -> BoardInfoDto.builder()
 				.title(findBoard.getTitle())
 				.boardId(findBoard.getId())
 				.categoryName(findBoard.getCategory().getCategoryName())
@@ -128,5 +130,45 @@ public class UserService {
 				.endTime(findBoard.getEndTime())
 				.boardStatus(findBoard.getStatus())
 				.build()).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<BoardInfoDto> getMyMatchesRequestHistory(User user) {
+		List<Matches> findAllMatchesRequest = matchRepository.findAllMatchesByUserIdWithBoardDetails(user.getId(),
+			false);
+		Integer currentCount = matchRepository.countByUserIdAndStatus(user.getId(), MatchStatus.ACCEPTED) + 1;
+
+		return findAllMatchesRequest.stream()
+			.map(findMatches -> BoardInfoDto.builder()
+				.title(findMatches.getBoard().getTitle())
+				.boardId(findMatches.getId())
+				.categoryName(findMatches.getBoard().getCategory().getCategoryName())
+				.recruitCount(findMatches.getBoard().getRecruitCount())
+				.currentCount(currentCount)
+				.dayOfWeek(findMatches.getBoard().getMeetingDate().getDayOfWeek())
+				.startTime(findMatches.getBoard().getStartTime())
+				.endTime(findMatches.getBoard().getEndTime())
+				.boardStatus(findMatches.getBoard().getStatus())
+				.build()).collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public UserProfileResDto getUserProfile(Long userId) {
+		User findUser = userRepository.findById(userId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
+
+		List<UserCategory> findUserCategories = userCategoryRepository.findUserCategoryWithCategoryByUserId(userId);
+		List<CategoryName> findCategoryNames = findUserCategories.stream()
+			.map(userCategory -> userCategory.getCategory().getCategoryName())
+			.collect(Collectors.toList());
+
+		Gender gender = findUser.getIsVisible() ? findUser.getGender() : Gender.PRIVATE;
+
+		return UserProfileResDto.builder()
+			.nickname(findUser.getNickname())
+			.gender(gender)
+			.userCategory(findCategoryNames)
+			.userJob(findUser.getUserJob())
+			.build();
 	}
 }
