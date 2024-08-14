@@ -1,5 +1,9 @@
-package com.modakbul.domain.review.dto;
+package com.modakbul.domain.board.dto;
 
+import java.util.List;
+
+import com.modakbul.domain.cafe.entity.OpeningHour;
+import com.modakbul.domain.cafe.enums.Congestion;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
 
@@ -13,7 +17,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewReqDto {
+public class CafeDto {
+	private String cafeName;
+	private String streetAddress;
+	private String image;
+	private List<OpeningHour> openingHour;
 	private Outlet outlet;
 	private GroupSeat groupSeat;
+	private Congestion congestion;
 }

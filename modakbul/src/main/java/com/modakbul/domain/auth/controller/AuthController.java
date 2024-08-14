@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.auth.dto.AuthReqDto;
+import com.modakbul.domain.auth.dto.LoginReqDto;
+import com.modakbul.domain.auth.dto.SignUpReqDto;
 import com.modakbul.domain.auth.service.AuthService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -32,7 +33,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/users/login")
-	public ResponseEntity<BaseResponse> login(@RequestBody AuthReqDto.LoginDto request) {
+	public ResponseEntity<BaseResponse> login(@RequestBody LoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setAll(authService.login(request));
 
@@ -41,7 +42,7 @@ public class AuthController {
 
 	@PostMapping("/users/register")
 	public ResponseEntity<BaseResponse> signUp(@RequestPart(value = "image", required = false) MultipartFile image,
-		@RequestPart(value = "user") AuthReqDto.SignUpDto request) {
+		@RequestPart(value = "user") SignUpReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setAll(authService.signUp(image, request));
 

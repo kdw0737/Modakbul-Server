@@ -45,8 +45,8 @@ public class ChatMessageService {
 
 		chatMessageRepository.save(chatMessage);
 
-		messageDto.setSenderAndSendTime(chatMessage.getSendDate(), user.getId(), user.getNickname(),
-			chatMessage.getReadCount());
+		messageDto.setReadCount(readCount);
+
 		messageSender.send(KafkaUtil.KAFKA_TOPIC, messageDto);
 	}
 }

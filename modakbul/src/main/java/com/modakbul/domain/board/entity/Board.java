@@ -68,7 +68,7 @@ public class Board extends BaseEntity {
 
 	private LocalTime endTime; // 모임 종료 시간
 
-	public void update(Category category, BoardReqDto.BoardDto request) {
+	public void update(Category category, BoardReqDto request) {
 		this.category = category;
 		this.recruitCount = request.getRecruitCount();
 		this.title = request.getTitle();

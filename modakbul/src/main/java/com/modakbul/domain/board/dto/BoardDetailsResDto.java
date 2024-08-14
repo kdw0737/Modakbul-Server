@@ -2,8 +2,7 @@ package com.modakbul.domain.board.dto;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
+import java.util.List;
 
 import com.modakbul.domain.user.enums.CategoryName;
 
@@ -17,16 +16,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardReqDto {
+public class BoardDetailsResDto {
+	private List<String> cafeImageUrls;
+	private String title;
+	private String nickname;
+	private String userImage;
+	private String createdAt;
 	private CategoryName categoryName;
 	private int recruitCount;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private int currentCount;
 	private LocalDate meetingDate;
-	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime startTime;
-	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime endTime;
-	private String title;
 	private String content;
-
 }

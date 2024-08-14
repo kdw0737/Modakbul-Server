@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.modakbul.domain.match.dto.MatchResDto;
+import com.modakbul.domain.match.dto.MatchListResDto;
 import com.modakbul.domain.match.service.MatchService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -35,7 +35,7 @@ public class MatchController {
 	}
 
 	@GetMapping("/boards/{boardId}/matches")
-	public BaseResponse<List<MatchResDto.MatchListDto>> getMatchList(
+	public BaseResponse<List<MatchListResDto>> getMatchList(
 		@PathVariable(name = "boardId") Long boardId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_MATCH_SUCCESS, matchService.getMatchList(boardId));
 	}

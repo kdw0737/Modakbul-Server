@@ -1,7 +1,4 @@
-package com.modakbul.domain.review.dto;
-
-import com.modakbul.domain.cafe.enums.GroupSeat;
-import com.modakbul.domain.cafe.enums.Outlet;
+package com.modakbul.domain.user.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewReqDto {
-	private Outlet outlet;
-	private GroupSeat groupSeat;
+public class UserCafeResDto {
+	private long cafeId;
+	private String image;
+	private String name;
+	private String streetAddress;
+
 }

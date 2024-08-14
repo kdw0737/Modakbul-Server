@@ -1,6 +1,6 @@
 package com.modakbul.domain.user.entity;
 
-import com.modakbul.domain.user.dto.UserReqDto;
+import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserJob;
@@ -69,7 +69,7 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
 
-	public void update(String image, UserReqDto.ProfileDto request) {
+	public void update(String image, MyProfileReqDto request) {
 		this.isVisible = request.getIsVisible();
 		this.nickname = request.getNickname();
 		this.image = image;

@@ -20,7 +20,7 @@ public class ReviewController {
 
 	@PostMapping("/users/cafes/{cafeId}/reviews")
 	public BaseResponse<Void> createReview(@PathVariable(name = "cafeId") long cafeId,
-		@RequestBody ReviewReqDto.ReviewDto request) {
+		@RequestBody ReviewReqDto request) {
 		reviewService.createReview(cafeId, request);
 		return new BaseResponse<>(BaseResponseStatus.CREATE_REVIEW);
 	}

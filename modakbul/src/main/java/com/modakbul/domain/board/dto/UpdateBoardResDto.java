@@ -17,7 +17,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardReqDto {
+public class UpdateBoardResDto {
+	private String cafeName;
+	private String streetAddress;
 	private CategoryName categoryName;
 	private int recruitCount;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -28,5 +30,4 @@ public class BoardReqDto {
 	private LocalTime endTime;
 	private String title;
 	private String content;
-
 }

@@ -19,7 +19,7 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final CafeRepository cafeRepository;
 
-	public void createReview(long cafeId, ReviewReqDto.ReviewDto request) {
+	public void createReview(long cafeId, ReviewReqDto request) {
 		Cafe findCafe = cafeRepository.findById(cafeId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_FOUND));
 

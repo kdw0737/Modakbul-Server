@@ -24,11 +24,16 @@ public enum BaseResponseStatus {
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
 	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
+	GET_MEETINGS_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
 	SEARCH_USER_CAFE_SUCCESS(true, 1015, "모임에 참여했던 카페 목록 조회에 성공했습니다."),
 	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
 	CREATE_INFORMATION(true, 1017, "카페 제보 작성에 성공했습니다"),
-	GET_MATCHES_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
-	GET_MY_BOARD_HISTORY_SUCCESS(true, 1015, "나의 모집글 조회에 성공했습니다"),
+	GET_MATCHES_HISTORY_SUCCESS(true, 1018, "참여 모임 내역 조회에 성공했습니다"),
+	GET_MY_BOARD_HISTORY_SUCCESS(true, 1019, "나의 모집글 조회에 성공했습니다"),
+	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1020, "나의 참여 요청 목록 조회에 성공했습니다"),
+	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
+	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
+	REPORT_CHATROOM_SECCESS(true, 1023, "채팅방 신고에 성공했습니다"),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),

@@ -1,6 +1,6 @@
 package com.modakbul.domain.inquiry.entity;
 
-import com.modakbul.domain.report.enums.InquiryStatus;
+import com.modakbul.domain.inquiry.enums.InquiryStatus;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
 

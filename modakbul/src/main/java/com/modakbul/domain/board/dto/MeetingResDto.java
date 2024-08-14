@@ -1,7 +1,6 @@
-package com.modakbul.domain.review.dto;
+package com.modakbul.domain.board.dto;
 
-import com.modakbul.domain.cafe.enums.GroupSeat;
-import com.modakbul.domain.cafe.enums.Outlet;
+import java.util.List;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ReviewReqDto {
-	private Outlet outlet;
-	private GroupSeat groupSeat;
+public class MeetingResDto {
+	private CafeDto cafe;
+	private List<BoardDto> boards;
 }

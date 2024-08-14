@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.modakbul.domain.board.dto.BoardDetailsResDto;
 import com.modakbul.domain.board.dto.BoardReqDto;
-import com.modakbul.domain.board.dto.BoardResDto;
+import com.modakbul.domain.board.dto.MeetingResDto;
+import com.modakbul.domain.board.dto.UpdateBoardResDto;
 import com.modakbul.domain.board.service.BoardService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -30,7 +32,7 @@ public class BoardController {
 	@PostMapping("/cafes/{cafeId}/boards")
 	public BaseResponse<Map<String, Long>> createBoard(@AuthenticationPrincipal User user,
 		@PathVariable(name = "cafeId") Long cafeId,
-		@RequestBody BoardReqDto.BoardDto request) {
+		@RequestBody BoardReqDto request) {
 		Map<String, Long> board = new HashMap<>();
 		board.put("board_id", boardService.createBoard(user, cafeId, request));
 
@@ -38,7 +40,7 @@ public class BoardController {
 	}
 
 	@GetMapping("/boards/{boardId}")
-	public BaseResponse<BoardResDto.UpdateBoardDto> getBoardInfoForEdit(
+	public BaseResponse<UpdateBoardResDto> getBoardInfoForEdit(
 		@PathVariable(name = "boardId") Long boardId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_UPDATE_BOARD_SUCCESS,
 			boardService.getBoardInfoForEdit(boardId));
@@ -46,20 +48,20 @@ public class BoardController {
 
 	@PatchMapping("/boards/{boardId}")
 	public BaseResponse<Void> updateBoard(@PathVariable(name = "boardId") Long boardId,
-		@RequestBody BoardReqDto.BoardDto request) {
+		@RequestBody BoardReqDto request) {
 		boardService.updateBoard(boardId, request);
 
 		return new BaseResponse<>(BaseResponseStatus.UPDATE_BOARD_SUCCESS);
 	}
 
 	@GetMapping("/cafes/{cafeId}/boards")
-	public BaseResponse<BoardResDto.MeetingDto> getBoardList(@PathVariable(name = "cafeId") Long cafeId) {
+	public BaseResponse<MeetingResDto> getBoardList(@PathVariable(name = "cafeId") Long cafeId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_BOARD_LIST_SUCCESS,
 			boardService.getBoardList(cafeId));
 	}
 
 	@GetMapping("/cafes/boards/{boardId}")
-	public BaseResponse<BoardResDto.BoardDetails> getBoardDetails(@PathVariable(name = "boardId") Long boardId) {
+	public BaseResponse<BoardDetailsResDto> getBoardDetails(@PathVariable(name = "boardId") Long boardId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_BOARD_SUCCESS, boardService.getBoardDetails(boardId));
 	}
 

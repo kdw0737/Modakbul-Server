@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
-import com.modakbul.domain.match.dto.MatchResDto;
+import com.modakbul.domain.match.dto.MatchListResDto;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
@@ -33,31 +33,31 @@ public class MatchService {
 		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
-		Matches addMatch = Matches.builder()
+		Matches match = Matches.builder()
 			.sender(user)
 			.board(findBoard)
 			.matchStatus(MatchStatus.PENDING)
 			.build();
-		matchRepository.save(addMatch);
+		matchRepository.save(match);
 
-		return addMatch.getId();
+		return match.getId();
 	}
 
-	public List<MatchResDto.MatchListDto> getMatchList(Long boardId) {
+	public List<MatchListResDto> getMatchList(Long boardId) {
 		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
-		List<Matches> findMatchList = matchRepository.findAllByBoard(findBoard);
+		List<Matches> findMatchList = matchRepository.findByBoardWithUser(findBoard.getId());
 
-		List<MatchResDto.MatchListDto> matchList = new ArrayList<>();
+		List<MatchListResDto> matchList = new ArrayList<>();
 
 		for (Matches findMatch : findMatchList) {
-			List<UserCategory> findUserCategories = userCategoryRepository.findUserCategoryByUser(
-				findMatch.getSender());
+			List<UserCategory> findUserCategories = userCategoryRepository.findAllByUserIdWithCategory(
+				findMatch.getSender().getId());
 			List<CategoryName> findCategoryNames = findUserCategories.stream()
 				.map(userCategory -> userCategory.getCategory().getCategoryName())
 				.toList();
 
-			MatchResDto.MatchListDto match = MatchResDto.MatchListDto.builder()
+			MatchListResDto match = MatchListResDto.builder()
 				.matchId(findMatch.getId())
 				.userImage(findMatch.getSender().getImage())
 				.nickname(findMatch.getSender().getNickname())
