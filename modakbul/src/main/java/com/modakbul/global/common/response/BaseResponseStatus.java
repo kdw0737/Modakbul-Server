@@ -25,30 +25,34 @@ public enum BaseResponseStatus {
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
 	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
 	GET_MEETINGS_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
-	GET_MY_BOARD_HISTORY_SUCCESS(true, 1015, "나의 모집글 조회에 성공했습니다"),
+	SEARCH_USER_CAFE_SUCCESS(true, 1015, "모임에 참여했던 카페 목록 조회에 성공했습니다."),
 	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
 	CREATE_INFORMATION(true, 1017, "카페 제보 작성에 성공했습니다"),
-	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1018, "나의 참여 요청 목록 조회에 성공했습니다"),
-	GET_USER_PROFILE_SUCCESS(true, 1019, "해당 사용자 프로필 정보 조회에 성공했습니다"),
-	REPORT_PROFILE_SUCCESS(true, 1020, "사용자 프로필 신고에 성공했습니다."),
-	REPORT_CHATROOM_SECCESS(true, 1021, "채팅방 신고에 성공했습니다"),
+	GET_MATCHES_HISTORY_SUCCESS(true, 1018, "참여 모임 내역 조회에 성공했습니다"),
+	GET_MY_BOARD_HISTORY_SUCCESS(true, 1019, "나의 모집글 조회에 성공했습니다"),
+	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1020, "나의 참여 요청 목록 조회에 성공했습니다"),
+	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
+	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
+	REPORT_CHATROOM_SECCESS(true, 1023, "채팅방 신고에 성공했습니다"),
 
 	//cafe
-	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
+	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
 	CAFE_DUPLICATED(true, 1101, "이미 등록되어 있는 카페 입니다."),
 	REGISTRATION_WAITING_SUCCESS(true, 1102, "매칭 대기 등록에 성공했습니다."),
 	DELETE_WAITING_SUCCESS(true, 1103, "매칭 대기 취소가 완료되었습니다."),
 	SEARCH_WAITING_SUCCESS(true, 1104, "매칭 대기 목록 조회에 성공했습니다."),
 	APPLICATION_MATCHING_SUCCESS(true, 1105, "매칭 신청에 성공했습니다."),
-	DELETE_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
+	CANCEL_MATCHING_SUCCESS(true, 1106, "매칭 신청 취소에 성공했습니다."),
 	REFUSE_MATCHING_SUCCESS(true, 1107, "매칭 신청을 거절했습니다."),
 	SEARCH_MATCHING_SUCCESS(true, 1108, "보낸/받은 매칭 목록 조회에 성공했습니다."),
 	WAITING_PROFILE_SUCCESS(true, 1109, "대기 등록 유저 프로필 조회에 성공했습니다."),
 	MATCHING_PROFILE_SUCCESS(true, 1110, "매칭 신청 유저 프로필 조회에 성공했습니다."),
-	SEARCH_CAFE_LIST(true, 1111, "카페 목록 조회에 성공했습니다."),
-	SORT_CAFE_MEETING_COUNT(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_SORT_BY_DISTANCE_SUCCESS(true, 1111, "거리순으로 정렬한 카페 목록 조회에 성공했습니다."),
+	SEARCH_SORT_BY_MEETING_COUNT_SUCCESS(true, 1112, "모임 많은 순으로 정렬한 카페 목록 조회에 성공했습니다."),
 	SEARCH_MEETING_LIST_SUCCESS(true, 1113, "해당 카페의 모임 목록 조회에 성공했습니다."),
 	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
+	SEARCH_MATCH_SUCCESS(true, 1115, "모임 참여 요청 목록 조회에 성공했습니다."),
+	EXIT_MATCHING_SUCCESS(true, 1116, "모임 나가기에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
@@ -115,6 +119,9 @@ public enum BaseResponseStatus {
 	UNSUPPORTED_TOKEN(false, 2404, "지원하지 않는 Token 입니다."),
 	WRONG_TYPE_TOKEN(false, 2405, "시그니처 검증에 실패한 Token 입니다."),
 	DAMAGED_TOKEN(false, 2406, "손상된 Token 입니다."),
+
+	//category
+	CATEGORY_NOT_FOUND(false, 2500, "해당 카테고리가 존재하지 않습니다."),
 
 	//image
 	EMPTY_IMAGE_FILE(false, 2501, "이미지가 없습니다."),

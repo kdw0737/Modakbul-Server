@@ -3,7 +3,7 @@ package com.modakbul.domain.board.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import com.modakbul.domain.board.dto.BoardRequestDto;
+import com.modakbul.domain.board.dto.BoardReqDto;
 import com.modakbul.domain.board.enums.BoardStatus;
 import com.modakbul.domain.board.enums.BoardType;
 import com.modakbul.domain.cafe.entity.Cafe;
@@ -68,7 +68,7 @@ public class Board extends BaseEntity {
 
 	private LocalTime endTime; // 모임 종료 시간
 
-	public void update(Category category, BoardRequestDto.BoardDto request) {
+	public void update(Category category, BoardReqDto request) {
 		this.category = category;
 		this.recruitCount = request.getRecruitCount();
 		this.title = request.getTitle();
@@ -76,5 +76,13 @@ public class Board extends BaseEntity {
 		this.meetingDate = request.getMeetingDate();
 		this.startTime = request.getStartTime();
 		this.endTime = request.getEndTime();
+	}
+
+	public void updateStatus(BoardStatus boardStatus) {
+		this.status = boardStatus;
+	}
+
+	public void delete() {
+		this.status = BoardStatus.DELETED;
 	}
 }
