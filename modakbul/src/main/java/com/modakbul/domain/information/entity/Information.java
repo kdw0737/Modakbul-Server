@@ -1,12 +1,11 @@
 package com.modakbul.domain.information.entity;
 
-import com.modakbul.domain.cafe.entity.Address;
-import com.modakbul.domain.cafe.enums.Congestion;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,8 +29,10 @@ public class Information extends BaseEntity {
 	@Column(name = "information_id")
 	private Long id;
 
+	@Column(nullable = false)
 	private String name;
 
+	@Embedded
 	private Address address;
 
 	@Enumerated(EnumType.STRING)
@@ -40,6 +41,6 @@ public class Information extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private GroupSeat groupSeat; // 단체석
 
-	@Enumerated(EnumType.STRING)
-	private Congestion congestion; // 혼잡도
+	/*@Enumerated(EnumType.STRING)
+	private Congestion congestion; // 혼잡도*/
 }

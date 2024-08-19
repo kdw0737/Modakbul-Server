@@ -18,7 +18,7 @@ public class InformationController {
 	private final InformationService informationService;
 
 	@PostMapping("/users/cafes/information")
-	public BaseResponse<Void> createInformation(@RequestBody InformationReqDto.InformationDto request) {
+	public BaseResponse<Void> createInformation(@RequestBody InformationReqDto request) {
 		informationService.createInformation(request);
 		return new BaseResponse<>(BaseResponseStatus.CREATE_INFORMATION);
 	}
