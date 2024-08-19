@@ -61,7 +61,6 @@ public class BoardService {
 			.type(BoardType.ONE)
 			.build();
 		boardRepository.save(board);
-		findCafe.countMeeting();
 
 		return board.getId();
 	}
@@ -107,7 +106,6 @@ public class BoardService {
 			.openingHour(findCafe.getOpeningHours())
 			.outlet(findCafe.getOutlet())
 			.groupSeat(findCafe.getGroupSeat())
-			.congestion(findCafe.getCongestion())
 			.build();
 
 		List<BoardDto> boards = findBoardList.stream()
