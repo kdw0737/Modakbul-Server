@@ -3,6 +3,8 @@ package com.modakbul.domain.information.service;
 import org.springframework.stereotype.Service;
 
 import com.modakbul.domain.information.dto.InformationReqDto;
+import com.modakbul.domain.information.entity.Information;
+import com.modakbul.domain.information.repository.InformationRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -10,7 +12,15 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class InformationService {
 
-	public void createInformation(InformationReqDto.InformationDto request) {
+	private final InformationRepository informationRepository;
 
+	public void createInformation(InformationReqDto request) {
+		Information information = Information.builder()
+			.name(request.getName())
+			.address(request.getAddress())
+			.outlet(request.getOutlet())
+			.groupSeat(request.getGroupSeat())
+			.build();
+		informationRepository.save(information);
 	}
 }
