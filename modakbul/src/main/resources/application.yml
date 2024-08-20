@@ -2,7 +2,6 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_SERVER}
-
   redis:
     host: localhost
     port: 6379
@@ -40,6 +39,7 @@ logging:
     org.hibernate: info
     org.hibernate.SQL: info
     org.hibernate.type: info
+
 
 jwt:
   secret: ${SECRET_KEY}

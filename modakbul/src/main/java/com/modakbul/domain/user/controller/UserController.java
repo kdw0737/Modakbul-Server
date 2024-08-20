@@ -9,13 +9,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.modakbul.domain.user.dto.BoardInfoDto;
+import com.modakbul.domain.board.dto.BoardInfoDto;
+import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.UserProfileResDto;
 import com.modakbul.domain.user.dto.UserRequestDto;
 import com.modakbul.domain.user.dto.UserResponseDto;
 import com.modakbul.domain.user.entity.User;
-import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.domain.user.service.UserService;
 import com.modakbul.global.common.response.BaseResponse;
 import com.modakbul.global.common.response.BaseResponseStatus;
@@ -27,7 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
 	private final UserService userService;
-	private final UserRepository userRepository;
 
 	@GetMapping("/users/mypage/profile")
 	public BaseResponse<UserResponseDto.ProfileDto> profileDetails(@AuthenticationPrincipal User user) {
@@ -61,5 +60,10 @@ public class UserController {
 	@GetMapping("/users/profile/{userId}")
 	public BaseResponse<UserProfileResDto> getUserProfile(@PathVariable Long userId) {
 		return new BaseResponse<>(BaseResponseStatus.GET_USER_PROFILE_SUCCESS, userService.getUserProfile(userId));
+	}
+
+	@GetMapping("/users/blocks")
+	public BaseResponse<List<BlockListResDto>> getBlockedUserList(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_BLOCK_LIST_SUCCESS, userService.getBlockedUserList(user));
 	}
 }

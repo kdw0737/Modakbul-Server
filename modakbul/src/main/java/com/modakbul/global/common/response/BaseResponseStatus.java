@@ -17,7 +17,7 @@ public enum BaseResponseStatus {
 	REPORT_SUCCESS(true, 1004, "회원 신고에 성공했습니다."),
 	BLOCK_SUCCESS(true, 1005, "회원 차단에 성공했습니다."),
 	SEARCH_BLOCKLIST_SUCCESS(true, 1006, "차단된 회원 조회에 성공했습니다."),
-	UPDATE_BLOCK_SUCCESS(true, 1007, "회원 차단 해제에 성공했습니다."),
+	UNBLOCK_SUCCESS(true, 1007, "회원 차단 해제에 성공했습니다."),
 	WITHDRAWAL_SUCCESS(true, 1008, "회원 탈퇴에 성공했습니다."),
 	INQUIRY_REGISTRATION_SUCCESS(true, 1009, "문의 등록에 성공했습니다."),
 	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
@@ -32,6 +32,7 @@ public enum BaseResponseStatus {
 	GET_USER_PROFILE_SUCCESS(true, 1019, "해당 사용자 프로필 정보 조회에 성공했습니다"),
 	REPORT_PROFILE_SUCCESS(true, 1020, "사용자 프로필 신고에 성공했습니다."),
 	REPORT_CHATROOM_SECCESS(true, 1021, "채팅방 신고에 성공했습니다"),
+	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다"),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "신규 카페 정보 저장에 성공했습니다."),
@@ -87,6 +88,7 @@ public enum BaseResponseStatus {
 	INQUIRY_REGISTRATION_FAILED(false, 2016, "문의 등록에 실패했습니다."),
 	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
 	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
+	BLOCK_NOT_EXIST(false, 2019, "차단 해제 과정에 오류가 발생하였습니다"),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),

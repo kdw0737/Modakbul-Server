@@ -1,4 +1,4 @@
-package com.modakbul.domain.user.dto;
+package com.modakbul.domain.board.dto;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

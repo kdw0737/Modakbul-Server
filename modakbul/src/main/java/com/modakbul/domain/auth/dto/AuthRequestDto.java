@@ -14,12 +14,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 public class AuthRequestDto {
-	@Builder
 	@Getter
-	@AllArgsConstructor(access = AccessLevel.PROTECTED)
-	@NoArgsConstructor(access = AccessLevel.PROTECTED)
+	@Setter
 	public static class LoginDto {
 		private String email;
 		@Enumerated(EnumType.STRING)
