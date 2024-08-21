@@ -40,9 +40,11 @@ import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ChatRoomService {
 
 	private final ChatRoomRepository chatRoomRepository;
@@ -116,6 +118,7 @@ public class ChatRoomService {
 
 	@Transactional
 	public void connectChatRoom(Long chatRoomId, String nickname) {
+		log.info("user 접속 redis에 저장: {}", nickname);
 		RedisChatRoom redisChatRoom = connectedChatUserRepository.findByChatRoomId(chatRoomId)
 			.orElseGet(() -> {
 				RedisChatRoom newChatRoom = RedisChatRoom.builder()
@@ -136,6 +139,8 @@ public class ChatRoomService {
 	public void disconnectChatRoom(Long chatRoomId, String nickname) {
 		RedisChatRoom findRedisChatRoom = connectedChatUserRepository.findByChatRoomId(chatRoomId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.CHATROOM_NOT_FOUND));
+
+		log.info("user 접속 종료 redis에서 삭제 : {}", nickname);
 
 		findRedisChatRoom.getConnectedUsers().remove(nickname);
 		if (findRedisChatRoom.getConnectedUsers().isEmpty()) {

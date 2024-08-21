@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.user.dto.BoardInfoDto;
+import com.modakbul.domain.board.dto.BoardInfoDto;
+import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
@@ -67,5 +68,10 @@ public class UserController {
 	@GetMapping("/users/profile/{userId}")
 	public BaseResponse<UserProfileResDto> getUserProfile(@PathVariable Long userId) {
 		return new BaseResponse<>(BaseResponseStatus.GET_USER_PROFILE_SUCCESS, userService.getUserProfile(userId));
+	}
+
+	@GetMapping("/users/blocks")
+	public BaseResponse<List<BlockListResDto>> getBlockedUserList(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_BLOCK_LIST_SUCCESS, userService.getBlockedUserList(user));
 	}
 }
