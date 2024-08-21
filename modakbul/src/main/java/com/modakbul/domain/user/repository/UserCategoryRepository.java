@@ -9,15 +9,16 @@ import org.springframework.stereotype.Repository;
 
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
-import com.modakbul.domain.user.enums.CategoryName;
 
 @Repository
 public interface UserCategoryRepository extends JpaRepository<UserCategory, Long> {
-	List<UserCategory> findCategoryByUser(User user);
+
+	@Query("SELECT DISTINCT uc FROM UserCategory uc "
+		+ "JOIN FETCH uc.category c "
+		+ "WHERE uc.user.id = :userId ")
+	List<UserCategory> findAllByUserIdWithCategory(@Param("userId") Long userId);
 
 	void deleteAllByUser(User user);
-
-	List<CategoryName> findCategoryNamesByUser(User user);
 
 	@Query("select uc "
 		+ "from UserCategory uc "

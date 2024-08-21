@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.modakbul.domain.block.entity.Block;
-import com.modakbul.domain.block.reposiroty.BlockRepository;
 import com.modakbul.domain.board.dto.BoardInfoDto;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.report.repository.Blockrepository;
 import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.UserProfileResDto;
@@ -43,7 +43,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final BoardRepository boardRepository;
 	private final MatchRepository matchRepository;
-	private final BlockRepository blockRepository;
+	private final Blockrepository blockrepository;
 
 	public UserResponseDto.ProfileDto findProfile(User user) {
 		List<UserCategory> findUserCategories = userCategoryRepository.findCategoryByUser(user);
@@ -118,7 +118,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<BoardInfoDto> getMyBoardHistory(User user) { //TODO: 쿼리 최적화 필요
+	public List<BoardInfoDto> getMyBoardHistory(User user) {
 		List<Board> findBoardList = boardRepository.findAllByUserIdWithCategory(user.getId());
 
 		return findBoardList.stream()
@@ -141,7 +141,7 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<BoardInfoDto> getMyMatchesRequestHistory(User user) { //TODO: 쿼리 최적화 필요
+	public List<BoardInfoDto> getMyMatchesRequestHistory(User user) {
 		List<Matches> findAllMatchesRequest = matchRepository.findAllMatchesByUserIdWithBoardDetails(user.getId(),
 			false);
 
@@ -185,7 +185,7 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public List<BlockListResDto> getBlockedUserList(User user) { //TODO : 쿼리 최적화 고려
-		List<Block> findBlockList = blockRepository.findAllByBlockerId(user.getId());
+		List<Block> findBlockList = blockrepository.findAllByBlockerId(user.getId());
 		List<Long> blockedIds = findBlockList.stream()
 			.map(findBlock -> findBlock.getBlockedId().getId())
 			.collect(Collectors.toList());

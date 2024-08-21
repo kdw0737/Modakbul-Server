@@ -6,15 +6,17 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.board.dto.BoardInfoDto;
 import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
+import com.modakbul.domain.user.dto.MyProfileReqDto;
+import com.modakbul.domain.user.dto.MyProfileResDto;
+import com.modakbul.domain.user.dto.UserCafeResDto;
 import com.modakbul.domain.user.dto.UserProfileResDto;
-import com.modakbul.domain.user.dto.UserRequestDto;
-import com.modakbul.domain.user.dto.UserResponseDto;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.service.UserService;
 import com.modakbul.global.common.response.BaseResponse;
@@ -29,15 +31,21 @@ public class UserController {
 	private final UserService userService;
 
 	@GetMapping("/users/mypage/profile")
-	public BaseResponse<UserResponseDto.ProfileDto> profileDetails(@AuthenticationPrincipal User user) {
-		return new BaseResponse<>(BaseResponseStatus.SEARCH_PROFILE_SUCCESS, userService.findProfile(user));
+	public BaseResponse<MyProfileResDto> getMyProfileDetails(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.SEARCH_PROFILE_SUCCESS, userService.getMyProfileDetails(user));
 	}
 
 	@PatchMapping("/users/profile")
-	public BaseResponse<Void> profileModify(@AuthenticationPrincipal User user,
-		@RequestBody UserRequestDto.ProfileDto request) {
-		userService.modifyProfile(user, request);
+	public BaseResponse<Void> updateMyProfile(@AuthenticationPrincipal User user,
+		@RequestPart(value = "image", required = false) MultipartFile image,
+		@RequestPart(value = "user") MyProfileReqDto request) {
+		userService.updateMyProfile(user, image, request);
 		return new BaseResponse<>(BaseResponseStatus.UPDATE_PROFILE_SUCCESS);
+	}
+
+	@GetMapping("/users/cafes")
+	public BaseResponse<List<UserCafeResDto>> getCafesHistory(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.SEARCH_USER_CAFE_SUCCESS, userService.getCafesHistory(user));
 	}
 
 	@GetMapping("/users/meetings")
