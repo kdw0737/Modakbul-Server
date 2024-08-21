@@ -6,8 +6,10 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.auth.dto.AuthRequestDto;
+import com.modakbul.domain.auth.dto.LoginReqDto;
+import com.modakbul.domain.auth.dto.SignUpReqDto;
 import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
@@ -22,6 +24,7 @@ import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.auth.jwt.JwtProvider;
 import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
+import com.modakbul.global.s3.service.S3ImageService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +42,9 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	@Value("${jwt.refresh-token.expiration-time}")
 	private Long refreshTokenExpirationTime;
+	private final S3ImageService s3ImageService;
 
-	public Map<String, String> login(AuthRequestDto.LoginDto request) {
+	public Map<String, String> login(LoginReqDto request) {
 		Map<String, String> token = new HashMap<>();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
@@ -63,7 +67,7 @@ public class AuthService {
 		}
 	}
 
-	public Map<String, String> signUp(AuthRequestDto.SignUpDto request) {
+	public Map<String, String> signUp(MultipartFile image, SignUpReqDto request) {
 		Map<String, String> token = new HashMap<>();
 
 		String accessToken = jwtProvider.createAccessToken(request.getProvider(), request.getEmail(),
@@ -80,7 +84,7 @@ public class AuthService {
 			.gender(request.getGender())
 			.userJob(request.getUserJob())
 			.isVisible(true)
-			.image(request.getImage())
+			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
 			.build();

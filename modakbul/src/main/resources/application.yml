@@ -34,6 +34,18 @@ spring:
       hibernate:
         format_sql: true
 
+cloud:
+  aws:
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY}
+      secretKey: ${AWS_SECRET_KEY}
+    s3:
+      bucket: ${BUCKET_NAME}
+    region:
+      static: ${REGION}
+    stack:
+      auto: false
+
 logging:
   level:
     org.hibernate: info
