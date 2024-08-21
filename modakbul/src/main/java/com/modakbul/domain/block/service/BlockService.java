@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.modakbul.domain.block.entity.Block;
+import com.modakbul.domain.block.reposiroty.BlockRepository;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.repository.MatchRepository;
-import com.modakbul.domain.report.repository.Blockrepository;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.common.response.BaseException;
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class BlockService {
 
 	private final UserRepository userRepository;
-	private final Blockrepository blockrepository;
+	private final BlockRepository blockrepository;
 	private final MatchRepository matchRepository;
 	private final BoardRepository boardRepository;
 
