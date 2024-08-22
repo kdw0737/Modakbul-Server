@@ -10,12 +10,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.modakbul.domain.block.entity.Block;
+import com.modakbul.domain.block.reposiroty.BlockRepository;
+import com.modakbul.domain.board.dto.BoardInfoDto;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
-import com.modakbul.domain.user.dto.BoardInfoDto;
+import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
@@ -44,6 +47,7 @@ public class UserService {
 	private final UserRepository userRepository;
 	private final S3ImageService s3ImageService;
 	private final MatchRepository matchRepository;
+	private final BlockRepository blockRepository;
 	private final BoardRepository boardRepository;
 
 	public MyProfileResDto getMyProfileDetails(User user) {
@@ -137,40 +141,47 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public List<BoardInfoDto> getMyBoardHistory(User user) {
 		List<Board> findBoardList = boardRepository.findAllByUserIdWithCategory(user.getId());
-		Integer currentCount = matchRepository.countByUserIdAndStatus(user.getId(), MatchStatus.ACCEPTED) + 1;
 
 		return findBoardList.stream()
-			.map(findBoard -> BoardInfoDto.builder()
-				.title(findBoard.getTitle())
-				.boardId(findBoard.getId())
-				.categoryName(findBoard.getCategory().getCategoryName())
-				.recruitCount(findBoard.getRecruitCount())
-				.currentCount(currentCount)
-				.dayOfWeek(findBoard.getMeetingDate().getDayOfWeek())
-				.startTime(findBoard.getStartTime())
-				.endTime(findBoard.getEndTime())
-				.boardStatus(findBoard.getStatus())
-				.build()).collect(Collectors.toList());
+			.map(findBoard -> {
+				Integer currentCount =
+					matchRepository.countByBoardIdAndStatus(findBoard.getId(), MatchStatus.ACCEPTED) + 1;
+				return BoardInfoDto.builder()
+					.title(findBoard.getTitle())
+					.boardId(findBoard.getId())
+					.categoryName(findBoard.getCategory().getCategoryName())
+					.recruitCount(findBoard.getRecruitCount())
+					.currentCount(currentCount)
+					.dayOfWeek(findBoard.getMeetingDate().getDayOfWeek())
+					.startTime(findBoard.getStartTime())
+					.endTime(findBoard.getEndTime())
+					.boardStatus(findBoard.getStatus())
+					.build();
+			}).collect(Collectors.toList());
+
 	}
 
 	@Transactional(readOnly = true)
 	public List<BoardInfoDto> getMyMatchesRequestHistory(User user) {
 		List<Matches> findAllMatchesRequest = matchRepository.findAllMatchesByUserIdWithBoardDetails(user.getId(),
 			false);
-		Integer currentCount = matchRepository.countByUserIdAndStatus(user.getId(), MatchStatus.ACCEPTED) + 1;
 
 		return findAllMatchesRequest.stream()
-			.map(findMatches -> BoardInfoDto.builder()
-				.title(findMatches.getBoard().getTitle())
-				.boardId(findMatches.getId())
-				.categoryName(findMatches.getBoard().getCategory().getCategoryName())
-				.recruitCount(findMatches.getBoard().getRecruitCount())
-				.currentCount(currentCount)
-				.dayOfWeek(findMatches.getBoard().getMeetingDate().getDayOfWeek())
-				.startTime(findMatches.getBoard().getStartTime())
-				.endTime(findMatches.getBoard().getEndTime())
-				.boardStatus(findMatches.getBoard().getStatus())
-				.build()).collect(Collectors.toList());
+			.map(findMatches -> {
+				Integer currentCount =
+					matchRepository.countByBoardIdAndStatus(findMatches.getBoard().getId(), MatchStatus.ACCEPTED) + 1;
+				return BoardInfoDto.builder()
+					.title(findMatches.getBoard().getTitle())
+					.boardId(findMatches.getId())
+					.categoryName(findMatches.getBoard().getCategory().getCategoryName())
+					.recruitCount(findMatches.getBoard().getRecruitCount())
+					.currentCount(currentCount)
+					.dayOfWeek(findMatches.getBoard().getMeetingDate().getDayOfWeek())
+					.startTime(findMatches.getBoard().getStartTime())
+					.endTime(findMatches.getBoard().getEndTime())
+					.boardStatus(findMatches.getBoard().getStatus())
+					.build();
+			}).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -192,4 +203,25 @@ public class UserService {
 			.userJob(findUser.getUserJob())
 			.build();
 	}
+
+	@Transactional(readOnly = true)
+	public List<BlockListResDto> getBlockedUserList(User user) { //TODO : 쿼리 최적화 고려
+		List<Block> findBlockList = blockRepository.findAllByBlockerId(user.getId());
+		List<Long> blockedIds = findBlockList.stream()
+			.map(findBlock -> findBlock.getBlockedId().getId())
+			.collect(Collectors.toList());
+
+		List<UserCategory> findBlockedUserInfos = userCategoryRepository.findCategoryWithUserByUserIds(blockedIds);
+
+		return findBlockedUserInfos.stream()
+			.map(findBlockedUserInfo -> BlockListResDto.builder()
+				.image(findBlockedUserInfo.getUser().getImage())
+				.nickname(findBlockedUserInfo.getUser().getNickname())
+				.categoryName(findBlockedUserInfo.getCategory().getCategoryName())
+				.job(findBlockedUserInfo.getUser().getUserJob())
+				.build())
+			.collect(Collectors.toList());
+
+	}
+
 }

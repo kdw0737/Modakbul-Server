@@ -30,9 +30,9 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 	List<Matches> findAllByParticipantIdWithBoard(@Param("userId") Long userId, @Param("status") MatchStatus status);
 
 	@Query("SELECT COUNT(m) FROM Matches m "
-		+ "WHERE m.sender.id = :userId "
+		+ "WHERE m.board.id = :boardId "
 		+ "AND m.matchStatus = :status")
-	Integer countByUserIdAndStatus(@Param("userId") Long userId, @Param("status") MatchStatus status);
+	Integer countByBoardIdAndStatus(@Param("boardId") Long boardId, @Param("status") MatchStatus status);
 
 	@Query("SELECT m FROM Matches m "
 		+ "JOIN FETCH m.board b "

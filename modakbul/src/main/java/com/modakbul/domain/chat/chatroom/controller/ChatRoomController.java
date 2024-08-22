@@ -35,7 +35,7 @@ public class ChatRoomController {
 		// 상대방 ID 와 내 ID가 같은 경우 오류
 		if (createOneToOneChatReqDto.getTheOtherUserId() == user.getId())
 			throw new BaseException(BaseResponseStatus.USER_CANNOT_MAKE_CHATROOM_ALONE);
-
+	
 		Long chatRoomId = chatRoomService.createOneToOneChatRoom(createOneToOneChatReqDto, user);
 
 		return new BaseResponse<>(BaseResponseStatus.CREATE_CHATROOM_SUCCESS, chatRoomId);

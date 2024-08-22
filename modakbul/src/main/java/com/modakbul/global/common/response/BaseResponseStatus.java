@@ -17,7 +17,7 @@ public enum BaseResponseStatus {
 	REPORT_SUCCESS(true, 1004, "회원 신고에 성공했습니다."),
 	BLOCK_SUCCESS(true, 1005, "회원 차단에 성공했습니다."),
 	SEARCH_BLOCKLIST_SUCCESS(true, 1006, "차단된 회원 조회에 성공했습니다."),
-	UPDATE_BLOCK_SUCCESS(true, 1007, "회원 차단 해제에 성공했습니다."),
+	UNBLOCK_SUCCESS(true, 1007, "회원 차단 해제에 성공했습니다."),
 	WITHDRAWAL_SUCCESS(true, 1008, "회원 탈퇴에 성공했습니다."),
 	INQUIRY_REGISTRATION_SUCCESS(true, 1009, "문의 등록에 성공했습니다."),
 	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
