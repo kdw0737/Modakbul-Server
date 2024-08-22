@@ -33,7 +33,8 @@ public enum BaseResponseStatus {
 	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1020, "나의 참여 요청 목록 조회에 성공했습니다"),
 	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
 	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
-	REPORT_CHATROOM_SECCESS(true, 1023, "채팅방 신고에 성공했습니다"),
+	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다"),
+	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다"),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
@@ -91,6 +92,7 @@ public enum BaseResponseStatus {
 	INQUIRY_REGISTRATION_FAILED(false, 2016, "문의 등록에 실패했습니다."),
 	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
 	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
+	BLOCK_NOT_EXIST(false, 2019, "차단 해제 과정에 오류가 발생하였습니다"),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
