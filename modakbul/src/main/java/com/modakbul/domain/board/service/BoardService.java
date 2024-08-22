@@ -49,7 +49,6 @@ public class BoardService {
 
 		Board board = Board.builder()
 			.category(findCategory)
-			.cafe(findCafe)
 			.user(user)
 			.recruitCount(request.getRecruitCount())
 			.meetingDate(request.getMeetingDate())
@@ -60,6 +59,7 @@ public class BoardService {
 			.status(BoardStatus.CONTINUE)
 			.type(BoardType.ONE)
 			.build();
+		board.setCafe(findCafe);
 		boardRepository.save(board);
 
 		return board.getId();

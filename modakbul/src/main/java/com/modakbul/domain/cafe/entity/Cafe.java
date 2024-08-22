@@ -8,6 +8,7 @@ import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
 import com.modakbul.global.common.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -51,7 +52,7 @@ public class Cafe extends BaseEntity {
 	@CollectionTable(name = "cafe_opening_hour", joinColumns = @JoinColumn(name = "cafe_Id"))
 	private final List<OpeningHour> openingHours = new ArrayList<>();
 
-	@OneToMany(mappedBy = "cafe")
+	@OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Board> boards = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
