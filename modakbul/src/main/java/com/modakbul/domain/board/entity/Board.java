@@ -78,11 +78,17 @@ public class Board extends BaseEntity {
 		this.endTime = request.getEndTime();
 	}
 
+	public void setCafe(Cafe cafe) {
+		this.cafe = cafe;
+		cafe.getBoards().add(this);
+	}
+
 	public void updateStatus(BoardStatus boardStatus) {
 		this.status = boardStatus;
 	}
 
 	public void delete() {
 		this.status = BoardStatus.DELETED;
+		this.cafe = null;
 	}
 }
