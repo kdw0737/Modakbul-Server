@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.modakbul.domain.block.entity.Block;
-import com.modakbul.domain.block.reposiroty.BlockRepository;
+import com.modakbul.domain.block.repository.BlockRepository;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.repository.MatchRepository;
 import com.modakbul.domain.user.entity.User;
