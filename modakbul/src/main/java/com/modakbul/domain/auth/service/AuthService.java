@@ -60,8 +60,8 @@ public class AuthService {
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
 			refreshTokenRepository.save(addRefreshToken);
 
-			token.put("accessToken", accessToken);
-			token.put("refreshToken", refreshToken);
+			token.put("Authorization", "Bearer " + accessToken);
+			token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 			return token;
 		}
@@ -108,8 +108,8 @@ public class AuthService {
 		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
 
-		token.put("accessToken", accessToken);
-		token.put("refreshToken", refreshToken);
+		token.put("Authorization", "Bearer " + accessToken);
+		token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 		return token;
 	}
@@ -132,7 +132,7 @@ public class AuthService {
 		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
 			findUser.getNickname());
 
-		token.put("accessToken", accessToken);
+		token.put("Authorization", "Bearer " + accessToken);
 
 		return token;
 	}

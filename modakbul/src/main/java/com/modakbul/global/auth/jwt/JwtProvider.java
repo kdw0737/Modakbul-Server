@@ -101,7 +101,12 @@ public class JwtProvider {
 	}
 
 	public String resolveToken(HttpServletRequest httpServletRequest) {
-		return httpServletRequest.getHeader("Authorization");
+		String token = httpServletRequest.getHeader("Authorization");
+		if (token != null && token.startsWith("Bearer ")) {
+			token = token.substring(7);
+			return token;
+		}
+		return null;
 	}
 
 	public Long getExpiration(String accessToken) {
