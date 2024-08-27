@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardDto {
-	private long boardId;
+	private long writerId;
+	private long id;
 	private String title;
-	private CategoryName categoryName;
+	private CategoryName category;
 	private int recruitCount;
 	private int currentCount;
 	private LocalDate meetingDate;
