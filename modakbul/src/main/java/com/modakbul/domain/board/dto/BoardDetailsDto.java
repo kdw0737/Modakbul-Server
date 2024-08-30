@@ -17,16 +17,17 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class BoardReqDto {
-	private CategoryName category;
+public class BoardDetailsDto {
+	private String title;
+	private String createdDate;
+	private String createdTime;
+	private CategoryName categoryName;
 	private int recruitCount;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private int currentCount;
 	private LocalDate meetingDate;
 	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime startTime;
 	@DateTimeFormat(pattern = "HH:mm")
 	private LocalTime endTime;
-	private String title;
 	private String content;
-
 }

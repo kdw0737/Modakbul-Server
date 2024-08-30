@@ -70,9 +70,9 @@ public class User extends BaseEntity {
 	private UserStatus userStatus;
 
 	public void update(String image, MyProfileReqDto request) {
-		this.isVisible = request.getIsVisible();
+		this.isVisible = request.getIsGenderVisible();
 		this.nickname = request.getNickname();
 		this.image = image;
-		this.userJob = request.getUserJob();
+		this.userJob = request.getJob();
 	}
 }
