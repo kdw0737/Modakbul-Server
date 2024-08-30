@@ -1,9 +1,4 @@
-package com.modakbul.domain.user.dto;
-
-import java.util.List;
-
-import com.modakbul.domain.user.enums.CategoryName;
-import com.modakbul.domain.user.enums.UserJob;
+package com.modakbul.domain.board.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -15,11 +10,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyProfileResDto {
+public class UserDto {
 	private long id;
 	private String nickname;
 	private String image;
-	private Boolean isGenderVisible;
-	private UserJob job;
-	private List<CategoryName> categories;
 }

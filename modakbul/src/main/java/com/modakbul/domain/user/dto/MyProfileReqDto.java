@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MyProfileReqDto {
+	private Boolean isGenderVisible;
 	private String nickname;
-	private Boolean isVisible;
-	private UserJob userJob;
 	private List<CategoryName> categories;
+	private UserJob job;
 }

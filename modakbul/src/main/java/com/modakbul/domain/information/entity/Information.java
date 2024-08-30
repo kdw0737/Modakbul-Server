@@ -1,5 +1,6 @@
 package com.modakbul.domain.information.entity;
 
+import com.modakbul.domain.cafe.entity.Address;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
 import com.modakbul.global.common.entity.BaseEntity;
@@ -40,7 +41,4 @@ public class Information extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	private GroupSeat groupSeat; // 단체석
-
-	/*@Enumerated(EnumType.STRING)
-	private Congestion congestion; // 혼잡도*/
 }

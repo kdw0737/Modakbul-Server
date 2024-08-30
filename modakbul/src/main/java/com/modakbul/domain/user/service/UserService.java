@@ -58,10 +58,11 @@ public class UserService {
 			.collect(Collectors.toList());
 
 		return MyProfileResDto.builder()
-			.image(user.getImage())
+			.id(user.getId())
 			.nickname(user.getNickname())
-			.isVisible(user.getIsVisible())
-			.userJob(user.getUserJob())
+			.image(user.getImage())
+			.isGenderVisible(user.getIsVisible())
+			.job(user.getUserJob())
 			.categories(findCategories)
 			.build();
 	}
@@ -93,10 +94,10 @@ public class UserService {
 
 		return findMatches.stream()
 			.map(findMatch -> UserCafeResDto.builder()
-				.cafeId(findMatch.getBoard().getCafe().getId())
+				.id(findMatch.getBoard().getCafe().getId())
 				.name(findMatch.getBoard().getCafe().getName())
 				.image(findMatch.getBoard().getCafe().getImageUrls().get(0))
-				.streetAddress(findMatch.getBoard().getCafe().getAddress().getStreetAddress())
+				.address(findMatch.getBoard().getCafe().getAddress().getStreetAddress())
 				.build())
 			.collect(Collectors.toList());
 	}

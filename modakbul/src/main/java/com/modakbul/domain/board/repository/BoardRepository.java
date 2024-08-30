@@ -32,7 +32,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 	List<Board> findByMeetingDateBeforeAndStatus(LocalDate today, BoardStatus status);
 
 	@Query("SELECT DISTINCT b FROM Board b "
-		+ "JOIN FETCH b.cafe c "
 		+ "JOIN FETCH b.category cat "
 		+ "WHERE b.id = :boardId ")
 	Optional<Board> findByBoardIdWithCategory(@Param("boardId") Long boardId);
