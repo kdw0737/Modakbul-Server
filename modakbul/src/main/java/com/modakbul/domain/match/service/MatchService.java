@@ -45,7 +45,7 @@ public class MatchService {
 	public List<MatchesResDto> getMatchList(Long boardId) {
 		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
-		List<Matches> findMatchList = matchRepository.findByBoardWithUser(findBoard.getId());
+		List<Matches> findMatchList = matchRepository.findByBoardWithUser(findBoard.getId(), MatchStatus.PENDING);
 
 		return findMatchList.stream()
 			.map(findMatch -> {
