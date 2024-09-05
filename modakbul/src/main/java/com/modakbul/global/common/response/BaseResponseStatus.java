@@ -69,6 +69,13 @@ public enum BaseResponseStatus {
 	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
 	DELETE_BOARD_SUCCESS(true, 1316, "모집글 삭제에 성공했습니다."),
 
+	//notification
+	SEND_NOTIFICATION_SUCCESS(true, 1401, "알림 전송에 성공했습니다"),
+	GET_NOTIFICATION_LIST_SUCCESS(true, 1402, "알림 목록 조회에 성공했습니다"),
+	DELETE_NOTIFICATION_SUCCESS(true, 1403, "알림 삭제에 성공했습니다."),
+	READ_NOTIFICATION_SUCCESS(true, 1404, "알림 읽음 처리에 성공했습니다"),
+
+
 	/**
 	 * 2000 : request 오류
 	 */
@@ -109,10 +116,12 @@ public enum BaseResponseStatus {
 	DUPLICATE_CHAT_ROOM_USER(false, 2202, "사용자가 이미 다른 채팅방에 포함되어 있습니다."),
 	CREATE_CHAT_FAILED(false, 2203, "채팅방 생성에 실패했습니다."),
 	USER_CANNOT_MAKE_CHATROOM_ALONE(false, 2204, "내 게시글에는 채팅방을 생성할 수 없습니다."),
+	CONNECTED_USER_EMPTY(false, 2205, "채팅방에 접속중인 인원이 없습니다."),
 
 	//board
 	BOARD_NOT_FOUND(false, 2300, "해당 게시글이 존재하지 않습니다."),
 	PARTICIPANT_EXIST(false, 2301, "모임 참여자가 존재합니다."),
+	BOARD_NOT_OWNED_BY_USER(false, 2302, "본인이 작성한 게시글만 삭제할 수 있습니다"),
 
 	//token
 	ACCESSTOKEN_EXPIRED(false, 2401, "AccessToken이 만료되었습니다."),
@@ -132,6 +141,10 @@ public enum BaseResponseStatus {
 	INVALID_FILE_EXTENTION(false, 2504, "잘못된 파일 확장자 입니다."),
 	PUT_OBJECT_EXCEPTION(false, 2505, "이미지 저장에 실패했습니다."),
 	IO_EXCEPTION_ON_IMAGE_DELETE(false, 2506, "이미지 삭제에 실패했습니다."),
+
+	//notification
+	NOTIFICATION_FAILED(false, 2601, "알림 전송에 실패하였습니다"),
+	NOTIFICATION_NOT_EXIST(false, 2602, "해당 알림이 존재하지 않습니다."),
 
 	/**
 	 * 3000 : response 오류

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.modakbul.domain.board.dto.BoardDetailsResDto;
 import com.modakbul.domain.board.dto.BoardReqDto;
-import com.modakbul.domain.board.dto.MeetingResDto;
+import com.modakbul.domain.board.dto.BoardsResDto;
 import com.modakbul.domain.board.dto.UpdateBoardResDto;
 import com.modakbul.domain.board.service.BoardService;
 import com.modakbul.domain.user.entity.User;
@@ -55,9 +55,10 @@ public class BoardController {
 	}
 
 	@GetMapping("/cafes/{cafeId}/boards")
-	public BaseResponse<MeetingResDto> getBoardList(@PathVariable(name = "cafeId") Long cafeId) {
+	public BaseResponse<BoardsResDto> getBoardList(@AuthenticationPrincipal User user,
+		@PathVariable(name = "cafeId") Long cafeId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_BOARD_LIST_SUCCESS,
-			boardService.getBoardList(cafeId));
+			boardService.getBoardList(user, cafeId));
 	}
 
 	@GetMapping("/cafes/boards/{boardId}")
@@ -66,8 +67,8 @@ public class BoardController {
 	}
 
 	@DeleteMapping("/boards/{boardId}")
-	public BaseResponse<Void> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
-		boardService.deleteBoard(boardId);
+	public BaseResponse<Void> deleteBoard(@PathVariable(name = "boardId") Long boardId, @AuthenticationPrincipal User user) {
+		boardService.deleteBoard(user, boardId);
 		return new BaseResponse<>(BaseResponseStatus.DELETE_BOARD_SUCCESS);
 	}
 }

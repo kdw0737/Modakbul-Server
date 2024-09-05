@@ -49,6 +49,8 @@ public class AuthService {
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
 
+		findUser.updateFcmToken(request.getFcmToken());
+
 		if (findUser == null) {
 			throw new BaseException(BaseResponseStatus.USER_NOT_EXIST);
 		} else {
@@ -60,8 +62,8 @@ public class AuthService {
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
 			refreshTokenRepository.save(addRefreshToken);
 
-			token.put("accessToken", accessToken);
-			token.put("refreshToken", refreshToken);
+			token.put("Authorization", "Bearer " + accessToken);
+			token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 			return token;
 		}
@@ -87,7 +89,9 @@ public class AuthService {
 			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
+			.fcmToken(request.getFcmToken())
 			.build();
+
 		userRepository.save(addUser);
 
 		request.getCategoryNames().forEach(categoryName ->
@@ -108,8 +112,8 @@ public class AuthService {
 		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
 
-		token.put("accessToken", accessToken);
-		token.put("refreshToken", refreshToken);
+		token.put("Authorization", "Bearer " + accessToken);
+		token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 		return token;
 	}
@@ -132,7 +136,7 @@ public class AuthService {
 		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
 			findUser.getNickname());
 
-		token.put("accessToken", accessToken);
+		token.put("Authorization", "Bearer " + accessToken);
 
 		return token;
 	}

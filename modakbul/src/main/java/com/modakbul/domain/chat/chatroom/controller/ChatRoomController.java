@@ -58,8 +58,8 @@ public class ChatRoomController {
 
 	@GetMapping("/chatrooms/{chatroomId}/{boardId}") //TODO: 채팅방에 접속해 있는 경우 상대방이 들어와서 읽으면 내 화면에도 동기화 필요
 	public BaseResponse<GetMessageHistoryResDto> getMessageHistory(@AuthenticationPrincipal User user,
-		@PathVariable Long chatroomId,
-		@PathVariable Long boardId) {
+		@PathVariable("chatroomId") Long chatroomId,
+		@PathVariable("boardId") Long boardId) {
 		GetMessageHistoryResDto messageHistory = chatRoomService.getMessageHistory(user, chatroomId, boardId);
 		return new BaseResponse<>(BaseResponseStatus.GET_NEW_MESSAGE_SUCCESS, messageHistory);
 	}

@@ -18,9 +18,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 		+ "JOIN FETCH b.category c "
 		+ "WHERE b.cafe.id = :cafeId "
 		+ "AND b.status = :status "
+		+ "AND b.user.id NOT IN (:blocks) "
 		+ "ORDER By b.createdAt DESC")
 	List<Board> findAllByCafeIdAndStatusOrderByCreatedAtDesc(@Param("cafeId") Long cafeId,
-		@Param("status") BoardStatus status);
+		@Param("status") BoardStatus status, @Param("blocks") List<Long> blocks);
 
 	@Query("SELECT DISTINCT b FROM Board b "
 		+ "JOIN FETCH b.cafe c "
@@ -42,4 +43,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 		+ "JOIN FETCH b.user u "
 		+ "WHERE b.id = :boardId ")
 	Optional<Board> findByBoardIdWithCafeAndCategoryAndUser(@Param("boardId") Long boardId);
+
+	@Query("SELECT b FROM Board b "
+		+ "JOIN FETCH b.user u "
+		+ "WHERE b.id = :boardId")
+	Optional<Board> findByBoardIdwithUser(@Param("boardId") Long boardId);
 }

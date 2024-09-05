@@ -1,17 +1,18 @@
 package com.modakbul.domain.board.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.modakbul.domain.block.repository.BlockRepository;
 import com.modakbul.domain.board.dto.BoardDetailsResDto;
 import com.modakbul.domain.board.dto.BoardDto;
 import com.modakbul.domain.board.dto.BoardReqDto;
-import com.modakbul.domain.board.dto.CafeDto;
-import com.modakbul.domain.board.dto.MeetingResDto;
+import com.modakbul.domain.board.dto.BoardsResDto;
 import com.modakbul.domain.board.dto.UpdateBoardResDto;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.enums.BoardStatus;
@@ -37,6 +38,7 @@ public class BoardService {
 	private final CategoryRepository categoryRepository;
 	private final CafeRepository cafeRepository;
 	private final MatchRepository matchRepository;
+	private final BlockRepository blockRepository;
 
 	@Transactional
 	public Long createBoard(User user, Long cafeId, BoardReqDto request) {
@@ -93,28 +95,26 @@ public class BoardService {
 		findBoard.update(findCategory, request);
 	}
 
-	public MeetingResDto getBoardList(Long cafeId) {
+	public BoardsResDto getBoardList(User user, Long cafeId) {
+		List<Long> findBlockerId = blockRepository.findBlockerId(user.getId());
+		List<Long> findBlockedId = blockRepository.findBlockedId(user.getId());
+		List<Long> blocks = new ArrayList<>(findBlockerId);
+		blocks.removeAll(findBlockedId);
+		blocks.addAll(findBlockedId);
+
 		Cafe findCafe = cafeRepository.findById(cafeId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_FOUND));
 		List<Board> findBoardList = boardRepository.findAllByCafeIdAndStatusOrderByCreatedAtDesc(findCafe.getId(),
-			BoardStatus.CONTINUE);
+			BoardStatus.CONTINUE, blocks);
 
-		CafeDto cafe = CafeDto.builder()
-			.cafeName(findCafe.getName())
-			.streetAddress(findCafe.getAddress().getStreetAddress())
-			.image(findCafe.getImageUrls().get(0))
-			.openingHour(findCafe.getOpeningHours())
-			.outlet(findCafe.getOutlet())
-			.groupSeat(findCafe.getGroupSeat())
-			.build();
-
-		List<BoardDto> boards = findBoardList.stream()
+		List<BoardDto> boardList = findBoardList.stream()
 			.map(findBoard -> {
 				int currentCount = matchRepository.countAllByBoardAndMatchStatus(findBoard, MatchStatus.ACCEPTED) + 1;
 				return BoardDto.builder()
-					.boardId(findBoard.getId())
+					.writerId(findBoard.getUser().getId())
+					.id(findBoard.getId())
 					.title(findBoard.getTitle())
-					.categoryName(findBoard.getCategory().getCategoryName())
+					.category(findBoard.getCategory().getCategoryName())
 					.recruitCount(findBoard.getRecruitCount())
 					.currentCount(currentCount)
 					.meetingDate(findBoard.getMeetingDate())
@@ -123,9 +123,8 @@ public class BoardService {
 					.build();
 			}).collect(Collectors.toList());
 
-		return MeetingResDto.builder()
-			.cafe(cafe)
-			.boards(boards)
+		return BoardsResDto.builder()
+			.boards(boardList)
 			.build();
 	}
 
@@ -151,10 +150,14 @@ public class BoardService {
 	}
 
 	@Transactional
-	public void deleteBoard(Long boardId) {
-		Board findBoard = boardRepository.findById(boardId)
+	public void deleteBoard(User user, Long boardId) {
+		Board findBoard = boardRepository.findByBoardIdwithUser(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 		int currentCount = matchRepository.countAllByBoardAndMatchStatus(findBoard, MatchStatus.ACCEPTED);
+
+		if(!findBoard.getUser().getId().equals(user.getId())) {
+			throw new BaseException(BaseResponseStatus.BOARD_NOT_OWNED_BY_USER);
+		}
 
 		if (currentCount != 0) {
 			throw new BaseException(BaseResponseStatus.PARTICIPANT_EXIST);

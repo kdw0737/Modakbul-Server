@@ -18,10 +18,12 @@ import com.modakbul.global.kafka.service.MessageSender;
 import com.modakbul.global.kafka.util.KafkaUtil;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ChatMessageService {
 
 	private final UserRepository userRepository;
@@ -31,13 +33,13 @@ public class ChatMessageService {
 	private final MessageSender messageSender;
 	private final ChatRoomService chatRoomService;
 
-	public void sendMessage(MessageDto messageDto, User user) { //TODO : 빈 방이 열리면 상대방은 모르다가 메세지 전송 시 상대방한테 채팅방 생성
+	public void sendMessage(MessageDto messageDto) { //TODO : 빈 방이 열리면 상대방은 모르다가 메세지 전송 시 상대방한테 채팅방 생성
 		Integer readCount = chatRoomService.checkConnectedUser(messageDto.getChatRoomId());
 
 		ChatMessage chatMessage = ChatMessage.builder()
 			.id(ObjectId.get().toHexString())
 			.sendDate(LocalDateTime.now())
-			.userId(user.getId())
+			.userId(messageDto.getSenderId())
 			.chatRoomId(messageDto.getChatRoomId())
 			.content(messageDto.getContent())
 			.readCount(readCount)

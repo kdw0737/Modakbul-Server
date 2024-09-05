@@ -35,3 +35,5 @@ out/
 
 ### VS Code ###
 .vscode/
+/src/main/resources/modakbul-61caf-firebase-adminsdk-ahvl4-90278e5350.json
+/src/main/java/com/modakbul/global/firebase/

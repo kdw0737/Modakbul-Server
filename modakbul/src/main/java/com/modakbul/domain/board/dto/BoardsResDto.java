@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MeetingResDto {
-	private CafeDto cafe;
+public class BoardsResDto {
 	private List<BoardDto> boards;
 }

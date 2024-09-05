@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.block.entity.Block;
-import com.modakbul.domain.block.reposiroty.BlockRepository;
+import com.modakbul.domain.block.repository.BlockRepository;
 import com.modakbul.domain.board.dto.BoardInfoDto;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
@@ -199,7 +199,7 @@ public class UserService {
 		return UserProfileResDto.builder()
 			.nickname(findUser.getNickname())
 			.gender(gender)
-			.userCategory(findCategoryNames)
+			.categories(findCategoryNames)
 			.userJob(findUser.getUserJob())
 			.build();
 	}
