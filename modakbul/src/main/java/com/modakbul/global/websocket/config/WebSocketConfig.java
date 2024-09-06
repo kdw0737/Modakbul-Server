@@ -10,10 +10,12 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 import com.modakbul.global.websocket.util.StompHandler;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Configuration
 @RequiredArgsConstructor
 @EnableWebSocketMessageBroker   // STOMP 사용
+@Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	private final StompHandler stompHandler;
@@ -28,13 +30,14 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
-		registry.addEndpoint("/ws") // ex ) ws://localhost:8080/ws
+		registry.addEndpoint("/stomp") // ex ) ws://localhost:8080/stomp
 			.setAllowedOriginPatterns("*"); // 일단 모두 허용
 	}
 
 	// socket 연결이 성공 후 실제 메세지가 송수신될 때 동작
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
+		log.info(" 소켓 연결 성공 ");
 		registration.interceptors(stompHandler);
 	}
 }

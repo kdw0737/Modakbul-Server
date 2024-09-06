@@ -43,6 +43,8 @@ public class Matches extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL
 
+	private Boolean isDeleted;
+
 	public void update(MatchStatus matchStatus) {
 		this.matchStatus = matchStatus;
 	}

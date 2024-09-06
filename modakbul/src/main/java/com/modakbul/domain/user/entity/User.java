@@ -1,6 +1,8 @@
 package com.modakbul.domain.user.entity;
 
-import com.modakbul.domain.user.dto.UserRequestDto;
+import org.checkerframework.checker.units.qual.C;
+
+import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserJob;
@@ -42,7 +44,7 @@ public class User extends BaseEntity {
 	@Column(nullable = false, length = 30)
 	private String name;
 
-	@Column(nullable = false, length = 8)
+	@Column(nullable = false, length = 10)
 	private String birth;
 
 	@Column(nullable = false, length = 15, unique = true)
@@ -69,10 +71,17 @@ public class User extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private UserStatus userStatus;
 
-	public void update(UserRequestDto.ProfileDto request) {
-		this.isVisible = request.getIsVisible();
+	@Column(nullable = false)
+	private String fcmToken;
+
+	public void update(String image, MyProfileReqDto request) {
+		this.isVisible = request.getIsGenderVisible();
 		this.nickname = request.getNickname();
-		this.image = request.getImage();
-		this.userJob = request.getUserJob();
+		this.image = image;
+		this.userJob = request.getJob();
+	}
+
+	public void updateFcmToken(String fcmToken) {
+		this.fcmToken = fcmToken;
 	}
 }

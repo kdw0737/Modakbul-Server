@@ -33,7 +33,7 @@ import lombok.NoArgsConstructor;
 public class ChatRoom extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "chat_id")
+	@Column(name = "chat_room_id")
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -42,9 +42,15 @@ public class ChatRoom extends BaseEntity {
 
 	private int roomHashCode; // 단체채팅의 경우 0, 일대일 채팅에 사용
 
-	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+	@Builder.Default
+	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<UserChatRoom> chatRoomUsers = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
 	private ChatRoomType chatRoomType; // GROUP, ONE_TO_ONE
+
+	public void addChatUser(UserChatRoom chatRoomUser) {
+		this.getChatRoomUsers().add(chatRoomUser);
+	}
+
 }

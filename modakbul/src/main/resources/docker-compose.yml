@@ -21,7 +21,7 @@ services:
       - zookeeper
 
   redis:
-    image: redis:alpine
+    image: redis:latest
     command: redis-server --port 6379
     container_name: my-redis
     hostname: localhost

@@ -35,7 +35,7 @@ public class ChatRoomController {
 		// 상대방 ID 와 내 ID가 같은 경우 오류
 		if (createOneToOneChatReqDto.getTheOtherUserId() == user.getId())
 			throw new BaseException(BaseResponseStatus.USER_CANNOT_MAKE_CHATROOM_ALONE);
-
+	
 		Long chatRoomId = chatRoomService.createOneToOneChatRoom(createOneToOneChatReqDto, user);
 
 		return new BaseResponse<>(BaseResponseStatus.CREATE_CHATROOM_SUCCESS, chatRoomId);
@@ -58,8 +58,8 @@ public class ChatRoomController {
 
 	@GetMapping("/chatrooms/{chatroomId}/{boardId}") //TODO: 채팅방에 접속해 있는 경우 상대방이 들어와서 읽으면 내 화면에도 동기화 필요
 	public BaseResponse<GetMessageHistoryResDto> getMessageHistory(@AuthenticationPrincipal User user,
-		@PathVariable Long chatroomId,
-		@PathVariable Long boardId) {
+		@PathVariable("chatroomId") Long chatroomId,
+		@PathVariable("boardId") Long boardId) {
 		GetMessageHistoryResDto messageHistory = chatRoomService.getMessageHistory(user, chatroomId, boardId);
 		return new BaseResponse<>(BaseResponseStatus.GET_NEW_MESSAGE_SUCCESS, messageHistory);
 	}

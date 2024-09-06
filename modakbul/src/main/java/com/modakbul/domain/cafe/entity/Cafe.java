@@ -3,11 +3,12 @@ package com.modakbul.domain.cafe.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.modakbul.domain.cafe.enums.Congestion;
+import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
 import com.modakbul.global.common.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -19,6 +20,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,12 +52,12 @@ public class Cafe extends BaseEntity {
 	@CollectionTable(name = "cafe_opening_hour", joinColumns = @JoinColumn(name = "cafe_Id"))
 	private final List<OpeningHour> openingHours = new ArrayList<>();
 
+	@OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Board> boards = new ArrayList<>();
+
 	@Enumerated(EnumType.STRING)
 	private Outlet outlet; // 콘센트
 
 	@Enumerated(EnumType.STRING)
 	private GroupSeat groupSeat; // 단체석
-
-	@Enumerated(EnumType.STRING)
-	private Congestion congestion; // 혼잡도
 }

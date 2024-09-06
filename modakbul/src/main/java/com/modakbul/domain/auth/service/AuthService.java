@@ -6,8 +6,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.auth.dto.AuthRequestDto;
+import com.modakbul.domain.auth.dto.CheckNicknameDto;
+import com.modakbul.domain.auth.dto.LoginReqDto;
+import com.modakbul.domain.auth.dto.SignUpReqDto;
 import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
@@ -22,6 +25,8 @@ import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.auth.jwt.JwtProvider;
 import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
+import com.modakbul.global.s3.service.S3ImageService;
+import com.vane.badwordfiltering.BadWordFiltering;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +44,14 @@ public class AuthService {
 	private final JwtProvider jwtProvider;
 	@Value("${jwt.refresh-token.expiration-time}")
 	private Long refreshTokenExpirationTime;
+	private final S3ImageService s3ImageService;
 
-	public Map<String, String> login(AuthRequestDto.LoginDto request) {
+	public Map<String, String> login(LoginReqDto request) {
 		Map<String, String> token = new HashMap<>();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
+
+		findUser.updateFcmToken(request.getFcmToken());
 
 		if (findUser == null) {
 			throw new BaseException(BaseResponseStatus.USER_NOT_EXIST);
@@ -56,14 +64,14 @@ public class AuthService {
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
 			refreshTokenRepository.save(addRefreshToken);
 
-			token.put("accessToken", accessToken);
-			token.put("refreshToken", refreshToken);
+			token.put("Authorization", "Bearer " + accessToken);
+			token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 			return token;
 		}
 	}
 
-	public Map<String, String> signUp(AuthRequestDto.SignUpDto request) {
+	public Map<String, String> signUp(MultipartFile image, SignUpReqDto request) {
 		Map<String, String> token = new HashMap<>();
 
 		String accessToken = jwtProvider.createAccessToken(request.getProvider(), request.getEmail(),
@@ -80,10 +88,12 @@ public class AuthService {
 			.gender(request.getGender())
 			.userJob(request.getUserJob())
 			.isVisible(true)
-			.image(request.getImage())
+			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
+			.fcmToken(request.getFcmToken())
 			.build();
+
 		userRepository.save(addUser);
 
 		request.getCategoryNames().forEach(categoryName ->
@@ -104,8 +114,8 @@ public class AuthService {
 		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
 
-		token.put("accessToken", accessToken);
-		token.put("refreshToken", refreshToken);
+		token.put("Authorization", "Bearer " + accessToken);
+		token.put("Authorization_refresh", "Bearer " + refreshToken);
 
 		return token;
 	}
@@ -128,15 +138,43 @@ public class AuthService {
 		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
 			findUser.getNickname());
 
-		token.put("accessToken", accessToken);
+		token.put("Authorization", "Bearer " + accessToken);
 
 		return token;
+	}
+
+	public CheckNicknameDto checkNickname(String nickname) {
+		if (isAbuse(nickname)) {
+			return CheckNicknameDto.builder()
+				.isOverlapped(false)
+				.isAbuse(true)
+				.build();
+		} else if (isOverlapped(nickname)) {
+			return CheckNicknameDto.builder()
+				.isOverlapped(true)
+				.isAbuse(false)
+				.build();
+		} else {
+			return CheckNicknameDto.builder()
+				.isOverlapped(false)
+				.isAbuse(false)
+				.build();
+		}
 	}
 
 	public boolean isOverlapped(String nickname) {
 		Optional<User> findNickname = userRepository.findByNickname(nickname);
 
 		if (findNickname.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isAbuse(String nickname) {
+		BadWordFiltering badWordFiltering = new BadWordFiltering();
+
+		if (badWordFiltering.blankCheck(nickname)) {
 			return true;
 		}
 		return false;

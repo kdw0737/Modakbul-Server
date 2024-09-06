@@ -1,8 +1,5 @@
 package com.modakbul.domain.auth.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,9 +10,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.modakbul.domain.auth.dto.AuthRequestDto;
+import com.modakbul.domain.auth.dto.CheckNicknameDto;
+import com.modakbul.domain.auth.dto.LoginReqDto;
+import com.modakbul.domain.auth.dto.SignUpReqDto;
 import com.modakbul.domain.auth.service.AuthService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -30,7 +31,7 @@ public class AuthController {
 	private final AuthService authService;
 
 	@PostMapping("/users/login")
-	public ResponseEntity<BaseResponse> login(@RequestBody AuthRequestDto.LoginDto request) {
+	public ResponseEntity<BaseResponse> kakaoLogin(@RequestBody LoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setAll(authService.login(request));
 
@@ -38,9 +39,10 @@ public class AuthController {
 	}
 
 	@PostMapping("/users/register")
-	public ResponseEntity<BaseResponse> signUp(@RequestBody AuthRequestDto.SignUpDto request) {
+	public ResponseEntity<BaseResponse> signUp(@RequestPart(value = "image", required = false) MultipartFile image,
+		@RequestPart(value = "user") SignUpReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		httpHeaders.setAll(authService.signUp(request));
+		httpHeaders.setAll(authService.signUp(image, request));
 
 		return new ResponseEntity(new BaseResponse<>(BaseResponseStatus.REGISTER_SUCCESS), httpHeaders, HttpStatus.OK);
 	}
@@ -62,15 +64,15 @@ public class AuthController {
 	}
 
 	@GetMapping("/users")
-	public BaseResponse<Map<String, Boolean>> isOverlapped(@RequestParam String nickname) {
-		Map<String, Boolean> isOverlapped = new HashMap<>();
+	public BaseResponse<CheckNicknameDto> checkNickname(@RequestParam String nickname) {
+		CheckNicknameDto checkNickname = authService.checkNickname(nickname);
 
-		if (authService.isOverlapped(nickname)) {
-			isOverlapped.put("is_overlapped", true);
-			return new BaseResponse<>(BaseResponseStatus.NICKNAME_DUPLICATED, isOverlapped);
+		if (checkNickname.isAbuse()) {
+			return new BaseResponse<>(BaseResponseStatus.NICKNAME_ABUSE, checkNickname);
+		} else if (checkNickname.isOverlapped()) {
+			return new BaseResponse<>(BaseResponseStatus.NICKNAME_DUPLICATED, checkNickname);
+		} else {
+			return new BaseResponse<>(BaseResponseStatus.CHECK_NICKNAME_SUCCESS, checkNickname);
 		}
-
-		isOverlapped.put("is_overlapped", false);
-		return new BaseResponse<>(BaseResponseStatus.NICKNAME_NOT_DUPLICATED, isOverlapped);
 	}
 }
