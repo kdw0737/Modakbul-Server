@@ -67,4 +67,10 @@ public class BoardController {
 		boardService.deleteBoard(boardId);
 		return new BaseResponse<>(BaseResponseStatus.DELETE_BOARD_SUCCESS);
 	}
+
+	@PatchMapping("/boards/{boardId}/completed")
+	public BaseResponse<Void> completeBoard(@PathVariable(name = "boardId") Long boardId) {
+		boardService.completeBoard(boardId);
+		return new BaseResponse<>(BaseResponseStatus.COMPLETE_BOARD_SUCCESS);
+	}
 }

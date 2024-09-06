@@ -142,10 +142,14 @@ public class BoardService {
 			.image(findBoard.getUser().getImage())
 			.build();
 
+		String[] parts = findBoard.getCreatedAt().split(" ");
+		String date = parts[0];
+		String time = parts[1];
+
 		BoardDetailsDto boardDetailsDto = BoardDetailsDto.builder()
 			.title(findBoard.getTitle())
-			.createdDate(findBoard.getCreatedAt())
-			.createdTime(findBoard.getCreatedAt())
+			.createdDate(date)
+			.createdTime(time)
 			.categoryName(findBoard.getCategory().getCategoryName())
 			.recruitCount(findBoard.getRecruitCount())
 			.currentCount(currentCount)
@@ -172,6 +176,14 @@ public class BoardService {
 			throw new BaseException(BaseResponseStatus.PARTICIPANT_EXIST);
 		}
 		findBoard.delete();
+	}
+
+	@Transactional
+	public void completeBoard(Long boardId) {
+		Board findBoard = boardRepository.findById(boardId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
+
+		findBoard.updateStatus(BoardStatus.COMPLETED);
 	}
 
 	@Transactional

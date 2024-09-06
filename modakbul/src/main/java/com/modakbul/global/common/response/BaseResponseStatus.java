@@ -23,7 +23,7 @@ public enum BaseResponseStatus {
 	LOGOUT_SUCCESS(true, 1010, "로그아웃에 성공했습니다."),
 	REISSUE_TOKEN_SUCCESS(true, 1011, "Token 재발행에 성공했습니다."),
 	SEARCH_PROFILE_SUCCESS(true, 1012, "프로필 조회에 성공했습니다."),
-	NICKNAME_NOT_DUPLICATED(true, 1013, "사용할 수 있는 닉네임입니다."),
+	CHECK_NICKNAME_SUCCESS(true, 1013, "사용 가능한 닉네임입니다."),
 	GET_MEETINGS_HISTORY_SUCCESS(true, 1014, "참여 모임 내역 조회에 성공했습니다"),
 	SEARCH_USER_CAFE_SUCCESS(true, 1015, "모임에 참여했던 카페 목록 조회에 성공했습니다."),
 	CREATE_REVIEW(true, 1016, "참여한 모임의 카페 리뷰 작성에 성공했습니다"),
@@ -68,6 +68,7 @@ public enum BaseResponseStatus {
 	SEARCH_BOARD_LIST_SUCCESS(true, 1314, "모집글 목록 조회에 성공했습니다."),
 	SEARCH_BOARD_SUCCESS(true, 1315, "모집글 상세 조회에 성공했습니다."),
 	DELETE_BOARD_SUCCESS(true, 1316, "모집글 삭제에 성공했습니다."),
+	COMPLETE_BOARD_SUCCESS(true, 1317, "모집글 모임 종료에 성공했습니다."),
 
 	/**
 	 * 2000 : request 오류
@@ -93,6 +94,7 @@ public enum BaseResponseStatus {
 	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
 	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
 	BLOCK_NOT_EXIST(false, 2019, "차단 해제 과정에 오류가 발생하였습니다"),
+	NICKNAME_ABUSE(false, 2020, "욕설이 포함된 닉네임 입니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
