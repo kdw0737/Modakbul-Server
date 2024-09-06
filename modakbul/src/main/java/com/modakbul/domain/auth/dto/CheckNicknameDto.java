@@ -1,4 +1,4 @@
-package com.modakbul.domain.user.dto;
+package com.modakbul.domain.auth.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserCafeResDto {
-	private long id;
-	private String image;
-	private String name;
-	private String address;
-
+public class CheckNicknameDto {
+	private boolean isOverlapped;
+	private boolean isAbuse;
 }

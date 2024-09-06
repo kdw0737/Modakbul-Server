@@ -1,8 +1,6 @@
 package com.modakbul.domain.match.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.modakbul.domain.match.dto.MatchListResDto;
+import com.modakbul.domain.match.dto.MatchesResDto;
 import com.modakbul.domain.match.service.MatchService;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.response.BaseResponse;
@@ -26,16 +24,15 @@ public class MatchController {
 	private final MatchService matchService;
 
 	@PostMapping("/boards/{boardId}/matches")
-	public BaseResponse<Map<String, Long>> createMatch(@AuthenticationPrincipal User user,
+	public BaseResponse<Void> createMatch(@AuthenticationPrincipal User user,
 		@PathVariable(name = "boardId") Long boardId) {
-		Map<String, Long> match = new HashMap<>();
-		match.put("match_id", matchService.createMatch(user, boardId));
+		matchService.createMatch(user, boardId);
 
-		return new BaseResponse<>(BaseResponseStatus.CREATE_MATCHING_SUCCESS, match);
+		return new BaseResponse<>(BaseResponseStatus.CREATE_MATCHING_SUCCESS);
 	}
 
 	@GetMapping("/boards/{boardId}/matches")
-	public BaseResponse<List<MatchListResDto>> getMatchList(
+	public BaseResponse<List<MatchesResDto>> getMatchList(
 		@PathVariable(name = "boardId") Long boardId) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_MATCH_SUCCESS, matchService.getMatchList(boardId));
 	}

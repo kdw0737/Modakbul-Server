@@ -1,8 +1,5 @@
 package com.modakbul.domain.board.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,13 +27,12 @@ public class BoardController {
 	private final BoardService boardService;
 
 	@PostMapping("/cafes/{cafeId}/boards")
-	public BaseResponse<Map<String, Long>> createBoard(@AuthenticationPrincipal User user,
+	public BaseResponse<Void> createBoard(@AuthenticationPrincipal User user,
 		@PathVariable(name = "cafeId") Long cafeId,
 		@RequestBody BoardReqDto request) {
-		Map<String, Long> board = new HashMap<>();
-		board.put("board_id", boardService.createBoard(user, cafeId, request));
+		boardService.createBoard(user, cafeId, request);
 
-		return new BaseResponse<>(BaseResponseStatus.CREATE_BOARD_SUCCESS, board);
+		return new BaseResponse<>(BaseResponseStatus.CREATE_BOARD_SUCCESS);
 	}
 
 	@GetMapping("/boards/{boardId}")
@@ -70,5 +66,11 @@ public class BoardController {
 	public BaseResponse<Void> deleteBoard(@PathVariable(name = "boardId") Long boardId, @AuthenticationPrincipal User user) {
 		boardService.deleteBoard(user, boardId);
 		return new BaseResponse<>(BaseResponseStatus.DELETE_BOARD_SUCCESS);
+	}
+
+	@PatchMapping("/boards/{boardId}/completed")
+	public BaseResponse<Void> completeBoard(@PathVariable(name = "boardId") Long boardId) {
+		boardService.completeBoard(boardId);
+		return new BaseResponse<>(BaseResponseStatus.COMPLETE_BOARD_SUCCESS);
 	}
 }

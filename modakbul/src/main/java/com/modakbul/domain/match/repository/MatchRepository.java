@@ -18,8 +18,9 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 
 	@Query("SELECT m FROM Matches m "
 		+ "JOIN FETCH m.sender s "
-		+ "WHERE m.board.id = :boardId")
-	List<Matches> findByBoardWithUser(@Param("boardId") Long boardId);
+		+ "WHERE m.board.id = :boardId "
+		+ "AND m.matchStatus = :matchStatus")
+	List<Matches> findByBoardWithUser(@Param("boardId") Long boardId, @Param("matchStatus") MatchStatus matchStatus);
 
 	@Query("SELECT m FROM Matches m "
 		+ "JOIN FETCH m.board b "

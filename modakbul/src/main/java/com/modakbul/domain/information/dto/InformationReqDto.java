@@ -1,8 +1,8 @@
 package com.modakbul.domain.information.dto;
 
+import com.modakbul.domain.cafe.entity.Address;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
-import com.modakbul.domain.information.entity.Address;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class InformationReqDto {
 	private String name;
-	private Address address;
+	private Address location;
 	private Outlet outlet;
 	private GroupSeat groupSeat;
 }

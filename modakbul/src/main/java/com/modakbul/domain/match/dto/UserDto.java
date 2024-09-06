@@ -15,10 +15,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MatchListResDto {
-	private long matchId;
-	private String userImage;
+public class UserDto {
+	private long id;
+	private String image;
 	private String nickname;
-	private List<CategoryName> categoryName;
-	private UserJob userJob;
+	private List<CategoryName> categories;
+	private UserJob job;
 }

@@ -1,14 +1,15 @@
 package com.modakbul.domain.match.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
-import com.modakbul.domain.match.dto.MatchListResDto;
+import com.modakbul.domain.match.dto.MatchesResDto;
+import com.modakbul.domain.match.dto.UserDto;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
@@ -29,7 +30,7 @@ public class MatchService {
 	private final BoardRepository boardRepository;
 	private final UserCategoryRepository userCategoryRepository;
 
-	public Long createMatch(User user, Long boardId) {
+	public void createMatch(User user, Long boardId) {
 		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
@@ -39,36 +40,34 @@ public class MatchService {
 			.matchStatus(MatchStatus.PENDING)
 			.build();
 		matchRepository.save(match);
-
-		return match.getId();
 	}
 
-	public List<MatchListResDto> getMatchList(Long boardId) {
+	public List<MatchesResDto> getMatchList(Long boardId) {
 		Board findBoard = boardRepository.findById(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
-		List<Matches> findMatchList = matchRepository.findByBoardWithUser(findBoard.getId());
+		List<Matches> findMatchList = matchRepository.findByBoardWithUser(findBoard.getId(), MatchStatus.PENDING);
 
-		List<MatchListResDto> matchList = new ArrayList<>();
+		return findMatchList.stream()
+			.map(findMatch -> {
+				List<UserCategory> findUserCategories = userCategoryRepository.findAllByUserIdWithCategory(
+					findMatch.getSender().getId());
+				List<CategoryName> findCategoryNames = findUserCategories.stream()
+					.map(userCategory -> userCategory.getCategory().getCategoryName())
+					.toList();
 
-		for (Matches findMatch : findMatchList) {
-			List<UserCategory> findUserCategories = userCategoryRepository.findAllByUserIdWithCategory(
-				findMatch.getSender().getId());
-			List<CategoryName> findCategoryNames = findUserCategories.stream()
-				.map(userCategory -> userCategory.getCategory().getCategoryName())
-				.toList();
+				UserDto userDto = UserDto.builder()
+					.id(findMatch.getSender().getId())
+					.image(findMatch.getSender().getImage())
+					.nickname(findMatch.getSender().getNickname())
+					.categories(findCategoryNames)
+					.job(findMatch.getSender().getUserJob())
+					.build();
 
-			MatchListResDto match = MatchListResDto.builder()
-				.matchId(findMatch.getId())
-				.userImage(findMatch.getSender().getImage())
-				.nickname(findMatch.getSender().getNickname())
-				.categoryName(findCategoryNames)
-				.userJob(findMatch.getSender().getUserJob())
-				.build();
-
-			matchList.add(match);
-		}
-
-		return matchList;
+				return MatchesResDto.builder()
+					.id(findMatch.getId())
+					.user(userDto)
+					.build();
+			}).collect(Collectors.toList());
 	}
 
 	@Transactional

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.modakbul.domain.auth.dto.CheckNicknameDto;
 import com.modakbul.domain.auth.dto.LoginReqDto;
 import com.modakbul.domain.auth.dto.SignUpReqDto;
 import com.modakbul.domain.auth.entity.LogoutToken;
@@ -25,6 +26,7 @@ import com.modakbul.global.auth.jwt.JwtProvider;
 import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
 import com.modakbul.global.s3.service.S3ImageService;
+import com.vane.badwordfiltering.BadWordFiltering;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -141,10 +143,38 @@ public class AuthService {
 		return token;
 	}
 
+	public CheckNicknameDto checkNickname(String nickname) {
+		if (isAbuse(nickname)) {
+			return CheckNicknameDto.builder()
+				.isOverlapped(false)
+				.isAbuse(true)
+				.build();
+		} else if (isOverlapped(nickname)) {
+			return CheckNicknameDto.builder()
+				.isOverlapped(true)
+				.isAbuse(false)
+				.build();
+		} else {
+			return CheckNicknameDto.builder()
+				.isOverlapped(false)
+				.isAbuse(false)
+				.build();
+		}
+	}
+
 	public boolean isOverlapped(String nickname) {
 		Optional<User> findNickname = userRepository.findByNickname(nickname);
 
 		if (findNickname.isPresent()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isAbuse(String nickname) {
+		BadWordFiltering badWordFiltering = new BadWordFiltering();
+
+		if (badWordFiltering.blankCheck(nickname)) {
 			return true;
 		}
 		return false;

@@ -17,7 +17,7 @@ public class InformationService {
 	public void createInformation(InformationReqDto request) {
 		Information information = Information.builder()
 			.name(request.getName())
-			.address(request.getAddress())
+			.address(request.getLocation())
 			.outlet(request.getOutlet())
 			.groupSeat(request.getGroupSeat())
 			.build();
