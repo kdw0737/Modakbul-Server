@@ -19,5 +19,5 @@ public class UserProfileResDto {
 	private String nickname;
 	private Gender gender;
 	private UserJob userJob;
-	private List<CategoryName> userCategory;
+	private List<CategoryName> categories;
 }

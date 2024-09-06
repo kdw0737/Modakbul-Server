@@ -31,4 +31,5 @@ public class SignUpReqDto {
 	private UserJob userJob;
 	@Enumerated(EnumType.STRING)
 	private List<CategoryName> categoryNames;
+	private String fcmToken;
 }

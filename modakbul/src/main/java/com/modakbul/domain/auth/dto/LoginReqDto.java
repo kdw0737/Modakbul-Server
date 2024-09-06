@@ -18,4 +18,5 @@ public class LoginReqDto {
 	private String email;
 	@Enumerated(EnumType.STRING)
 	private Provider provider;
+	private String fcmToken;
 }

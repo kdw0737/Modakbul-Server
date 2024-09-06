@@ -51,6 +51,8 @@ public class AuthService {
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			request.getProvider()).orElse(null);
 
+		findUser.updateFcmToken(request.getFcmToken());
+
 		if (findUser == null) {
 			throw new BaseException(BaseResponseStatus.USER_NOT_EXIST);
 		} else {
@@ -89,7 +91,9 @@ public class AuthService {
 			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
+			.fcmToken(request.getFcmToken())
 			.build();
+
 		userRepository.save(addUser);
 
 		request.getCategoryNames().forEach(categoryName ->

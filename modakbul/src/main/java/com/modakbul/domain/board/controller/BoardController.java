@@ -63,8 +63,8 @@ public class BoardController {
 	}
 
 	@DeleteMapping("/boards/{boardId}")
-	public BaseResponse<Void> deleteBoard(@PathVariable(name = "boardId") Long boardId) {
-		boardService.deleteBoard(boardId);
+	public BaseResponse<Void> deleteBoard(@PathVariable(name = "boardId") Long boardId, @AuthenticationPrincipal User user) {
+		boardService.deleteBoard(user, boardId);
 		return new BaseResponse<>(BaseResponseStatus.DELETE_BOARD_SUCCESS);
 	}
 

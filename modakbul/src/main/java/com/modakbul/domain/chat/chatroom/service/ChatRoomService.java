@@ -5,11 +5,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +60,7 @@ public class ChatRoomService {
 	private final CustomChatMessageRepository customChatMessageRepository;
 	private final CategoryRepository categoryRepository;
 	private final CafeRepository cafeRepository;
+	private final MongoTemplate mongoTemplate;
 
 	@Transactional
 	public Long createOneToOneChatRoom(CreateOneToOneChatReqDto createOneToOneChatReqDto, User user) {
@@ -89,7 +94,6 @@ public class ChatRoomService {
 				.roomHashCode(roomHashCode)
 				.chatRoomType(ChatRoomType.ONE_TO_ONE)
 				.build();
-			chatRoom.setChatRoomUsers();
 
 			UserChatRoom userChatRoom = UserChatRoom.builder()
 				.user(user)
@@ -150,6 +154,14 @@ public class ChatRoomService {
 		}
 	}
 
+	@Transactional(readOnly = true)
+	public Boolean isBothConnected(Long chatRoomId) {
+		RedisChatRoom findRedisChatRoom = connectedChatUserRepository.findByChatRoomId(chatRoomId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.CHATROOM_NOT_FOUND));
+		return findRedisChatRoom.getConnectedUsers().size() == 2;
+	}
+
+	@Transactional(readOnly = true)
 	public List<GetOneToOneChatRoomListResDto> getOneToOneChatRoomList(User user) {
 		List<UserChatRoom> findChatRoomList = userChatRoomRepository.findAllByUserIdAndUserChatRoomStatus(user.getId(),
 			UserChatRoomStatus.ACTIVE);
@@ -162,8 +174,14 @@ public class ChatRoomService {
 			ChatRoom findChatRoom = chatRoomRepository.findById(userChatRoom.getChatRoom().getId())
 				.orElseThrow(() -> new BaseException(BaseResponseStatus.CHATROOM_NOT_FOUND));
 
-			Long theOtherUserId = findChatRoom.getChatRoomUsers().get(0).getId().equals(user.getId()) ?
-				findChatRoom.getChatRoomUsers().get(1).getId() : user.getId();
+			List<Long> userIds = findChatRoom.getChatRoomUsers().stream() // TODO: 쿼리 최적화 다른 방식 고려
+				.map(chatUser -> chatUser.getUser().getId())
+				.collect(Collectors.toList());
+
+			// 상대방의 ID를 찾기
+			userIds.remove(user.getId()); // 현재 사용자의 ID를 제거하면 상대방의 ID만 남습니다
+			Long theOtherUserId = userIds.get(0);
+
 
 			User findTheOtherUser = userRepository.findByIdAndUserStatus(theOtherUserId, UserStatus.ACTIVE)
 				.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
@@ -173,7 +191,7 @@ public class ChatRoomService {
 
 			ChatMessage lastMessage = findMessage.hasContent() ? findMessage.getContent().get(0) : null;
 
-			Integer unReadCount = chatMessageRepository.countUnreadMessages(findChatRoom.getId(), user.getId());
+			Long unReadCount = Optional.of(countUnreadMessages(findChatRoom.getId(), user.getId())).orElse(0L);
 
 			return GetOneToOneChatRoomListResDto.builder()
 				.roomTitle(findTheOtherUser.getNickname())
@@ -207,6 +225,7 @@ public class ChatRoomService {
 		return findChatRoom.getChatRoomUsers().size() - findRedisChatRoom.getConnectedUsers().size();
 	}
 
+	@Transactional(readOnly = true)
 	public GetMessageHistoryResDto getMessageHistory(User user, Long chatRoomId, Long boardId) {
 		List<ChatMessage> findUnreadMessages = chatMessageRepository.findByChatRoomIdAndUserIdNotAndReadCountOrderBySendDateAsc(
 			chatRoomId,
@@ -245,10 +264,21 @@ public class ChatRoomService {
 		customChatMessageRepository.updateReadCount(chatRoomId, userId);
 	}
 
+
 	// 채팅방 해시코드 생성
 	private int createRoomHashCode(User user, User anotherUser) {
+
 		Long userId = user.getId();
 		Long anotherId = anotherUser.getId();
 		return userId > anotherId ? Objects.hash(userId, anotherId) : Objects.hash(anotherId, userId);
+	}
+
+	private long countUnreadMessages(Long chatRoomId, Long userId) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("chatRoomId").is(chatRoomId));
+		query.addCriteria(Criteria.where("readCount").is(1));
+		query.addCriteria(Criteria.where("userId").ne(userId));
+
+		return mongoTemplate.count(query, "chatMessage");
 	}
 }

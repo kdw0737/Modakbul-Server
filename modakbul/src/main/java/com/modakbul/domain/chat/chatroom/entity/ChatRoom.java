@@ -42,7 +42,8 @@ public class ChatRoom extends BaseEntity {
 
 	private int roomHashCode; // 단체채팅의 경우 0, 일대일 채팅에 사용
 
-	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE)
+	@Builder.Default
+	@OneToMany(mappedBy = "chatRoom", cascade = CascadeType.REMOVE, orphanRemoval = true)
 	private List<UserChatRoom> chatRoomUsers = new ArrayList<>();
 
 	@Enumerated(EnumType.STRING)
@@ -52,7 +53,4 @@ public class ChatRoom extends BaseEntity {
 		this.getChatRoomUsers().add(chatRoomUser);
 	}
 
-	public void setChatRoomUsers() {
-		this.chatRoomUsers = new ArrayList<>();
-	}
 }

@@ -21,5 +21,5 @@ public class GetOneToOneChatRoomListResDto {
 	private Long theOtherUserId;
 	private Long chatRoomId;
 	private Long boardId;
-	private Integer unreadCount;
+	private Long unreadCount;
 }

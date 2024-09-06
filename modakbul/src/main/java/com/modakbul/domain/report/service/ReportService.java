@@ -10,6 +10,7 @@ import com.modakbul.domain.chat.chatroom.repository.UserChatRoomRepository;
 import com.modakbul.domain.report.dto.ReportReqDto;
 import com.modakbul.domain.report.entity.ChatReport;
 import com.modakbul.domain.report.entity.UserReport;
+import com.modakbul.domain.report.enums.ReportStatus;
 import com.modakbul.domain.report.repository.ChatReportRepository;
 import com.modakbul.domain.report.repository.UserReportRepository;
 import com.modakbul.domain.user.entity.User;
@@ -38,6 +39,7 @@ public class ReportService {
 			.reporter(user)
 			.reported(findReported)
 			.content(reportReqDto.getContent())
+			.status(ReportStatus.PENDING)
 			.build();
 
 		userReportRepository.save(userReport);
@@ -61,6 +63,7 @@ public class ReportService {
 			.reported(findReported)
 			.chatRoom(findChatRoom)
 			.content(reportReqDto.getContent())
+			.status(ReportStatus.PENDING)
 			.build();
 
 		chatReportRepository.save(chatReport);

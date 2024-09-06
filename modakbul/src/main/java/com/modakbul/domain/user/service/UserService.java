@@ -200,7 +200,7 @@ public class UserService {
 		return UserProfileResDto.builder()
 			.nickname(findUser.getNickname())
 			.gender(gender)
-			.userCategory(findCategoryNames)
+			.categories(findCategoryNames)
 			.userJob(findUser.getUserJob())
 			.build();
 	}

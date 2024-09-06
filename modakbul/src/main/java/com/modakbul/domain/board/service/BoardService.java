@@ -167,10 +167,14 @@ public class BoardService {
 	}
 
 	@Transactional
-	public void deleteBoard(Long boardId) {
-		Board findBoard = boardRepository.findById(boardId)
+	public void deleteBoard(User user, Long boardId) {
+		Board findBoard = boardRepository.findByBoardIdwithUser(boardId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 		int currentCount = matchRepository.countAllByBoardAndMatchStatus(findBoard, MatchStatus.ACCEPTED);
+
+		if(!findBoard.getUser().getId().equals(user.getId())) {
+			throw new BaseException(BaseResponseStatus.BOARD_NOT_OWNED_BY_USER);
+		}
 
 		if (currentCount != 0) {
 			throw new BaseException(BaseResponseStatus.PARTICIPANT_EXIST);
