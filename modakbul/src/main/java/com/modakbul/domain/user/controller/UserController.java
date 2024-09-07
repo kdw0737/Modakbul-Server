@@ -15,6 +15,7 @@ import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
+import com.modakbul.domain.user.dto.ReportListResDto;
 import com.modakbul.domain.user.dto.UserCafeResDto;
 import com.modakbul.domain.user.dto.UserProfileResDto;
 import com.modakbul.domain.user.entity.User;
@@ -74,4 +75,10 @@ public class UserController {
 	public BaseResponse<List<BlockListResDto>> getBlockedUserList(@AuthenticationPrincipal User user) {
 		return new BaseResponse<>(BaseResponseStatus.GET_BLOCK_LIST_SUCCESS, userService.getBlockedUserList(user));
 	}
+
+	@GetMapping("/users/reports")
+	public BaseResponse<List<ReportListResDto>> getReportedUserList(@AuthenticationPrincipal User user) {
+		return new BaseResponse<>(BaseResponseStatus.GET_REPORT_LIST_SUCCESS, userService.getReportedUserList(user));
+	}
+
 }
