@@ -2,6 +2,7 @@ package com.modakbul.domain.cafe.controller;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +42,11 @@ public class CafeController {
 	) {
 		return new BaseResponse<>(BaseResponseStatus.SEARCH_CAFE_SUCCESS,
 			cafeService.searchCafeList(cafeName, latitude, longitude));
+	}
+
+	@DeleteMapping("/cafes")
+	public BaseResponse<Void> deleteCafe() {
+		cafeService.deleteCafe();
+		return new BaseResponse<>(BaseResponseStatus.DELETE_CAFE_SUCCESS);
 	}
 }

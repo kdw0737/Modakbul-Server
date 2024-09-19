@@ -68,4 +68,8 @@ public class CafeService {
 				.build())
 			.collect(Collectors.toList());
 	}
+
+	public void deleteCafe() {
+		
+	}
 }
