@@ -4,32 +4,27 @@ import java.util.List;
 
 import com.modakbul.domain.user.enums.CategoryName;
 import com.modakbul.domain.user.enums.Gender;
-import com.modakbul.domain.user.enums.Provider;
 import com.modakbul.domain.user.enums.UserJob;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Builder
+@NoArgsConstructor
 @Getter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SignUpReqDto {
-	private String email;
-	@Enumerated(EnumType.STRING)
-	private Provider provider;
+@AllArgsConstructor
+@Builder
+public class AppleUserDto {
+	private String authorizationCode;
 	private String name;
+	private String nickname;
 	private String birth;
 	private Gender gender;
-	private String image;
-	private String nickname;
-	private UserJob userJob;
 	@Enumerated(EnumType.STRING)
-	private List<CategoryName> categoryNames;
-	private String fcmToken;
+	private List<CategoryName> categories;
+	private UserJob job;
+	private String fcm;
 }
