@@ -3,6 +3,7 @@ package com.modakbul.domain.report.entity;
 import com.modakbul.domain.chat.chatroom.entity.ChatRoom;
 import com.modakbul.domain.report.enums.ReportStatus;
 import com.modakbul.domain.user.entity.User;
+import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 @Builder
-public class ChatReport {
+public class ChatReport extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "chat_report_id")

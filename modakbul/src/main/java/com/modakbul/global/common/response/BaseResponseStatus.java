@@ -33,8 +33,9 @@ public enum BaseResponseStatus {
 	GET_MATCHES_REQUEST_HISTORY_SUCCESS(true, 1020, "나의 참여 요청 목록 조회에 성공했습니다"),
 	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
 	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
-	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다"),
-	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다"),
+	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다."),
+	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다."),
+	GET_REPORT_LIST_SUCCESS(true, 1023, "신고 목록 조회에 성공했습니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
@@ -54,6 +55,7 @@ public enum BaseResponseStatus {
 	CREATE_MATCHING_SUCCESS(true, 1114, "해당 모임의 매칭 요청에 성공했습니다."),
 	SEARCH_MATCH_SUCCESS(true, 1115, "모임 참여 요청 목록 조회에 성공했습니다."),
 	EXIT_MATCHING_SUCCESS(true, 1116, "모임 나가기에 성공했습니다."),
+	DELETE_CAFE_SUCCESS(true, 1117, "카페 삭제에 성공했습니다."),
 
 	//chat
 	CREATE_CHATROOM_SUCCESS(true, 1200, "채팅방 생성에 성공했습니다."),
@@ -75,7 +77,6 @@ public enum BaseResponseStatus {
 	GET_NOTIFICATION_LIST_SUCCESS(true, 1402, "알림 목록 조회에 성공했습니다"),
 	DELETE_NOTIFICATION_SUCCESS(true, 1403, "알림 삭제에 성공했습니다."),
 	READ_NOTIFICATION_SUCCESS(true, 1404, "알림 읽음 처리에 성공했습니다"),
-
 
 	/**
 	 * 2000 : request 오류
@@ -102,6 +103,8 @@ public enum BaseResponseStatus {
 	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
 	BLOCK_NOT_EXIST(false, 2019, "차단 해제 과정에 오류가 발생하였습니다"),
 	NICKNAME_ABUSE(false, 2020, "욕설이 포함된 닉네임 입니다."),
+	WITHDRAWAL_USER(false, 2021, "이미 탈퇴한 회원입니다."),
+	USER_EXIST(false, 2022, "이미 존재하는 회원힙니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),

@@ -1,7 +1,9 @@
 package com.modakbul.domain.user.service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -18,10 +20,17 @@ import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.enums.MatchStatus;
 import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.report.dto.ReportInfo;
+import com.modakbul.domain.report.entity.ChatReport;
+import com.modakbul.domain.report.entity.UserReport;
+import com.modakbul.domain.report.enums.ReportStatus;
+import com.modakbul.domain.report.repository.ChatReportRepository;
+import com.modakbul.domain.report.repository.UserReportRepository;
 import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
+import com.modakbul.domain.user.dto.ReportListResDto;
 import com.modakbul.domain.user.dto.UserCafeResDto;
 import com.modakbul.domain.user.dto.UserProfileResDto;
 import com.modakbul.domain.user.entity.Category;
@@ -49,6 +58,8 @@ public class UserService {
 	private final MatchRepository matchRepository;
 	private final BlockRepository blockRepository;
 	private final BoardRepository boardRepository;
+	private final UserReportRepository userReportRepository;
+	private final ChatReportRepository chatReportRepository;
 
 	public MyProfileResDto getMyProfileDetails(User user) {
 		List<UserCategory> findUserCategories = userCategoryRepository.findAllByUserIdWithCategory(user.getId());
@@ -216,6 +227,8 @@ public class UserService {
 
 		return findBlockedUserInfos.stream()
 			.map(findBlockedUserInfo -> BlockListResDto.builder()
+				.blockId(findBlockedUserInfo.getId())
+				.blockedId(findBlockedUserInfo.getUser().getId())
 				.image(findBlockedUserInfo.getUser().getImage())
 				.nickname(findBlockedUserInfo.getUser().getNickname())
 				.categoryName(findBlockedUserInfo.getCategory().getCategoryName())
@@ -225,4 +238,43 @@ public class UserService {
 
 	}
 
+	public List<ReportListResDto> getReportedUserList(User user) {
+		List<UserReport> findUserReportList = userReportRepository.findByReporterId(user.getId());
+		List<ChatReport> findChatReportList = chatReportRepository.findByReporterId(user.getId());
+
+		// UserReport에서 reportedId와 createdAt을 추출하여 리스트 생성
+		List<ReportInfo> userReportInfos = findUserReportList.stream()
+			.map(report -> new ReportInfo(report.getReported().getId(), report.getCreatedAt()))
+			.collect(Collectors.toList());
+
+		// ChatReport에서 reportedId와 createdAt을 추출하여 리스트 생성
+		List<ReportInfo> chatReportInfos = findChatReportList.stream()
+			.map(report -> new ReportInfo(report.getReported().getId(), report.getCreatedAt()))
+			.collect(Collectors.toList());
+
+		// 두 리스트 병합
+		List<ReportInfo> allReports = new ArrayList<>();
+		allReports.addAll(userReportInfos);
+		allReports.addAll(chatReportInfos);
+
+		// createAt을 기준으로 내림차순 정렬 후 reportedId만 추출
+		List<Long> reportedIds = allReports.stream()
+			.sorted(Comparator.comparing(ReportInfo::getCreatedAt).reversed()) // createAt 내림차순 정렬
+			.map(ReportInfo::getReportedId) // reportedId 추출
+			.collect(Collectors.toList());
+
+		List<UserCategory> findReportedUserInfos = userCategoryRepository.findCategoryWithUserByUserIds(
+			reportedIds);
+
+		return findReportedUserInfos.stream()
+			.map(findReportedUserInfo -> ReportListResDto.builder()
+				.userId(findReportedUserInfo.getUser().getId())
+				.image(findReportedUserInfo.getUser().getImage())
+				.nickname(findReportedUserInfo.getUser().getNickname())
+				.categoryName(findReportedUserInfo.getCategory().getCategoryName())
+				.job(findReportedUserInfo.getUser().getUserJob())
+				.status(ReportStatus.PENDING)
+				.build())
+			.collect(Collectors.toList());
+	}
 }

@@ -52,6 +52,7 @@ public class Cafe extends BaseEntity {
 	@CollectionTable(name = "cafe_opening_hour", joinColumns = @JoinColumn(name = "cafe_Id"))
 	private final List<OpeningHour> openingHours = new ArrayList<>();
 
+	@Builder.Default
 	@OneToMany(mappedBy = "cafe", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Board> boards = new ArrayList<>();
 

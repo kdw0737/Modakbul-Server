@@ -15,8 +15,7 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
 	@Query(value = "SELECT c.*, "
 		+ "(6371 * ACOS(COS(RADIANS(:userLatitude)) * COS(RADIANS(latitude)) * COS(RADIANS(longitude) - RADIANS(:userLongitude)) + SIN(RADIANS(:userLatitude)) * SIN(RADIANS(latitude)))) AS distance "
 		+ "FROM cafe c "
-		+ "JOIN board b ON c.cafe_id = b.cafe_id "
-		+ "WHERE b.status = 'CONTINUE' "
+		+ "LEFT JOIN board b ON c.cafe_id = b.cafe_id "
 		+ "GROUP BY c.cafe_id "
 		+ "HAVING distance <= 2 "
 		+ "ORDER BY distance ASC;",
@@ -26,13 +25,13 @@ public interface CafeRepository extends JpaRepository<Cafe, Long> {
 
 	@Query(value = "SELECT c.*, "
 		+ "(6371 * ACOS(COS(RADIANS(:userLatitude)) * COS(RADIANS(latitude)) * COS(RADIANS(longitude) - RADIANS(:userLongitude)) + SIN(RADIANS(:userLatitude)) * SIN(RADIANS(latitude)))) AS distance, "
-		+ "COUNT(b.board_id) AS meetingCount "
+		+ "(SELECT COUNT(b.board_id) "
+		+ "FROM board b "
+		+ "WHERE b.cafe_id = c.cafe_id "
+		+ "AND b.status = 'CONTINUE') AS meetingCount "
 		+ "FROM cafe c "
-		+ "JOIN board b ON c.cafe_id = b.cafe_id "
-		+ "WHERE b.status = 'CONTINUE' "
-		+ "GROUP BY c.cafe_id "
 		+ "HAVING distance <= 2 "
-		+ "ORDER BY meetingCount DESC, distance ASC;",
+		+ "ORDER BY meetingCount DESC, distance ASC; ",
 		nativeQuery = true)
 	List<Cafe> findAllByMeetingCount(@Param("userLatitude") double userLatitude,
 		@Param("userLongitude") double userLongitude);

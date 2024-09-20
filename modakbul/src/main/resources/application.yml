@@ -61,3 +61,14 @@ jwt:
   refresh-token:
     header: Authorization_refresh
     expiration-time: 600000
+
+apple:
+  team:
+    id: ${APPLE_TEAM_ID}
+  login:
+    key: ${APPLE_LOGIN_KEY}
+  client:
+    id: ${APPLE_CLIENT_ID}
+  private:
+    key: ${APPLE_PRIVATE_KEY}
+

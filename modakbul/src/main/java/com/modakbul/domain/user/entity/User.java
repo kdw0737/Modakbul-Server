@@ -1,7 +1,5 @@
 package com.modakbul.domain.user.entity;
 
-import org.checkerframework.checker.units.qual.C;
-
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.enums.Gender;
 import com.modakbul.domain.user.enums.Provider;
@@ -79,6 +77,10 @@ public class User extends BaseEntity {
 		this.nickname = request.getNickname();
 		this.image = image;
 		this.userJob = request.getJob();
+	}
+
+	public void updateUserStatus(UserStatus userStatus) {
+		this.userStatus = userStatus;
 	}
 
 	public void updateFcmToken(String fcmToken) {
