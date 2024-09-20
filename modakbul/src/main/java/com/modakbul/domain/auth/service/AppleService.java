@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modakbul.domain.auth.dto.AppleLoginReqDto;
 import com.modakbul.domain.auth.dto.AppleSignUpReqDto;
+import com.modakbul.domain.auth.dto.AuthResDto;
 import com.modakbul.domain.auth.entity.AppleRefreshToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.AppleRefreshTokenRepository;
@@ -41,6 +43,7 @@ import com.modakbul.domain.user.repository.UserCategoryRepository;
 import com.modakbul.domain.user.repository.UserRepository;
 import com.modakbul.global.auth.jwt.JwtProvider;
 import com.modakbul.global.common.response.BaseException;
+import com.modakbul.global.common.response.BaseResponse;
 import com.modakbul.global.common.response.BaseResponseStatus;
 import com.modakbul.global.s3.service.S3ImageService;
 
@@ -78,10 +81,9 @@ public class AppleService {
 	private final AppleRefreshTokenRepository appleRefreshTokenRepository;
 
 	@Transactional
-	public Map<String, String> login(AppleLoginReqDto request) throws
+	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) throws
 		JsonProcessingException, IOException {
-		Map<String, String> token = new HashMap<>();
-
+		HttpHeaders httpHeaders = new HttpHeaders();
 		JsonNode node = getNode(request.getAuthorizationCode());
 		String email = getEmail(node.path("id_token").asText());
 		Provider provider = Provider.APPLE;
@@ -89,7 +91,9 @@ public class AppleService {
 		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
 
 		if (findUser == null) {
-			throw new BaseException(BaseResponseStatus.USER_NOT_EXIST);
+			AuthResDto authResDto = AuthResDto.builder().userId(-1L).build();
+			return new ResponseEntity<>(new BaseResponse<>(BaseResponseStatus.USER_NOT_EXIST, authResDto),
+				httpHeaders, HttpStatus.OK);
 		} else if ((findUser.getUserStatus()).equals(UserStatus.DELETED)) {
 			throw new BaseException(BaseResponseStatus.WITHDRAWAL_USER);
 		} else {
@@ -107,20 +111,22 @@ public class AppleService {
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
 			refreshTokenRepository.save(addRefreshToken);
 
-			token.put("Authorization", "Bearer " + accessToken);
-			token.put("Authorization_refresh", "Bearer " + refreshToken);
+			httpHeaders.set("Authorization", "Bearer " + accessToken);
+			httpHeaders.set("Authorization_refresh", "Bearer " + refreshToken);
 
-			return token;
+			AuthResDto authResDto = AuthResDto.builder().userId(findUser.getId()).build();
+			return new ResponseEntity<>(new BaseResponse<>(BaseResponseStatus.LOGIN_SUCCESS, authResDto),
+				httpHeaders, HttpStatus.OK);
 		}
 	}
 
-	public Map<String, String> signUp(MultipartFile image, AppleSignUpReqDto request) throws IOException {
+	public ResponseEntity<BaseResponse<AuthResDto>> signUp(MultipartFile image, AppleSignUpReqDto request) throws
+		IOException {
 		JsonNode node = getNode(request.getUser().getAuthorizationCode());
 
 		String email = getEmail(node.path("id_token").asText());
 		Provider provider = Provider.APPLE;
 
-		Map<String, String> token = new HashMap<>();
 		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
 
 		if (findUser != null) {
@@ -168,10 +174,13 @@ public class AppleService {
 		RefreshToken addRefreshToken = new RefreshToken(addUser.getId(), refreshToken, refreshTokenExpirationTime);
 		refreshTokenRepository.save(addRefreshToken);
 
-		token.put("Authorization", "Bearer " + accessToken);
-		token.put("Authorization_refresh", "Bearer " + refreshToken);
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.set("Authorization", "Bearer " + accessToken);
+		httpHeaders.set("Authorization_refresh", "Bearer " + refreshToken);
 
-		return token;
+		AuthResDto authResDto = AuthResDto.builder().userId(addUser.getId()).build();
+		return new ResponseEntity<>(new BaseResponse<>(BaseResponseStatus.LOGIN_SUCCESS, authResDto),
+			httpHeaders, HttpStatus.OK);
 	}
 
 	public void withdrawal(User user) throws IOException {
@@ -198,6 +207,14 @@ public class AppleService {
 		HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
 		restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
+	}
+
+	public void validateIdToken(String idToken) {
+
+	}
+
+	public JsonNode publicKey() {
+		return null;
 	}
 
 	public String getEmail(String idToken) throws JsonProcessingException {
