@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.modakbul.domain.board.enums.BoardStatus;
 import com.modakbul.domain.cafe.dto.CafeListResDto;
 import com.modakbul.domain.cafe.entity.Cafe;
 import com.modakbul.domain.cafe.repository.CafeRepository;
@@ -42,7 +43,9 @@ public class CafeService {
 				.id(findCafe.getId())
 				.image(findCafe.getImageUrls())
 				.name(findCafe.getName())
-				.meetingCount(findCafe.getBoards().size())
+				.meetingCount(findCafe.getBoards().stream()
+					.filter(board -> (BoardStatus.CONTINUE).equals(board.getStatus()))
+					.count())
 				.location(findCafe.getAddress())
 				.openingHour(findCafe.getOpeningHours())
 				.outlet(findCafe.getOutlet())
@@ -70,6 +73,6 @@ public class CafeService {
 	}
 
 	public void deleteCafe() {
-		
+
 	}
 }
