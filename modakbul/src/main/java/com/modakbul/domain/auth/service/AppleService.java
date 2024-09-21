@@ -122,7 +122,7 @@ public class AppleService {
 
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(MultipartFile image, AppleSignUpReqDto request) throws
 		IOException {
-		JsonNode node = getNode(request.getUser().getAuthorizationCode());
+		JsonNode node = getNode(request.getAuthorizationCode());
 
 		String email = getEmail(node.path("id_token").asText());
 		Provider provider = Provider.APPLE;
@@ -133,26 +133,26 @@ public class AppleService {
 			throw new BaseException(BaseResponseStatus.USER_EXIST);
 		}
 
-		String accessToken = jwtProvider.createAccessToken(provider, email, request.getUser().getNickname());
-		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getUser().getNickname());
+		String accessToken = jwtProvider.createAccessToken(provider, email, request.getNickname());
+		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getNickname());
 
 		User addUser = User.builder()
 			.email(email)
 			.provider(provider)
-			.birth(request.getUser().getBirth())
-			.name(request.getUser().getName())
-			.nickname(request.getUser().getNickname())
-			.gender(request.getUser().getGender())
-			.userJob(request.getUser().getJob())
+			.birth(request.getBirth())
+			.name(request.getName())
+			.nickname(request.getNickname())
+			.gender(request.getGender())
+			.userJob(request.getJob())
 			.isVisible(true)
 			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
-			.fcmToken(request.getUser().getFcm())
+			.fcmToken(request.getFcm())
 			.build();
 		userRepository.save(addUser);
 
-		request.getUser().getCategories().forEach(categoryName ->
+		request.getCategories().forEach(categoryName ->
 			categoryRepository.findByCategoryName(categoryName)
 				.ifPresentOrElse(
 					category -> userCategoryRepository.save(

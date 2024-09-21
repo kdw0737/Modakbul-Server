@@ -109,8 +109,22 @@ public class JwtProvider {
 		return null;
 	}
 
+	public String resolveToken(String accessToken) {
+		if (accessToken != null && accessToken.startsWith("Bearer ")) {
+			accessToken = accessToken.substring(7);
+			return accessToken;
+		}
+		return null;
+	}
+
 	public Long getExpiration(String accessToken) {
-		Date expiration = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(accessToken).getBody().getExpiration();
+		accessToken = resolveToken(accessToken);
+
+		Date expiration = Jwts.parser()
+			.setSigningKey(secretKey)
+			.parseClaimsJws(accessToken)
+			.getBody()
+			.getExpiration();
 
 		Long now = new Date().getTime();
 		return (expiration.getTime() - now);
