@@ -75,35 +75,35 @@ public class KakaoService {
 	}
 
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(MultipartFile image, KakaoSignUpReqDto request) {
-		User findUser = userRepository.findByEmailAndProvider(request.getUser().getEmail(),
+		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
 			Provider.KAKAO).orElse(null);
 
 		if (findUser != null) {
 			throw new BaseException(BaseResponseStatus.USER_EXIST);
 		}
 
-		String accessToken = jwtProvider.createAccessToken(Provider.KAKAO, request.getUser().getEmail(),
-			request.getUser().getNickname());
-		String refreshToken = jwtProvider.createRefreshToken(Provider.KAKAO, request.getUser().getEmail(),
-			request.getUser().getNickname());
+		String accessToken = jwtProvider.createAccessToken(Provider.KAKAO, request.getEmail(),
+			request.getNickname());
+		String refreshToken = jwtProvider.createRefreshToken(Provider.KAKAO, request.getEmail(),
+			request.getNickname());
 
 		User addUser = User.builder()
-			.email(request.getUser().getEmail())
+			.email(request.getEmail())
 			.provider(Provider.KAKAO)
-			.birth(request.getUser().getBirth())
-			.name(request.getUser().getName())
-			.nickname(request.getUser().getNickname())
-			.gender(request.getUser().getGender())
-			.userJob(request.getUser().getJob())
+			.birth(request.getBirth())
+			.name(request.getName())
+			.nickname(request.getNickname())
+			.gender(request.getGender())
+			.userJob(request.getJob())
 			.isVisible(true)
 			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
-			.fcmToken(request.getUser().getFcm())
+			.fcmToken(request.getFcm())
 			.build();
 		userRepository.save(addUser);
 
-		request.getUser().getCategories().forEach(categoryName ->
+		request.getCategories().forEach(categoryName ->
 			categoryRepository.findByCategoryName(categoryName)
 				.ifPresentOrElse(
 					category -> userCategoryRepository.save(
@@ -126,7 +126,7 @@ public class KakaoService {
 		httpHeaders.set("Authorization_refresh", "Bearer " + refreshToken);
 
 		AuthResDto authResDto = AuthResDto.builder().userId(addUser.getId()).build();
-		return new ResponseEntity<>(new BaseResponse<>(BaseResponseStatus.LOGIN_SUCCESS, authResDto),
+		return new ResponseEntity<>(new BaseResponse<>(BaseResponseStatus.REGISTER_SUCCESS, authResDto),
 			httpHeaders, HttpStatus.OK);
 	}
 
