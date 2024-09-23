@@ -1,6 +1,8 @@
+/*
 package com.modakbul.domain.auth.service;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
@@ -47,6 +49,7 @@ import com.modakbul.global.common.response.BaseResponse;
 import com.modakbul.global.common.response.BaseResponseStatus;
 import com.modakbul.global.s3.service.S3ImageService;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.RequiredArgsConstructor;
@@ -79,13 +82,15 @@ public class AppleService {
 	private Long refreshTokenExpirationTime;
 	private final S3ImageService s3ImageService;
 	private final AppleRefreshTokenRepository appleRefreshTokenRepository;
+	@Value("${image.url}")
+	private String IMAGE_URL;
 
 	@Transactional
 	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) throws
 		JsonProcessingException, IOException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		JsonNode node = getNode(request.getAuthorizationCode());
-		String email = getEmail(node.path("id_token").asText());
+		String email = (String)getClaims(node.path("id_token").asText()).get("email");
 		Provider provider = Provider.APPLE;
 
 		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
@@ -124,7 +129,7 @@ public class AppleService {
 		IOException {
 		JsonNode node = getNode(request.getAuthorizationCode());
 
-		String email = getEmail(node.path("id_token").asText());
+		String email = (String)getClaims(node.path("id_token").asText()).get("email");
 		Provider provider = Provider.APPLE;
 
 		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
@@ -136,6 +141,12 @@ public class AppleService {
 		String accessToken = jwtProvider.createAccessToken(provider, email, request.getNickname());
 		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getNickname());
 
+		String imageUrl = s3ImageService.upload(image);
+
+		if (imageUrl == null) {
+			imageUrl = IMAGE_URL;
+		}
+
 		User addUser = User.builder()
 			.email(email)
 			.provider(provider)
@@ -145,7 +156,7 @@ public class AppleService {
 			.gender(request.getGender())
 			.userJob(request.getJob())
 			.isVisible(true)
-			.image(s3ImageService.upload(image))
+			.image(imageUrl)
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
 			.fcmToken(request.getFcm())
@@ -209,15 +220,46 @@ public class AppleService {
 		restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
 	}
 
-	public void validateIdToken(String idToken) {
+	public Claims getClaims(String idToken) throws JsonProcessingException, UnsupportedEncodingException {
+		JsonNode publicKey = getPublicKey().get("keys");
 
-	}
+		String headerOfIdToken = idToken.substring(0, idToken.indexOf("."));
+		Map<String, String> header = new ObjectMapper().readValue(
+			new String(Base64.getDecoder().decode(headerOfIdToken), "UTF-8"), Map.class);
 
-	public JsonNode publicKey() {
+		//return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(identityToken).getBody();
 		return null;
 	}
 
-	public String getEmail(String idToken) throws JsonProcessingException {
+	public JsonNode getPublicKey() throws JsonProcessingException {
+		RestTemplate restTemplate = new RestTemplateBuilder().build();
+		String authUrl = APPLE_AUTH_URL + "/auth/keys";
+
+		// MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		// params.add("code", code);
+		// params.add("client_id", APPLE_CLIENT_ID);
+		// params.add("client_secret", createClientSecret());
+		// params.add("grant_type", "authorization_code");
+
+		// HttpHeaders headers = new HttpHeaders();
+		// headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		// headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+		// HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(headers);
+		//ResponseEntity<String> response = restTemplate.postForEntity(authUrl, null, String.class);
+		ResponseEntity<String> response = restTemplate.getForEntity(authUrl, String.class);
+
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.readTree(response.getBody());
+	}
+
+
+	*/
+/*	public String getEmail(Claims claims*//*
+ */
+/*String idToken*//*
+ */
+/*) throws JsonProcessingException {
+		return (String)claims.get("email");
 		if (idToken == null) {
 			throw new BaseException(BaseResponseStatus.CODE_NOT_EXIST);
 		}
@@ -229,7 +271,9 @@ public class AppleService {
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode payloadJson = objectMapper.readTree(decodedPayload);
 		return payloadJson.get("email").asText();
-	}
+
+	}*//*
+
 
 	private String createClientSecret() throws IOException {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
@@ -268,3 +312,4 @@ public class AppleService {
 		return mapper.readTree(response.getBody());
 	}
 }
+*/
