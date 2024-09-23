@@ -77,3 +77,5 @@ apple:
   private:
     key: ${APPLE_PRIVATE_KEY}
 
+image:
+  url: ${IMAGE_URL}

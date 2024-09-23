@@ -1,3 +1,4 @@
+/*
 package com.modakbul.domain.auth.controller;
 
 import java.io.IOException;
@@ -45,3 +46,4 @@ public class AppleController {
 		return new BaseResponse<>(BaseResponseStatus.WITHDRAWAL_SUCCESS);
 	}
 }
+*/
