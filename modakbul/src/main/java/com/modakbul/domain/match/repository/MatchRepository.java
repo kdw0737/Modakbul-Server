@@ -57,4 +57,10 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 		@Param("currentDate") LocalDate currentDate);
 
 	List<Matches> findAllByBoard(Board board);
+
+	List<Matches> findAllBySenderId(Long senderId);
+
+	void deleteAllByBoard(Board board);
+
+	void deleteAllById(Long id);
 }

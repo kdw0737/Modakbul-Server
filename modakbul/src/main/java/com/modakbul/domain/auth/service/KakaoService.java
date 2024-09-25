@@ -1,17 +1,26 @@
 package com.modakbul.domain.auth.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.modakbul.domain.auth.dto.AuthResDto;
 import com.modakbul.domain.auth.dto.KakaoLoginReqDto;
 import com.modakbul.domain.auth.dto.KakaoSignUpReqDto;
+import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
+import com.modakbul.domain.auth.repository.LogoutTokenRepository;
 import com.modakbul.domain.auth.repository.RefreshTokenRepository;
+import com.modakbul.domain.board.entity.Board;
+import com.modakbul.domain.board.repository.BoardRepository;
+import com.modakbul.domain.match.entity.Matches;
+import com.modakbul.domain.match.repository.MatchRepository;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
 import com.modakbul.domain.user.enums.Provider;
@@ -42,6 +51,10 @@ public class KakaoService {
 	@Value("${jwt.refresh-token.expiration-time}")
 	private Long refreshTokenExpirationTime;
 	private final S3ImageService s3ImageService;
+	private final LogoutTokenRepository logoutTokenRepository;
+
+	private final BoardRepository boardRepository;
+	private final MatchRepository matchRepository;
 
 	public ResponseEntity<BaseResponse<AuthResDto>> login(KakaoLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
@@ -130,8 +143,31 @@ public class KakaoService {
 			httpHeaders, HttpStatus.OK);
 	}
 
-	public void withdrawal(User user) {
+/*	public void withdrawal(User user) {
 		user.updateUserStatus(UserStatus.DELETED);
 		userRepository.save(user);
+	}*/
+
+	@Transactional
+	public void withdrawal(User user, String accessToken) {
+		List<Board> findBoards = boardRepository.findAllByUser(user);
+		findBoards.forEach(matchRepository::deleteAllByBoard);
+
+		List<Matches> findMatches = matchRepository.findAllBySenderId(user.getId());
+		if (findMatches != null) {
+			findMatches.forEach(findMatch -> {
+				matchRepository.deleteAllById(findMatch.getId());
+			});
+		}
+		
+		boardRepository.deleteAllByUser(user);
+
+		userCategoryRepository.deleteAllByUser(user);
+		userRepository.delete(user);
+
+		Long expiration = jwtProvider.getExpiration(accessToken);
+
+		refreshTokenRepository.deleteById(user.getId());
+		logoutTokenRepository.save(new LogoutToken(accessToken, expiration / 1000));
 	}
 }

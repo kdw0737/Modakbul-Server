@@ -34,8 +34,8 @@ public enum BaseResponseStatus {
 	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
 	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
 	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다."),
-	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다."),
-	GET_REPORT_LIST_SUCCESS(true, 1023, "신고 목록 조회에 성공했습니다."),
+	GET_BLOCK_LIST_SUCCESS(true, 1024, "차단 목록 조회에 성공했습니다."),
+	GET_REPORT_LIST_SUCCESS(true, 1025, "신고 목록 조회에 성공했습니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),

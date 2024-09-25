@@ -2,6 +2,7 @@ package com.modakbul.domain.user.entity;
 
 import com.modakbul.global.common.entity.BaseEntity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -27,7 +28,7 @@ public class UserCategory extends BaseEntity {
 	@Column(name = "user_category_id")
 	private Long id;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "user_id")
 	private User user;
 

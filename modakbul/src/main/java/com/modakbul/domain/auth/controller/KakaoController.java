@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,8 +39,9 @@ public class KakaoController {
 	}
 
 	@DeleteMapping("/users/withdrawal/kakao")
-	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user) {
-		kakaoService.withdrawal(user);
+	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user,
+		@RequestHeader("Authorization") String accessToken) {
+		kakaoService.withdrawal(user, accessToken);
 		return new BaseResponse<>(BaseResponseStatus.WITHDRAWAL_SUCCESS);
 	}
 }
