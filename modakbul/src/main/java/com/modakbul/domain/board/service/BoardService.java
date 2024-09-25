@@ -147,6 +147,7 @@ public class BoardService {
 		String time = parts[1];
 
 		BoardDetailsDto boardDetailsDto = BoardDetailsDto.builder()
+			//.id(findBoard.getId())
 			.title(findBoard.getTitle())
 			.createdDate(date)
 			.createdTime(time)
@@ -172,7 +173,7 @@ public class BoardService {
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 		int currentCount = matchRepository.countAllByBoardAndMatchStatus(findBoard, MatchStatus.ACCEPTED);
 
-		if(!findBoard.getUser().getId().equals(user.getId())) {
+		if (!findBoard.getUser().getId().equals(user.getId())) {
 			throw new BaseException(BaseResponseStatus.BOARD_NOT_OWNED_BY_USER);
 		}
 

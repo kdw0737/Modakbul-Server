@@ -8,7 +8,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -37,13 +36,13 @@ public class S3ImageService {
 	private String bucketName;
 
 	public String upload(MultipartFile image) {
-		//입력받은 이미지 파일이 빈 파일이면 null 반환
-		if (image.isEmpty() || Objects.isNull(image.getOriginalFilename())) {
-			return null;
-			//throw new BaseException(BaseResponseStatus.EMPTY_IMAGE_FILE);
+		if (image != null) {
+			if (image.isEmpty()) {
+				return null;
+			}
+			return uploadImage(image);
 		}
-		//uploadImage를 호출하여 S3에 저장된 이미지의 public url을 반환한다.
-		return uploadImage(image);
+		return null;
 	}
 
 	private String uploadImage(MultipartFile image) {

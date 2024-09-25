@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardDetailsDto {
+	private Long id;
 	private String title;
 	private String createdDate;
 	private String createdTime;

@@ -11,6 +11,8 @@ import org.springframework.stereotype.Repository;
 
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.enums.BoardStatus;
+import com.modakbul.domain.cafe.entity.Cafe;
+import com.modakbul.domain.user.entity.User;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
@@ -47,4 +49,10 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 		+ "JOIN FETCH b.user u "
 		+ "WHERE b.id = :boardId")
 	Optional<Board> findByBoardIdwithUser(@Param("boardId") Long boardId);
+
+	List<Board> findAllByCafe(Cafe cafe);
+
+	void deleteAllByUser(User user);
+
+	List<Board> findAllByUser(User user);
 }

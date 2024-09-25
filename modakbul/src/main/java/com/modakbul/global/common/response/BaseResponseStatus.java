@@ -34,8 +34,8 @@ public enum BaseResponseStatus {
 	GET_USER_PROFILE_SUCCESS(true, 1021, "해당 사용자 프로필 정보 조회에 성공했습니다"),
 	REPORT_PROFILE_SUCCESS(true, 1022, "사용자 프로필 신고에 성공했습니다."),
 	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다."),
-	GET_BLOCK_LIST_SUCCESS(true, 1022, "차단 목록 조회에 성공했습니다."),
-	GET_REPORT_LIST_SUCCESS(true, 1023, "신고 목록 조회에 성공했습니다."),
+	GET_BLOCK_LIST_SUCCESS(true, 1024, "차단 목록 조회에 성공했습니다."),
+	GET_REPORT_LIST_SUCCESS(true, 1025, "신고 목록 조회에 성공했습니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
@@ -105,6 +105,7 @@ public enum BaseResponseStatus {
 	NICKNAME_ABUSE(false, 2020, "욕설이 포함된 닉네임 입니다."),
 	WITHDRAWAL_USER(false, 2021, "이미 탈퇴한 회원입니다."),
 	USER_EXIST(false, 2022, "이미 존재하는 회원힙니다."),
+	SEARCH_APPLE_PUBLIC_KEY_FAILED(false, 2023, "일치하는 애플 공개키가 없습니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),
