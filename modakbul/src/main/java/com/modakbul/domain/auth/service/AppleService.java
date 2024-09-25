@@ -1,14 +1,21 @@
-/*
 package com.modakbul.domain.auth.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.RSAPublicKeySpec;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +36,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.modakbul.domain.auth.dto.AppleLoginReqDto;
+import com.modakbul.domain.auth.dto.ApplePublicKeyDto;
 import com.modakbul.domain.auth.dto.AppleSignUpReqDto;
 import com.modakbul.domain.auth.dto.AuthResDto;
 import com.modakbul.domain.auth.entity.AppleRefreshToken;
@@ -82,12 +90,12 @@ public class AppleService {
 	private Long refreshTokenExpirationTime;
 	private final S3ImageService s3ImageService;
 	private final AppleRefreshTokenRepository appleRefreshTokenRepository;
-	@Value("${image.url}")
-	private String IMAGE_URL;
 
 	@Transactional
 	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) throws
-		JsonProcessingException, IOException {
+		IOException,
+		InvalidKeySpecException,
+		NoSuchAlgorithmException {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		JsonNode node = getNode(request.getAuthorizationCode());
 		String email = (String)getClaims(node.path("id_token").asText()).get("email");
@@ -126,7 +134,7 @@ public class AppleService {
 	}
 
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(MultipartFile image, AppleSignUpReqDto request) throws
-		IOException {
+		IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		JsonNode node = getNode(request.getAuthorizationCode());
 
 		String email = (String)getClaims(node.path("id_token").asText()).get("email");
@@ -141,12 +149,6 @@ public class AppleService {
 		String accessToken = jwtProvider.createAccessToken(provider, email, request.getNickname());
 		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getNickname());
 
-		String imageUrl = s3ImageService.upload(image);
-
-		if (imageUrl == null) {
-			imageUrl = IMAGE_URL;
-		}
-
 		User addUser = User.builder()
 			.email(email)
 			.provider(provider)
@@ -156,7 +158,7 @@ public class AppleService {
 			.gender(request.getGender())
 			.userJob(request.getJob())
 			.isVisible(true)
-			.image(imageUrl)
+			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
 			.fcmToken(request.getFcm())
@@ -194,14 +196,14 @@ public class AppleService {
 			httpHeaders, HttpStatus.OK);
 	}
 
-	public void withdrawal(User user) throws IOException {
+	public void withdrawal(User user) {
 		revoke(user);
 
 		user.updateUserStatus(UserStatus.DELETED);
 		userRepository.save(user);
 	}
 
-	public void revoke(User user) throws IOException {
+	public void revoke(User user) {
 		AppleRefreshToken findAppleRefreshToken = appleRefreshTokenRepository.findById(user.getId())
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
 
@@ -220,62 +222,60 @@ public class AppleService {
 		restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
 	}
 
-	public Claims getClaims(String idToken) throws JsonProcessingException, UnsupportedEncodingException {
-		JsonNode publicKey = getPublicKey().get("keys");
+	public Claims getClaims(String idToken) throws
+		JsonProcessingException,
+		UnsupportedEncodingException,
+		InvalidKeySpecException,
+		NoSuchAlgorithmException {
+		List<ApplePublicKeyDto> applePublicKeys = getPublicKey();
 
 		String headerOfIdToken = idToken.substring(0, idToken.indexOf("."));
 		Map<String, String> header = new ObjectMapper().readValue(
 			new String(Base64.getDecoder().decode(headerOfIdToken), "UTF-8"), Map.class);
+		ApplePublicKeyDto applePublicKey = applePublicKeys.stream()
+			.filter(key -> key.getKid().equals(header.get("kid")) && key.getAlg().equals(header.get("alg")))
+			.findFirst()
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.SEARCH_APPLE_PUBLIC_KEY_FAILED));
 
-		//return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(identityToken).getBody();
-		return null;
+		byte[] nBytes = Base64.getUrlDecoder().decode(applePublicKey.getN());
+		byte[] eBytes = Base64.getUrlDecoder().decode(applePublicKey.getE());
+
+		BigInteger n = new BigInteger(1, nBytes);
+		BigInteger e = new BigInteger(1, eBytes);
+
+		RSAPublicKeySpec publicKeySpec = new RSAPublicKeySpec(n, e);
+		KeyFactory keyFactory = KeyFactory.getInstance(applePublicKey.getKty());
+		PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+
+		return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(idToken).getBody();
 	}
 
-	public JsonNode getPublicKey() throws JsonProcessingException {
+	public List<ApplePublicKeyDto> getPublicKey() throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplateBuilder().build();
 		String authUrl = APPLE_AUTH_URL + "/auth/keys";
 
-		// MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		// params.add("code", code);
-		// params.add("client_id", APPLE_CLIENT_ID);
-		// params.add("client_secret", createClientSecret());
-		// params.add("grant_type", "authorization_code");
-
-		// HttpHeaders headers = new HttpHeaders();
-		// headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		// headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-		// HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(headers);
-		//ResponseEntity<String> response = restTemplate.postForEntity(authUrl, null, String.class);
 		ResponseEntity<String> response = restTemplate.getForEntity(authUrl, String.class);
 
 		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readTree(response.getBody());
+		JsonNode publicKeys = mapper.readTree(response.getBody()).get("keys");
+
+		List<ApplePublicKeyDto> applePublicKeys = new ArrayList<>();
+		for (JsonNode publicKey : publicKeys) {
+			ApplePublicKeyDto applePublicKey = ApplePublicKeyDto.builder()
+				.kty(publicKey.get("kty").asText())
+				.kid(publicKey.get("kid").asText())
+				.use(publicKey.get("use").asText())
+				.alg(publicKey.get("alg").asText())
+				.n(publicKey.get("n").asText())
+				.e(publicKey.get("e").asText())
+				.build();
+			applePublicKeys.add(applePublicKey);
+		}
+
+		return applePublicKeys;
 	}
 
-
-	*/
-/*	public String getEmail(Claims claims*//*
- */
-/*String idToken*//*
- */
-/*) throws JsonProcessingException {
-		return (String)claims.get("email");
-		if (idToken == null) {
-			throw new BaseException(BaseResponseStatus.CODE_NOT_EXIST);
-		}
-		String[] parts = idToken.split("\\.");
-		String payload = parts[1];
-		Base64.Decoder decoder = Base64.getUrlDecoder();
-		String decodedPayload = new String(decoder.decode(payload));
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		JsonNode payloadJson = objectMapper.readTree(decodedPayload);
-		return payloadJson.get("email").asText();
-
-	}*//*
-
-
-	private String createClientSecret() throws IOException {
+	private String createClientSecret() {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
 		Map<String, Object> jwtHeader = new HashMap<>();
 		jwtHeader.put("kid", APPLE_LOGIN_KEY); //애플 개발자 사이트의 key 탭에서 앱에 등록한 Sign in with Apple의 Key ID
@@ -312,4 +312,3 @@ public class AppleService {
 		return mapper.readTree(response.getBody());
 	}
 }
-*/

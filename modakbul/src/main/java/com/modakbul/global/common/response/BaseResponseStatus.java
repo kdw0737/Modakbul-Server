@@ -105,6 +105,7 @@ public enum BaseResponseStatus {
 	NICKNAME_ABUSE(false, 2020, "욕설이 포함된 닉네임 입니다."),
 	WITHDRAWAL_USER(false, 2021, "이미 탈퇴한 회원입니다."),
 	USER_EXIST(false, 2022, "이미 존재하는 회원힙니다."),
+	SEARCH_APPLE_PUBLIC_KEY_FAILED(false, 2023, "일치하는 애플 공개키가 없습니다."),
 
 	//cafe
 	REGISTRATION_WAITING_FAILED(false, 2100, "매칭 대기 등록에 실패했습니다."),

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,9 +45,9 @@ public class CafeController {
 			cafeService.searchCafeList(cafeName, latitude, longitude));
 	}
 
-	@DeleteMapping("/cafes")
-	public BaseResponse<Void> deleteCafe() {
-		cafeService.deleteCafe();
+	@DeleteMapping("/cafes/{cafeId}")
+	public BaseResponse<Void> deleteCafe(@PathVariable("cafeId") Long cafeId) {
+		cafeService.deleteCafe(cafeId);
 		return new BaseResponse<>(BaseResponseStatus.DELETE_CAFE_SUCCESS);
 	}
 }

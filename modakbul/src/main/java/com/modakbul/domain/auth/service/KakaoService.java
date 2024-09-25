@@ -42,9 +42,7 @@ public class KakaoService {
 	@Value("${jwt.refresh-token.expiration-time}")
 	private Long refreshTokenExpirationTime;
 	private final S3ImageService s3ImageService;
-	@Value("${image.url}")
-	private String IMAGE_URL;
-	
+
 	public ResponseEntity<BaseResponse<AuthResDto>> login(KakaoLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
@@ -89,11 +87,6 @@ public class KakaoService {
 		String refreshToken = jwtProvider.createRefreshToken(Provider.KAKAO, request.getEmail(),
 			request.getNickname());
 
-		String imageUrl = s3ImageService.upload(image);
-		if (imageUrl == null) {
-			imageUrl = IMAGE_URL;
-		}
-
 		User addUser = User.builder()
 			.email(request.getEmail())
 			.provider(Provider.KAKAO)
@@ -103,7 +96,7 @@ public class KakaoService {
 			.gender(request.getGender())
 			.userJob(request.getJob())
 			.isVisible(true)
-			.image(imageUrl)
+			.image(s3ImageService.upload(image))
 			.userRole(UserRole.NORMAL)
 			.userStatus(UserStatus.ACTIVE)
 			.fcmToken(request.getFcm())

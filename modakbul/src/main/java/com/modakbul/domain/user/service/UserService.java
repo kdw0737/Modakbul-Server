@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,8 +60,6 @@ public class UserService {
 	private final BoardRepository boardRepository;
 	private final UserReportRepository userReportRepository;
 	private final ChatReportRepository chatReportRepository;
-	@Value("${image.url}")
-	private String IMAGE_URL;
 
 	public MyProfileResDto getMyProfileDetails(User user) {
 		List<UserCategory> findUserCategories = userCategoryRepository.findAllByUserIdWithCategory(user.getId());
@@ -98,8 +95,8 @@ public class UserService {
 			}).collect(Collectors.toList());
 		userCategoryRepository.saveAll(userCategories);
 
-		if (!image.isEmpty()) {
-			if (!imageUrl.equals(IMAGE_URL)) {
+		if (!(image == null || image.isEmpty())) {
+			if (imageUrl != null) {
 				s3ImageService.deleteImageFromS3(imageUrl);
 			}
 			imageUrl = s3ImageService.upload(image);

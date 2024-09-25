@@ -30,7 +30,7 @@ public class KakaoController {
 		return kakaoService.login(request);
 	}
 
-	@PostMapping("/users/register/kakao")
+	@PostMapping(value = "/users/register/kakao")
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(
 		@RequestPart(value = "image", required = false) MultipartFile image,
 		@RequestPart(value = "user") KakaoSignUpReqDto request) {
