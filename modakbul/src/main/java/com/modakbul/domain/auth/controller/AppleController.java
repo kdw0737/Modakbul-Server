@@ -1,7 +1,8 @@
-/*
 package com.modakbul.domain.auth.controller;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,21 +30,26 @@ public class AppleController {
 	private final AppleService appleService;
 
 	@PostMapping("/users/login/apple")
-	public ResponseEntity<BaseResponse<AuthResDto>> login(@RequestBody AppleLoginReqDto request) throws IOException {
+	public ResponseEntity<BaseResponse<AuthResDto>> login(@RequestBody AppleLoginReqDto request) throws
+		IOException,
+		InvalidKeySpecException,
+		NoSuchAlgorithmException {
 		return appleService.login(request);
 	}
 
 	@PostMapping("/users/register/apple")
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(
 		@RequestPart(value = "image", required = false) MultipartFile image,
-		@RequestPart(value = "user") AppleSignUpReqDto request) throws IOException {
+		@RequestPart(value = "user") AppleSignUpReqDto request) throws
+		IOException,
+		InvalidKeySpecException,
+		NoSuchAlgorithmException {
 		return appleService.signUp(image, request);
 	}
 
 	@DeleteMapping("/users/withdrawal/apple")
-	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user) throws IOException {
+	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user) {
 		appleService.withdrawal(user);
 		return new BaseResponse<>(BaseResponseStatus.WITHDRAWAL_SUCCESS);
 	}
 }
-*/

@@ -5,10 +5,16 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.enums.BoardStatus;
+import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.cafe.dto.CafeListResDto;
 import com.modakbul.domain.cafe.entity.Cafe;
 import com.modakbul.domain.cafe.repository.CafeRepository;
+import com.modakbul.domain.match.entity.Matches;
+import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.global.common.response.BaseException;
+import com.modakbul.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +23,8 @@ import lombok.RequiredArgsConstructor;
 public class CafeService {
 
 	private final CafeRepository cafeRepository;
+	private final BoardRepository boardRepository;
+	private final MatchRepository matchRepository;
 
 	public List<CafeListResDto> getCafeListSortByDistance(double latitude, double longitude) {
 		List<Cafe> findCafes = cafeRepository.findAllByDistance(latitude, longitude);
@@ -76,7 +84,22 @@ public class CafeService {
 			.collect(Collectors.toList());
 	}
 
-	public void deleteCafe() {
+	public void deleteCafe(Long cafeId) {
+		Cafe cafe = cafeRepository.findById(cafeId)
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.CAFE_NOT_FOUND));
+		List<Board> findBoards = boardRepository.findAllByCafe(cafe);
 
+		findBoards.forEach(findBoard -> {
+			List<Matches> findMatches = matchRepository.findAllByBoard(findBoard);
+
+			if (!findMatches.isEmpty()) {
+				matchRepository.deleteAll(findMatches);
+			}
+		});
+
+		if (!findBoards.isEmpty()) {
+			boardRepository.deleteAll(findBoards);
+		}
+		cafeRepository.delete(cafe);
 	}
 }
