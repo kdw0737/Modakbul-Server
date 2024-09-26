@@ -147,7 +147,7 @@ public class BoardService {
 		String time = parts[1];
 
 		BoardDetailsDto boardDetailsDto = BoardDetailsDto.builder()
-			//.id(findBoard.getId())
+			.id(findBoard.getId())
 			.title(findBoard.getTitle())
 			.createdDate(date)
 			.createdTime(time)
