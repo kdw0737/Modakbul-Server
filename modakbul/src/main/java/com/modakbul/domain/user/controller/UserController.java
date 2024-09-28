@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.modakbul.domain.board.dto.BoardInfoDto;
 import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
+import com.modakbul.domain.user.dto.MyMatchesRequestHistoryDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
 import com.modakbul.domain.user.dto.ReportListResDto;
@@ -61,7 +62,8 @@ public class UserController {
 	}
 
 	@GetMapping("/users/matches/requests")
-	public BaseResponse<List<BoardInfoDto>> getMyMatchesRequestHistory(@AuthenticationPrincipal User user) {
+	public BaseResponse<List<MyMatchesRequestHistoryDto>> getMyMatchesRequestHistory(
+		@AuthenticationPrincipal User user) {
 		return new BaseResponse<>(BaseResponseStatus.GET_MATCHES_REQUEST_HISTORY_SUCCESS,
 			userService.getMyMatchesRequestHistory(user));
 	}
