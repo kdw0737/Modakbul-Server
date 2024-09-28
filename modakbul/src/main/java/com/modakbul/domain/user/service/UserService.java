@@ -28,6 +28,7 @@ import com.modakbul.domain.report.repository.ChatReportRepository;
 import com.modakbul.domain.report.repository.UserReportRepository;
 import com.modakbul.domain.user.dto.BlockListResDto;
 import com.modakbul.domain.user.dto.MeetingsHistoryResDto;
+import com.modakbul.domain.user.dto.MyMatchesRequestHistoryDto;
 import com.modakbul.domain.user.dto.MyProfileReqDto;
 import com.modakbul.domain.user.dto.MyProfileResDto;
 import com.modakbul.domain.user.dto.ReportListResDto;
@@ -130,27 +131,31 @@ public class UserService {
 
 		return Stream.concat(
 			findOwnBoardList.stream().map(board -> MeetingsHistoryResDto.builder()
+				.boardId(board.getId())
 				.title(board.getTitle())
-				.cafeName(board.getCafe().getName())
-				.roadName(board.getCafe().getAddress().getStreetAddress())
 				.categoryName(board.getCategory().getCategoryName())
 				.meetingDate(board.getMeetingDate())
 				.startTime(board.getStartTime())
 				.endTime(board.getEndTime())
 				.boardStatus(board.getStatus())
+				.cafeId(board.getCafe().getId())
+				.cafeName(board.getCafe().getName())
+				.roadName(board.getCafe().getAddress().getStreetAddress())
 				.build()
 			),
 			findParticipantBoardList.stream().map(match -> {
 				Board board = match.getBoard();
 				return MeetingsHistoryResDto.builder()
+					.boardId(board.getId())
 					.title(board.getTitle())
-					.cafeName(board.getCafe().getName())
-					.roadName(board.getCafe().getAddress().getStreetAddress())
 					.categoryName(board.getCategory().getCategoryName())
 					.meetingDate(board.getMeetingDate())
 					.startTime(board.getStartTime())
 					.endTime(board.getEndTime())
 					.boardStatus(board.getStatus())
+					.cafeId(board.getCafe().getId())
+					.cafeName(board.getCafe().getName())
+					.roadName(board.getCafe().getAddress().getStreetAddress())
 					.build();
 			})
 		).collect(Collectors.toList());
@@ -170,17 +175,19 @@ public class UserService {
 					.categoryName(findBoard.getCategory().getCategoryName())
 					.recruitCount(findBoard.getRecruitCount())
 					.currentCount(currentCount)
-					.dayOfWeek(findBoard.getMeetingDate().getDayOfWeek())
+					.meetingDate(findBoard.getMeetingDate())
 					.startTime(findBoard.getStartTime())
 					.endTime(findBoard.getEndTime())
 					.boardStatus(findBoard.getStatus())
+					.cafeId(findBoard.getCafe().getId())
+					.cafeName(findBoard.getCafe().getName())
 					.build();
 			}).collect(Collectors.toList());
 
 	}
 
 	@Transactional(readOnly = true)
-	public List<BoardInfoDto> getMyMatchesRequestHistory(User user) {
+	public List<MyMatchesRequestHistoryDto> getMyMatchesRequestHistory(User user) {
 		List<Matches> findAllMatchesRequest = matchRepository.findAllMatchesByUserIdWithBoardDetails(user.getId(),
 			false);
 
@@ -188,16 +195,20 @@ public class UserService {
 			.map(findMatches -> {
 				Integer currentCount =
 					matchRepository.countByBoardIdAndStatus(findMatches.getBoard().getId(), MatchStatus.ACCEPTED) + 1;
-				return BoardInfoDto.builder()
+				return MyMatchesRequestHistoryDto.builder()
 					.title(findMatches.getBoard().getTitle())
-					.boardId(findMatches.getId())
+					.boardId(findMatches.getBoard().getId())
+					.matchId(findMatches.getId())
 					.categoryName(findMatches.getBoard().getCategory().getCategoryName())
 					.recruitCount(findMatches.getBoard().getRecruitCount())
 					.currentCount(currentCount)
-					.dayOfWeek(findMatches.getBoard().getMeetingDate().getDayOfWeek())
+					.meetingDate(findMatches.getBoard().getMeetingDate())
 					.startTime(findMatches.getBoard().getStartTime())
 					.endTime(findMatches.getBoard().getEndTime())
 					.boardStatus(findMatches.getBoard().getStatus())
+					.matchStatus(findMatches.getMatchStatus())
+					.cafeId(findMatches.getBoard().getCafe().getId())
+					.cafeName(findMatches.getBoard().getCafe().getName())
 					.build();
 			}).collect(Collectors.toList());
 	}
