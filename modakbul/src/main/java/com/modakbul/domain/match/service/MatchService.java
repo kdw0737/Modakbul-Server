@@ -38,6 +38,7 @@ public class MatchService {
 			.sender(user)
 			.board(findBoard)
 			.matchStatus(MatchStatus.PENDING)
+			.isDeleted(false)
 			.build();
 		matchRepository.save(match);
 	}
@@ -75,7 +76,7 @@ public class MatchService {
 		Matches findMatch = matchRepository.findById(matchesId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
 
-		findMatch.update(MatchStatus.ACCEPTED);
+		findMatch.update(MatchStatus.ACCEPTED, false);
 	}
 
 	@Transactional
@@ -83,7 +84,7 @@ public class MatchService {
 		Matches findMatch = matchRepository.findById(matchesId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
 
-		findMatch.update(MatchStatus.REJECTED);
+		findMatch.update(MatchStatus.REJECTED, false);
 	}
 
 	@Transactional
@@ -91,7 +92,7 @@ public class MatchService {
 		Matches findMatch = matchRepository.findById(matchesId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
 
-		findMatch.update(MatchStatus.CANCEL);
+		findMatch.update(MatchStatus.CANCEL, true);
 	}
 
 	@Transactional
@@ -99,6 +100,6 @@ public class MatchService {
 		Matches findMatch = matchRepository.findById(matchesId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.MATCH_NOT_EXIST));
 
-		findMatch.update(MatchStatus.EXIT);
+		findMatch.update(MatchStatus.EXIT, true);
 	}
 }

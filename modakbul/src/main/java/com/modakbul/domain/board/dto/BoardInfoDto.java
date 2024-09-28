@@ -27,4 +27,6 @@ public class BoardInfoDto {
 	private LocalTime startTime;
 	private LocalTime endTime;
 	private BoardStatus boardStatus;
+	private Long cafeId;
+	private String cafeName;
 }

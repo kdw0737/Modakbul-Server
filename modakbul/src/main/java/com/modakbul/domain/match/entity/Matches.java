@@ -45,7 +45,8 @@ public class Matches extends BaseEntity {
 
 	private Boolean isDeleted;
 
-	public void update(MatchStatus matchStatus) {
+	public void update(MatchStatus matchStatus, Boolean isDeleted) {
 		this.matchStatus = matchStatus;
+		this.isDeleted = isDeleted;
 	}
 }
