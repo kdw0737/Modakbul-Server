@@ -1,5 +1,7 @@
 package com.modakbul.domain.user.dto;
 
+import java.time.LocalDate;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,5 +17,5 @@ public class UserCafeResDto {
 	private String image;
 	private String name;
 	private String address;
-
+	private LocalDate meetingDate;
 }

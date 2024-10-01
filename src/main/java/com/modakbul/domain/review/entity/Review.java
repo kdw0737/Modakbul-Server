@@ -3,6 +3,7 @@ package com.modakbul.domain.review.entity;
 import com.modakbul.domain.cafe.entity.Cafe;
 import com.modakbul.domain.cafe.enums.GroupSeat;
 import com.modakbul.domain.cafe.enums.Outlet;
+import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
 
 import jakarta.persistence.Column;
@@ -42,6 +43,7 @@ public class Review extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private GroupSeat groupSeat; // 단체석
 
-	/*@Enumerated(EnumType.STRING)
-	private Congestion congestion; // 혼잡도*/
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private User user;
 }

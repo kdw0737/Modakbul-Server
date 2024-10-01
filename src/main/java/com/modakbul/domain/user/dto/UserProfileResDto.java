@@ -16,8 +16,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserProfileResDto {
+	private Long id;
+	private String image;
 	private String nickname;
 	private Gender gender;
-	private UserJob userJob;
+	private UserJob job;
 	private List<CategoryName> categories;
 }
