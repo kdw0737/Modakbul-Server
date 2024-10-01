@@ -41,7 +41,7 @@ public class Matches extends BaseEntity {
 	private Board board;
 
 	@Enumerated(EnumType.STRING)
-	private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL
+	private MatchStatus matchStatus; // PENDING, REJECTED, ACCEPTED, CANCEL, EXIT
 
 	private Boolean isDeleted;
 

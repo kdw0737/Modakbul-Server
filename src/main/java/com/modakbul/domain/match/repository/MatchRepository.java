@@ -50,8 +50,7 @@ public interface MatchRepository extends JpaRepository<Matches, Long> {
 		+ "JOIN FETCH c.imageUrls i "
 		+ "WHERE m.sender.id = :userId "
 		+ "AND m.matchStatus = :status "
-		+ "AND m.board.meetingDate < :currentDate "
-		+ "ORDER BY m.board.meetingDate ASC")
+		+ "AND m.board.meetingDate < :currentDate ")
 	List<Matches> findAllByParticipantIdWithCafe(@Param("userId") Long userId,
 		@Param("status") MatchStatus status,
 		@Param("currentDate") LocalDate currentDate);

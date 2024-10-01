@@ -109,15 +109,23 @@ public class UserService {
 	public List<UserCafeResDto> getCafesHistory(User user) {
 		List<Matches> findMatches = matchRepository.findAllByParticipantIdWithCafe(user.getId(),
 			MatchStatus.ACCEPTED, LocalDate.now());
+		List<Board> findBoards = boardRepository.findAllByUserIdWithCafe(user.getId(), LocalDate.now());
 
-		return findMatches.stream()
-			.map(findMatch -> UserCafeResDto.builder()
+		return Stream.concat(findMatches.stream().map(findMatch -> UserCafeResDto.builder()
 				.id(findMatch.getBoard().getCafe().getId())
 				.name(findMatch.getBoard().getCafe().getName())
 				.image(findMatch.getBoard().getCafe().getImageUrls().get(0))
 				.address(findMatch.getBoard().getCafe().getAddress().getStreetAddress())
-				.build())
-			.collect(Collectors.toList());
+				.meetingDate(findMatch.getBoard().getMeetingDate())
+				.build()
+			),
+			findBoards.stream().map(findBoard -> UserCafeResDto.builder()
+				.id(findBoard.getCafe().getId())
+				.name(findBoard.getCafe().getName())
+				.image(findBoard.getCafe().getImageUrls().get(0))
+				.address(findBoard.getCafe().getAddress().getStreetAddress())
+				.meetingDate(findBoard.getMeetingDate())
+				.build())).collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -226,10 +234,12 @@ public class UserService {
 		Gender gender = findUser.getIsVisible() ? findUser.getGender() : Gender.PRIVATE;
 
 		return UserProfileResDto.builder()
+			.id(findUser.getId())
+			.image(findUser.getImage())
 			.nickname(findUser.getNickname())
 			.gender(gender)
 			.categories(findCategoryNames)
-			.userJob(findUser.getUserJob())
+			.job(findUser.getUserJob())
 			.build();
 	}
 
