@@ -32,5 +32,4 @@ public interface UserCategoryRepository extends JpaRepository<UserCategory, Long
 		+ "join fetch uc.user u "
 		+ "where uc.user.id in :userIds")
 	List<UserCategory> findCategoryWithUserByUserIds(@Param("userIds") List<Long> userIds);
-
 }
