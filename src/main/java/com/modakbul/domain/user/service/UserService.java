@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -244,25 +245,39 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<BlockListResDto> getBlockedUserList(User user) { //TODO : 쿼리 최적화 고려
+	public List<BlockListResDto> getBlockedUserList(User user) {
+		// Blocker ID로 차단 목록 가져오기
 		List<Block> findBlockList = blockRepository.findAllByBlockerId(user.getId());
-		List<Long> blockedIds = findBlockList.stream()
-			.map(findBlock -> findBlock.getBlockedId().getId())
-			.collect(Collectors.toList());
 
-		List<UserCategory> findBlockedUserInfos = userCategoryRepository.findCategoryWithUserByUserIds(blockedIds);
+		// Block된 사용자 ID와 Block ID 매핑 (Map<blockedId, blockId>)
+		Map<Long, Long> blockedIdToBlockIdMap = findBlockList.stream()
+			.collect(Collectors.toMap(
+				block -> block.getBlockedId().getId(),
+				Block::getId
+			));
 
+		// Block된 사용자 정보 조회
+		List<UserCategory> findBlockedUserInfos = userCategoryRepository.findCategoryWithUserByUserIds(
+			new ArrayList<>(blockedIdToBlockIdMap.keySet())  // blockedIds 리스트 전달
+		);
+
+		// 사용자별로 한 번만 결과를 반환 (첫 번째 카테고리만 포함)
 		return findBlockedUserInfos.stream()
-			.map(findBlockedUserInfo -> BlockListResDto.builder()
-				.blockId(findBlockedUserInfo.getId())
-				.blockedId(findBlockedUserInfo.getUser().getId())
-				.image(findBlockedUserInfo.getUser().getImage())
-				.nickname(findBlockedUserInfo.getUser().getNickname())
-				.categoryName(findBlockedUserInfo.getCategory().getCategoryName())
-				.job(findBlockedUserInfo.getUser().getUserJob())
-				.build())
+			.collect(Collectors.toMap(  // 동일한 사용자 ID는 하나의 항목으로
+				findBlockedUserInfo -> findBlockedUserInfo.getUser().getId(),
+				findBlockedUserInfo -> BlockListResDto.builder()
+					.blockId(blockedIdToBlockIdMap.get(findBlockedUserInfo.getUser().getId()))
+					.blockedId(findBlockedUserInfo.getUser().getId())
+					.image(findBlockedUserInfo.getUser().getImage())
+					.nickname(findBlockedUserInfo.getUser().getNickname())
+					.categoryName(findBlockedUserInfo.getCategory().getCategoryName())  // 첫 번째 카테고리만
+					.job(findBlockedUserInfo.getUser().getUserJob())
+					.build(),
+				(existing, replacement) -> existing  // 중복되는 사용자는 기존 값 유지
+			))
+			.values()
+			.stream()
 			.collect(Collectors.toList());
-
 	}
 
 	public List<ReportListResDto> getReportedUserList(User user) {
