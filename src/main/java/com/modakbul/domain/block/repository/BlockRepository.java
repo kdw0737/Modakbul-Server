@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.modakbul.domain.block.entity.Block;
+import com.modakbul.domain.user.entity.User;
 
 @Repository
 public interface BlockRepository extends JpaRepository<Block, Long> {
@@ -22,4 +23,8 @@ public interface BlockRepository extends JpaRepository<Block, Long> {
 	@Query("select b.blockerId.id from Block b "
 		+ "where b.blockedId.id = :blockedId ")
 	List<Long> findBlockerId(@Param("blockedId") Long blockedId);
+
+	void deleteAllByBlockedId(User user);
+
+	void deleteAllByBlockerId(User user);
 }

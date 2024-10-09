@@ -279,7 +279,7 @@ public class AppleService {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
 		Map<String, Object> jwtHeader = new HashMap<>();
 		jwtHeader.put("kid", APPLE_LOGIN_KEY); //애플 개발자 사이트의 key 탭에서 앱에 등록한 Sign in with Apple의 Key ID
-		jwtHeader.put("alg", "ES256"); //알고리즘 (ES256 사용)
+		jwtHeader.put("alg", "HS256"); //알고리즘 (ES256 사용)
 
 		return Jwts.builder()
 			.setHeader(jwtHeader)
@@ -288,7 +288,7 @@ public class AppleService {
 			.setExpiration(expirationDate) //만료 시각 (발급으로부터 6개월 미만)
 			.setAudience(APPLE_AUTH_URL) //"https://appleid.apple.com/"
 			.setSubject(APPLE_CLIENT_ID) //App bundle ID
-			.signWith(SignatureAlgorithm.ES256, APPLE_PRIVATE_KEY)
+			.signWith(SignatureAlgorithm.HS256, APPLE_PRIVATE_KEY)
 			.compact();
 	}
 

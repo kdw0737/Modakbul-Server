@@ -17,10 +17,19 @@ import com.modakbul.domain.auth.entity.LogoutToken;
 import com.modakbul.domain.auth.entity.RefreshToken;
 import com.modakbul.domain.auth.repository.LogoutTokenRepository;
 import com.modakbul.domain.auth.repository.RefreshTokenRepository;
+import com.modakbul.domain.block.repository.BlockRepository;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
+import com.modakbul.domain.chat.chatroom.entity.UserChatRoom;
+import com.modakbul.domain.chat.chatroom.repository.UserChatRoomRepository;
+import com.modakbul.domain.information.entity.Information;
+import com.modakbul.domain.information.repository.InformationRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.repository.MatchRepository;
+import com.modakbul.domain.notification.repository.NotificationRepository;
+import com.modakbul.domain.report.entity.UserReport;
+import com.modakbul.domain.report.repository.UserReportRepository;
+import com.modakbul.domain.review.repository.ReviewRepository;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.domain.user.entity.UserCategory;
 import com.modakbul.domain.user.enums.Provider;
@@ -55,7 +64,13 @@ public class KakaoService {
 
 	private final BoardRepository boardRepository;
 	private final MatchRepository matchRepository;
+	private final InformationRepository informationRepository;
+	private final BlockRepository blockRepository;
+	private final ReviewRepository reviewRepository;
+	private final UserReportRepository userReportRepository;
+	private final NotificationRepository notificationRepository;
 
+	@Transactional
 	public ResponseEntity<BaseResponse<AuthResDto>> login(KakaoLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
@@ -159,8 +174,15 @@ public class KakaoService {
 				matchRepository.deleteAllById(findMatch.getId());
 			});
 		}
-		
+
 		boardRepository.deleteAllByUser(user);
+		informationRepository.deleteAllByUser(user);
+		blockRepository.deleteAllByBlockedId(user);
+		blockRepository.deleteAllByBlockerId(user);
+		notificationRepository.deleteAllByUser(user);
+		reviewRepository.deleteAllByUser(user);
+		userReportRepository.deleteAllByReported(user);
+		userReportRepository.deleteAllByReporter(user);
 
 		userCategoryRepository.deleteAllByUser(user);
 		userRepository.delete(user);
