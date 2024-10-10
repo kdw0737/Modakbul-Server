@@ -22,8 +22,7 @@ public class ReportController {
 
 	@PostMapping("/reports/{reportedId}")
 	public BaseResponse<Void> reportUserProfile(@AuthenticationPrincipal User user, @PathVariable Long reportedId,
-		@RequestBody
-		ReportReqDto reportReqDto) {
+		@RequestBody ReportReqDto reportReqDto) {
 		reportService.reportUserProfile(user, reportedId, reportReqDto);
 		return new BaseResponse<>(BaseResponseStatus.REPORT_PROFILE_SUCCESS);
 	}
