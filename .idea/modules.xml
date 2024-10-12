@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Modakbul-Server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Modakbul-Server.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/modakbul.main.iml" filepath="$PROJECT_DIR$/.idea/modules/modakbul.main.iml" />
     </modules>
   </component>
 </project>
