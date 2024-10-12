@@ -48,7 +48,7 @@ public class AppleController {
 	}
 
 	@DeleteMapping("/users/withdrawal/apple")
-	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user) {
+	public BaseResponse<Void> withdrawal(@AuthenticationPrincipal User user) throws IOException {
 		appleService.withdrawal(user);
 		return new BaseResponse<>(BaseResponseStatus.WITHDRAWAL_SUCCESS);
 	}
