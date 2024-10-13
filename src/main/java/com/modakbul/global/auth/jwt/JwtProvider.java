@@ -61,26 +61,26 @@ public class JwtProvider {
 		return Provider.valueOf(providerStr);
 	}
 
-	public String getEmail(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("email", String.class);
+	public String getProvideId(String token) {
+		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("provideId", String.class);
 	}
 
 	public String getNickName(String token) {
 		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
-	public String createAccessToken(Provider provider, String email, String nickname) {
-		return createJwt(provider, email, nickname, Duration.ofSeconds(accessTokenExpirationTime).toMillis());
+	public String createAccessToken(Provider provider, String provideId, String nickname) {
+		return createJwt(provider, provideId, nickname, Duration.ofSeconds(accessTokenExpirationTime).toMillis());
 	}
 
-	public String createRefreshToken(Provider provider, String email, String nickname) {
-		return createJwt(provider, email, nickname, Duration.ofSeconds(refreshTokenExpirationTime).toMillis());
+	public String createRefreshToken(Provider provider, String provideId, String nickname) {
+		return createJwt(provider, provideId, nickname, Duration.ofSeconds(refreshTokenExpirationTime).toMillis());
 	}
 
-	public String createJwt(Provider provider, String email, String nickname, Long tokenValidTime) {
+	public String createJwt(Provider provider, String provideId, String nickname, Long tokenValidTime) {
 		Claims claims = Jwts.claims().setSubject(nickname);
 		claims.put("provider", provider);
-		claims.put("email", email);
+		claims.put("provideId", provideId);
 
 		return Jwts.builder()
 			.setClaims(claims)

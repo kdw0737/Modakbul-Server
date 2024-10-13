@@ -106,11 +106,16 @@ public class AppleService {
 		InvalidKeySpecException,
 		NoSuchAlgorithmException {
 		HttpHeaders httpHeaders = new HttpHeaders();
+
+		log.info("authorizationCode: {}", request.getAuthorizationCode());
+
 		JsonNode node = getNode(request.getAuthorizationCode());
-		String email = (String)getClaims(node.path("id_token").asText()).get("email");
+		String provideId = (String)getClaims(node.path("id_token").asText()).get("sub");
 		Provider provider = Provider.APPLE;
 
-		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
+		log.info("refreshToken: {}", node.path("refresh_token").asText());
+
+		User findUser = userRepository.findByProvideIdAndProvider(provideId, provider).orElse(null);
 
 		if (findUser == null) {
 			AuthResDto authResDto = AuthResDto.builder().userId(-1L).build();
@@ -125,9 +130,9 @@ public class AppleService {
 				.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
 			findAppleRefreshToken.updateRefreshToken(node.path("refresh_token").asText());
 
-			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
+			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
-			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getEmail(),
+			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
 
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
@@ -146,20 +151,20 @@ public class AppleService {
 		IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		JsonNode node = getNode(request.getAuthorizationCode());
 
-		String email = (String)getClaims(node.path("id_token").asText()).get("email");
+		String provideId = (String)getClaims(node.path("id_token").asText()).get("sub");
 		Provider provider = Provider.APPLE;
 
-		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
+		User findUser = userRepository.findByProvideIdAndProvider(provideId, provider).orElse(null);
 
 		if (findUser != null) {
 			throw new BaseException(BaseResponseStatus.USER_EXIST);
 		}
 
-		String accessToken = jwtProvider.createAccessToken(provider, email, request.getNickname());
-		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getNickname());
+		String accessToken = jwtProvider.createAccessToken(provider, provideId, request.getNickname());
+		String refreshToken = jwtProvider.createRefreshToken(provider, provideId, request.getNickname());
 
 		User addUser = User.builder()
-			.email(email)
+			.provideId(provideId)
 			.provider(provider)
 			.birth(request.getBirth())
 			.name(request.getName())
@@ -231,7 +236,7 @@ public class AppleService {
 		restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
 	}
 
-	public Claims getClaims(String idToken) throws
+	public Claims getClaims(String idToken) throws //idToken 정보
 		JsonProcessingException,
 		UnsupportedEncodingException,
 		InvalidKeySpecException,
@@ -287,7 +292,7 @@ public class AppleService {
 	private String createClientSecret() throws IOException {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
 
-		return  Jwts.builder()
+		return Jwts.builder()
 			.setHeaderParam("kid", APPLE_LOGIN_KEY)
 			.setHeaderParam("alg", "ES256")
 			.setIssuer(APPLE_TEAM_ID) //애플 개발자 Team ID
