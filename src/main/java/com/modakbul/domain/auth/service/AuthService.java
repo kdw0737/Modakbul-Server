@@ -46,7 +46,7 @@ public class AuthService {
 		User findUser = userRepository.findById(findToken.getId())
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
 
-		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
+		String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getProvideId(),
 			findUser.getNickname());
 
 		token.put("Authorization", "Bearer " + accessToken);
