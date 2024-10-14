@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
+import com.modakbul.domain.board.entity.Board;
+import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.notification.dto.DeleteNotificationsReqDto;
 import com.modakbul.domain.notification.dto.FcmNotificationDto;
 import com.modakbul.domain.notification.dto.NotificationListResDto;
@@ -20,40 +22,50 @@ import com.modakbul.global.common.response.BaseException;
 import com.modakbul.global.common.response.BaseResponseStatus;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class NotificationService {
 	private final FirebaseMessaging firebaseMessaging;
 	private final UserRepository userRepository;
 	private final NotificationRepository notificationRepository;
+	private final BoardRepository boardRepository;
 
 	@Transactional
 	public void sendAndSaveNotification(User user, Long targetId, NotificationReqDto notificationDto) throws
 		FirebaseMessagingException {
+		log.info("targetId: {}", targetId);
+		log.info("boardId: {}, title: {}, subtitle: {}, type: {}", notificationDto.getBoardId(),
+			notificationDto.getTitle(), notificationDto.getSubtitle(), notificationDto.getType());
+
 		User findTargetUser = userRepository.findById(targetId)
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
+		Board findBoard = boardRepository.findById(notificationDto.getBoardId())
+			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
 		FcmNotificationDto fcmDto = FcmNotificationDto.builder()
-			.title(findTargetUser.getNickname())
-			.content(notificationDto.getNotificationType() + "," + notificationDto.getBoardTitle())
+			.title(notificationDto.getTitle())
+			.subtitle(notificationDto.getSubtitle())
 			.build();
 
 		Message message = Message.builder()
 			.setToken(findTargetUser.getFcmToken())
 			.setNotification(fcmDto.toNotification())
+			.putData("type", notificationDto.getType())
+			.putData("boardId", String.valueOf(notificationDto.getBoardId()))
 			.build();
-
 		firebaseMessaging.send(message);
 
 		Notification notification = Notification.builder()
 			.user(findTargetUser)
-			.title(findTargetUser.getNickname())
-			.content(notificationDto.getBoardTitle())
-			.type(notificationDto.getNotificationType())
+			.board(findBoard)
+			.title(notificationDto.getTitle())
+			.subtitle(notificationDto.getSubtitle())
+			.type(notificationDto.getType())
 			.isRead(false)
 			.build();
-
 		notificationRepository.save(notification);
 	}
 
@@ -66,7 +78,7 @@ public class NotificationService {
 				.id(notification.getId())
 				.title(notification.getTitle())
 				.type(notification.getType())
-				.content(notification.getContent())
+				.content(notification.getSubtitle())
 				.isRead(notification.getIsRead())
 				.createdAt(notification.getCreatedAt())
 				.build()).toList();
@@ -74,7 +86,8 @@ public class NotificationService {
 
 	@Transactional
 	public void deleteNotifications(DeleteNotificationsReqDto deleteNotificationsReqDto) {
-		if (deleteNotificationsReqDto.getNotificationIds() != null && !deleteNotificationsReqDto.getNotificationIds().isEmpty()) {
+		if (deleteNotificationsReqDto.getNotificationIds() != null && !deleteNotificationsReqDto.getNotificationIds()
+			.isEmpty()) {
 			notificationRepository.deleteAllById(deleteNotificationsReqDto.getNotificationIds());
 		}
 	}
