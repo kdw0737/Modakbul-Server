@@ -101,21 +101,9 @@ public class AppleService {
 	private final AppleRefreshTokenRepository appleRefreshTokenRepository;
 
 	@Transactional
-	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) throws
-		IOException,
-		InvalidKeySpecException,
-		NoSuchAlgorithmException {
+	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-
-		log.info("authorizationCode: {}", request.getAuthorizationCode());
-
-		JsonNode node = getNode(request.getAuthorizationCode());
-		String provideId = (String)getClaims(node.path("id_token").asText()).get("sub");
-		Provider provider = Provider.APPLE;
-
-		log.info("refreshToken: {}", node.path("refresh_token").asText());
-
-		User findUser = userRepository.findByProvideIdAndProvider(provideId, provider).orElse(null);
+		User findUser = userRepository.findByProvideIdAndProvider(request.getProvideId(), Provider.APPLE).orElse(null);
 
 		if (findUser == null) {
 			AuthResDto authResDto = AuthResDto.builder().userId(-1L).build();
@@ -125,10 +113,6 @@ public class AppleService {
 			throw new BaseException(BaseResponseStatus.WITHDRAWAL_USER);
 		} else {
 			findUser.updateFcmToken(request.getFcm());
-
-			AppleRefreshToken findAppleRefreshToken = appleRefreshTokenRepository.findById(findUser.getId())
-				.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
-			findAppleRefreshToken.updateRefreshToken(node.path("refresh_token").asText());
 
 			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
@@ -151,8 +135,13 @@ public class AppleService {
 		IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		JsonNode node = getNode(request.getAuthorizationCode());
 
+		log.info("authorizationCode: {}", request.getAuthorizationCode());
+		log.info("refreshToken: {}", node.path("refresh_token").asText());
+
 		String provideId = (String)getClaims(node.path("id_token").asText()).get("sub");
 		Provider provider = Provider.APPLE;
+
+		log.info("provideId: {}", provideId);
 
 		User findUser = userRepository.findByProvideIdAndProvider(provideId, provider).orElse(null);
 
