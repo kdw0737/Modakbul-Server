@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AppleLoginReqDto {
-	private String authorizationCode;
+	private String provideId;
 	private String fcm;
 }

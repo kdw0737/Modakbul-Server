@@ -1,5 +1,6 @@
 package com.modakbul.domain.notification.entity;
 
+import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.user.entity.User;
 import com.modakbul.global.common.entity.BaseEntity;
 
@@ -32,11 +33,15 @@ public class Notification extends BaseEntity {
 
 	private String title;
 
-	private String content;
+	private String subtitle;
 
 	private String type;
 
 	private Boolean isRead;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "board_id")
+	private Board board;
 
 	public void readNotification() {
 		this.isRead = true;
