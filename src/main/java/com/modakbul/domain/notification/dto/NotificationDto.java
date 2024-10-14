@@ -11,11 +11,10 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationListResDto {
+public class NotificationDto {
 	private Long id;
 	private Long boardId;
 	private String title;
-	private String thumbnail;
 	private String type;
 	private String content;
 	private Boolean isRead;
