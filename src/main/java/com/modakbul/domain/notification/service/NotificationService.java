@@ -12,6 +12,7 @@ import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
 import com.modakbul.domain.notification.dto.DeleteNotificationsReqDto;
 import com.modakbul.domain.notification.dto.FcmNotificationDto;
+import com.modakbul.domain.notification.dto.NotificationDto;
 import com.modakbul.domain.notification.dto.NotificationListResDto;
 import com.modakbul.domain.notification.dto.NotificationReqDto;
 import com.modakbul.domain.notification.entity.Notification;
@@ -71,14 +72,16 @@ public class NotificationService {
 
 	@Transactional(readOnly = true)
 	public List<NotificationListResDto> getNotificationList(User user) {
-		List<Notification> findNotificationList = notificationRepository.findByUserId(user.getId());
+		List<NotificationDto> findNotificationList = notificationRepository.findByUserWithBoard(user.getId());
 
 		return findNotificationList.stream()
 			.map(notification -> NotificationListResDto.builder()
 				.id(notification.getId())
+				.boardId(notification.getBoardId())
 				.title(notification.getTitle())
+				.thumbnail(user.getImage())
 				.type(notification.getType())
-				.content(notification.getSubtitle())
+				.content(notification.getContent())
 				.isRead(notification.getIsRead())
 				.createdAt(notification.getCreatedAt())
 				.build()).toList();
