@@ -36,37 +36,38 @@ public class NotificationService {
 
 	@Transactional
 	public void sendAndSaveNotification(User user, Long targetId, NotificationReqDto notificationDto) throws
-		FirebaseMessagingException {
+			FirebaseMessagingException {
 		log.info("targetId: {}", targetId);
 		log.info("boardId: {}, title: {}, subtitle: {}, type: {}", notificationDto.getBoardId(),
-			notificationDto.getTitle(), notificationDto.getSubtitle(), notificationDto.getType());
+				notificationDto.getTitle(), notificationDto.getSubtitle(), notificationDto.getType());
 
 		User findTargetUser = userRepository.findById(targetId)
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
+				.orElseThrow(() -> new BaseException(BaseResponseStatus.USER_NOT_EXIST));
 		Board findBoard = boardRepository.findById(notificationDto.getBoardId())
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
+				.orElseThrow(() -> new BaseException(BaseResponseStatus.BOARD_NOT_FOUND));
 
 		FcmNotificationDto fcmDto = FcmNotificationDto.builder()
-			.title(notificationDto.getTitle())
-			.subtitle(notificationDto.getSubtitle())
-			.build();
+				.title(notificationDto.getTitle())
+				.subtitle(notificationDto.getSubtitle())
+				.build();
 
 		Message message = Message.builder()
-			.setToken(findTargetUser.getFcmToken())
-			.setNotification(fcmDto.toNotification())
-			.putData("type", notificationDto.getType())
-			.putData("boardId", String.valueOf(notificationDto.getBoardId()))
-			.build();
+				.setToken(findTargetUser.getFcmToken())
+				.setNotification(fcmDto.toNotification())
+				.putData("type", notificationDto.getType())
+				.putData("boardId", String.valueOf(notificationDto.getBoardId()))
+				.build();
 		firebaseMessaging.send(message);
 
 		Notification notification = Notification.builder()
-			.user(findTargetUser)
-			.board(findBoard)
-			.title(notificationDto.getTitle())
-			.subtitle(notificationDto.getSubtitle())
-			.type(notificationDto.getType())
-			.isRead(false)
-			.build();
+				.receiver(findTargetUser)
+				.sender(user)
+				.board(findBoard)
+				.title(notificationDto.getTitle())
+				.subtitle(notificationDto.getSubtitle())
+				.type(notificationDto.getType())
+				.isRead(false)
+				.build();
 		notificationRepository.save(notification);
 	}
 
@@ -75,22 +76,22 @@ public class NotificationService {
 		List<NotificationDto> findNotificationList = notificationRepository.findByUserWithBoard(user.getId());
 
 		return findNotificationList.stream()
-			.map(notification -> NotificationListResDto.builder()
-				.id(notification.getId())
-				.boardId(notification.getBoardId())
-				.title(notification.getTitle())
-				.thumbnail(user.getImage())
-				.type(notification.getType())
-				.content(notification.getContent())
-				.isRead(notification.getIsRead())
-				.createdAt(notification.getCreatedAt())
-				.build()).toList();
+				.map(notification -> NotificationListResDto.builder()
+						.id(notification.getId())
+						.boardId(notification.getBoardId())
+						.title(notification.getTitle())
+						.thumbnail(notification.getSender().getImage())
+						.type(notification.getType())
+						.content(notification.getContent())
+						.isRead(notification.getIsRead())
+						.createdAt(notification.getCreatedAt())
+						.build()).toList();
 	}
 
 	@Transactional
 	public void deleteNotifications(DeleteNotificationsReqDto deleteNotificationsReqDto) {
 		if (deleteNotificationsReqDto.getNotificationIds() != null && !deleteNotificationsReqDto.getNotificationIds()
-			.isEmpty()) {
+				.isEmpty()) {
 			notificationRepository.deleteAllById(deleteNotificationsReqDto.getNotificationIds());
 		}
 	}
@@ -98,7 +99,7 @@ public class NotificationService {
 	@Transactional
 	public void readNotification(Long id) {
 		Notification findNotification = notificationRepository.findById(id)
-			.orElseThrow(() -> new BaseException(BaseResponseStatus.NOTIFICATION_NOT_EXIST));
+				.orElseThrow(() -> new BaseException(BaseResponseStatus.NOTIFICATION_NOT_EXIST));
 
 		findNotification.readNotification();
 	}

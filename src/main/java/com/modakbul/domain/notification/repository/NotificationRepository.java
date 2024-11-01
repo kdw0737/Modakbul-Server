@@ -11,10 +11,12 @@ import com.modakbul.domain.user.entity.User;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 	@Query(
-		"SELECT new com.modakbul.domain.notification.dto.NotificationDto(n.id, b.id, n.title, n.type, n.subtitle, n.isRead, n.createdAt) "
+		"SELECT new com.modakbul.domain.notification.dto.NotificationDto(n.id, b.id, n.title, n.type, n.subtitle, n.isRead, n.createdAt, n.sender) "
 			+ "FROM Notification n JOIN n.board b "
-			+ "WHERE n.user.id = :userId")
+			+ "WHERE n.receiver.id = :userId "
+			+ "AND n.type != 'chat'")
 	List<NotificationDto> findByUserWithBoard(Long userId);
 
-	void deleteAllByUser(User user);
+	void deleteAllBySender(User user);
+	void deleteAllByReceiver(User user);
 }

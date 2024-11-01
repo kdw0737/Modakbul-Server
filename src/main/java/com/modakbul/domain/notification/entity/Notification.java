@@ -29,7 +29,11 @@ public class Notification extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "receiver_id")
-	private User user;
+	private User receiver;
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "sender_id")
+	private User sender;
 
 	private String title;
 
