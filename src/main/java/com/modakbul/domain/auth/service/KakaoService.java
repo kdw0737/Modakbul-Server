@@ -175,7 +175,8 @@ public class KakaoService {
 		informationRepository.deleteAllByUser(user);
 		blockRepository.deleteAllByBlockedId(user);
 		blockRepository.deleteAllByBlockerId(user);
-		notificationRepository.deleteAllByUser(user);
+		notificationRepository.deleteAllBySender(user);
+		notificationRepository.deleteAllByReceiver(user);
 		reviewRepository.deleteAllByUser(user);
 		userReportRepository.deleteAllByReported(user);
 		userReportRepository.deleteAllByReporter(user);

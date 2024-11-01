@@ -1,5 +1,6 @@
 package com.modakbul.domain.notification.dto;
 
+import com.modakbul.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,4 +20,5 @@ public class NotificationDto {
 	private String content;
 	private Boolean isRead;
 	private String createdAt;
+	private User sender;
 }
