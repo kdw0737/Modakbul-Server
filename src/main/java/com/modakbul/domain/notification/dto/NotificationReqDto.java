@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NotificationReqDto {
-	private String notificationType;
-	private String boardTitle;
+	private Long boardId;
+	private String title;
+	private String subtitle;
+	private String type;
 }

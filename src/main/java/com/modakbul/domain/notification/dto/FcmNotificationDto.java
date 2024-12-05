@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FcmNotificationDto {
 	private String title;
-	private String content;
+	private String subtitle;
 	private String fcmToken;
 
 	public Notification toNotification() {
 		return Notification.builder()
 			.setTitle(title)
-			.setBody(content)
+			.setBody(subtitle)
 			.build();
 	}
 }

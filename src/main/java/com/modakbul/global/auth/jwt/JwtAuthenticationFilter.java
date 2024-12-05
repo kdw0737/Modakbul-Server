@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		if (findAccessToken != null && jwtProvider.validateToken(findAccessToken)) {
-			User findUser = userRepository.findByEmailAndProvider(jwtProvider.getEmail(findAccessToken),
+			User findUser = userRepository.findByProvideIdAndProvider(jwtProvider.getProvideId(findAccessToken),
 				jwtProvider.getProvider(findAccessToken)).orElseThrow(NullPointerException::new);
 
 			Authentication auth = jwtProvider.getAuthentication(findUser);

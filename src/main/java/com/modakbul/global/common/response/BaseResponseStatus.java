@@ -36,6 +36,8 @@ public enum BaseResponseStatus {
 	REPORT_CHATROOM_SUCCESS(true, 1023, "채팅방 신고에 성공했습니다."),
 	GET_BLOCK_LIST_SUCCESS(true, 1024, "차단 목록 조회에 성공했습니다."),
 	GET_REPORT_LIST_SUCCESS(true, 1025, "신고 목록 조회에 성공했습니다."),
+	NICKNAME_DUPLICATED(false, 1026, "중복된 닉네임입니다."),
+	NICKNAME_ABUSE(false, 1027, "욕설이 포함된 닉네임 입니다."),
 
 	//cafe
 	SEARCH_CAFE_SUCCESS(true, 1100, "카페 검색에 성공했습니다."),
@@ -90,7 +92,6 @@ public enum BaseResponseStatus {
 	JWT_EXPIRED(false, 2005, "재로그인이 필요합니다."),
 	CODE_NOT_EXIST(false, 2006, "로그인 코드를 받는데 실패했습니다."),
 	LOAD_USERINFO_FAILED(false, 2007, "로그인 과정에서 정보를 받아오는데 실패했습니다."),
-	NICKNAME_DUPLICATED(false, 2008, "중복된 닉네임입니다."),
 	REGISTER_FAILED(false, 2009, "회원가입에 실패했습니다."),
 	UPDATE_PROFILE_FAILED(false, 2010, "프로필 수정에 실패했습니다."),
 	ACCESS_DENIED(false, 2011, "API 접근 권한이 없습니다."),
@@ -102,9 +103,8 @@ public enum BaseResponseStatus {
 	TOKEN_NOT_FOUND(false, 2017, "오류가 발생했습니다. 다시 시도해주세요."),
 	CATEGORY_NOT_EXIST(false, 2018, "존재하지 않는 카테고리입니다."),
 	BLOCK_NOT_EXIST(false, 2019, "차단 해제 과정에 오류가 발생하였습니다"),
-	NICKNAME_ABUSE(false, 2020, "욕설이 포함된 닉네임 입니다."),
 	WITHDRAWAL_USER(false, 2021, "이미 탈퇴한 회원입니다."),
-	USER_EXIST(false, 2022, "이미 존재하는 회원힙니다."),
+	USER_EXIST(false, 2022, "이미 존재하는 회원입니다."),
 	SEARCH_APPLE_PUBLIC_KEY_FAILED(false, 2023, "일치하는 애플 공개키가 없습니다."),
 
 	//cafe

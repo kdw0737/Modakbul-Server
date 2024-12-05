@@ -1,10 +1,15 @@
 package com.modakbul.domain.auth.service;
 
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
@@ -14,12 +19,16 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
+import org.bouncycastle.openssl.PEMParser;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -76,8 +85,8 @@ public class AppleService {
 	@Value("${apple.client.id}")
 	private String APPLE_CLIENT_ID;
 
-	@Value("${apple.private.key}")
-	private String APPLE_PRIVATE_KEY;
+	@Value("${apple.key.path}")
+	private String APPLE_KEY_PATH;
 
 	private final static String APPLE_AUTH_URL = "https://appleid.apple.com";
 
@@ -92,16 +101,9 @@ public class AppleService {
 	private final AppleRefreshTokenRepository appleRefreshTokenRepository;
 
 	@Transactional
-	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) throws
-		IOException,
-		InvalidKeySpecException,
-		NoSuchAlgorithmException {
+	public ResponseEntity<BaseResponse<AuthResDto>> login(AppleLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		JsonNode node = getNode(request.getAuthorizationCode());
-		String email = (String)getClaims(node.path("id_token").asText()).get("email");
-		Provider provider = Provider.APPLE;
-
-		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
+		User findUser = userRepository.findByProvideIdAndProvider(request.getProvideId(), Provider.APPLE).orElse(null);
 
 		if (findUser == null) {
 			AuthResDto authResDto = AuthResDto.builder().userId(-1L).build();
@@ -112,13 +114,9 @@ public class AppleService {
 		} else {
 			findUser.updateFcmToken(request.getFcm());
 
-			AppleRefreshToken findAppleRefreshToken = appleRefreshTokenRepository.findById(findUser.getId())
-				.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
-			findAppleRefreshToken.updateRefreshToken(node.path("refresh_token").asText());
-
-			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
+			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
-			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getEmail(),
+			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
 
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
@@ -137,20 +135,25 @@ public class AppleService {
 		IOException, InvalidKeySpecException, NoSuchAlgorithmException {
 		JsonNode node = getNode(request.getAuthorizationCode());
 
-		String email = (String)getClaims(node.path("id_token").asText()).get("email");
+		log.info("authorizationCode: {}", request.getAuthorizationCode());
+		log.info("refreshToken: {}", node.path("refresh_token").asText());
+
+		String provideId = (String)getClaims(node.path("id_token").asText()).get("sub");
 		Provider provider = Provider.APPLE;
 
-		User findUser = userRepository.findByEmailAndProvider(email, provider).orElse(null);
+		log.info("provideId: {}", provideId);
+
+		User findUser = userRepository.findByProvideIdAndProvider(provideId, provider).orElse(null);
 
 		if (findUser != null) {
 			throw new BaseException(BaseResponseStatus.USER_EXIST);
 		}
 
-		String accessToken = jwtProvider.createAccessToken(provider, email, request.getNickname());
-		String refreshToken = jwtProvider.createRefreshToken(provider, email, request.getNickname());
+		String accessToken = jwtProvider.createAccessToken(provider, provideId, request.getNickname());
+		String refreshToken = jwtProvider.createRefreshToken(provider, provideId, request.getNickname());
 
 		User addUser = User.builder()
-			.email(email)
+			.provideId(provideId)
 			.provider(provider)
 			.birth(request.getBirth())
 			.name(request.getName())
@@ -196,14 +199,14 @@ public class AppleService {
 			httpHeaders, HttpStatus.OK);
 	}
 
-	public void withdrawal(User user) {
+	public void withdrawal(User user) throws IOException {
 		revoke(user);
 
 		user.updateUserStatus(UserStatus.DELETED);
 		userRepository.save(user);
 	}
 
-	public void revoke(User user) {
+	public void revoke(User user) throws IOException {
 		AppleRefreshToken findAppleRefreshToken = appleRefreshTokenRepository.findById(user.getId())
 			.orElseThrow(() -> new BaseException(BaseResponseStatus.REFRESHTOKEN_EXPIRED));
 
@@ -222,7 +225,7 @@ public class AppleService {
 		restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
 	}
 
-	public Claims getClaims(String idToken) throws
+	public Claims getClaims(String idToken) throws //idToken 정보
 		JsonProcessingException,
 		UnsupportedEncodingException,
 		InvalidKeySpecException,
@@ -275,21 +278,32 @@ public class AppleService {
 		return applePublicKeys;
 	}
 
-	private String createClientSecret() {
+	private String createClientSecret() throws IOException {
 		Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
-		Map<String, Object> jwtHeader = new HashMap<>();
-		jwtHeader.put("kid", APPLE_LOGIN_KEY); //애플 개발자 사이트의 key 탭에서 앱에 등록한 Sign in with Apple의 Key ID
-		jwtHeader.put("alg", "HS256"); //알고리즘 (ES256 사용)
 
 		return Jwts.builder()
-			.setHeader(jwtHeader)
+			.setHeaderParam("kid", APPLE_LOGIN_KEY)
+			.setHeaderParam("alg", "ES256")
 			.setIssuer(APPLE_TEAM_ID) //애플 개발자 Team ID
 			.setIssuedAt(new Date(System.currentTimeMillis())) //발급 시각 (issued at)
 			.setExpiration(expirationDate) //만료 시각 (발급으로부터 6개월 미만)
 			.setAudience(APPLE_AUTH_URL) //"https://appleid.apple.com/"
 			.setSubject(APPLE_CLIENT_ID) //App bundle ID
-			.signWith(SignatureAlgorithm.HS256, APPLE_PRIVATE_KEY)
+			.signWith(SignatureAlgorithm.ES256, getPrivateKey())
 			.compact();
+	}
+
+	private PrivateKey getPrivateKey() throws IOException {
+		Resource resource = new FileSystemResource(APPLE_KEY_PATH);
+		if (!resource.exists()) {
+			System.out.println("파일이 존재하지 않습니다.");
+		}
+		String privateKey = new String(Files.readAllBytes(Paths.get(resource.getURI())));
+		Reader pemReader = new StringReader(privateKey);
+		PEMParser pemParser = new PEMParser(pemReader);
+		JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
+		PrivateKeyInfo object = (PrivateKeyInfo)pemParser.readObject();
+		return converter.getPrivateKey(object);
 	}
 
 	public JsonNode getNode(String code) throws IOException { //회원 정보 얻을 수 있는 함수

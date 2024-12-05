@@ -32,8 +32,11 @@ public class User extends BaseEntity {
 	@Column(name = "user_id")
 	private Long id;
 
+	/*@Column(nullable = false)
+	private String email;*/
+
 	@Column(nullable = false)
-	private String email;
+	private String provideId;
 
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)

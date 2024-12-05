@@ -20,14 +20,10 @@ import com.modakbul.domain.auth.repository.RefreshTokenRepository;
 import com.modakbul.domain.block.repository.BlockRepository;
 import com.modakbul.domain.board.entity.Board;
 import com.modakbul.domain.board.repository.BoardRepository;
-import com.modakbul.domain.chat.chatroom.entity.UserChatRoom;
-import com.modakbul.domain.chat.chatroom.repository.UserChatRoomRepository;
-import com.modakbul.domain.information.entity.Information;
 import com.modakbul.domain.information.repository.InformationRepository;
 import com.modakbul.domain.match.entity.Matches;
 import com.modakbul.domain.match.repository.MatchRepository;
 import com.modakbul.domain.notification.repository.NotificationRepository;
-import com.modakbul.domain.report.entity.UserReport;
 import com.modakbul.domain.report.repository.UserReportRepository;
 import com.modakbul.domain.review.repository.ReviewRepository;
 import com.modakbul.domain.user.entity.User;
@@ -73,7 +69,7 @@ public class KakaoService {
 	@Transactional
 	public ResponseEntity<BaseResponse<AuthResDto>> login(KakaoLoginReqDto request) {
 		HttpHeaders httpHeaders = new HttpHeaders();
-		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
+		User findUser = userRepository.findByProvideIdAndProvider(request.getEmail(),
 			Provider.KAKAO).orElse(null);
 
 		if (findUser == null) {
@@ -85,9 +81,9 @@ public class KakaoService {
 		} else {
 			findUser.updateFcmToken(request.getFcm());
 
-			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getEmail(),
+			String accessToken = jwtProvider.createAccessToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
-			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getEmail(),
+			String refreshToken = jwtProvider.createRefreshToken(findUser.getProvider(), findUser.getProvideId(),
 				findUser.getNickname());
 
 			RefreshToken addRefreshToken = new RefreshToken(findUser.getId(), refreshToken, refreshTokenExpirationTime);
@@ -103,7 +99,7 @@ public class KakaoService {
 	}
 
 	public ResponseEntity<BaseResponse<AuthResDto>> signUp(MultipartFile image, KakaoSignUpReqDto request) {
-		User findUser = userRepository.findByEmailAndProvider(request.getEmail(),
+		User findUser = userRepository.findByProvideIdAndProvider(request.getEmail(),
 			Provider.KAKAO).orElse(null);
 
 		if (findUser != null) {
@@ -116,7 +112,7 @@ public class KakaoService {
 			request.getNickname());
 
 		User addUser = User.builder()
-			.email(request.getEmail())
+			.provideId(request.getEmail())
 			.provider(Provider.KAKAO)
 			.birth(request.getBirth())
 			.name(request.getName())
@@ -179,7 +175,8 @@ public class KakaoService {
 		informationRepository.deleteAllByUser(user);
 		blockRepository.deleteAllByBlockedId(user);
 		blockRepository.deleteAllByBlockerId(user);
-		notificationRepository.deleteAllByUser(user);
+		notificationRepository.deleteAllBySender(user);
+		notificationRepository.deleteAllByReceiver(user);
 		reviewRepository.deleteAllByUser(user);
 		userReportRepository.deleteAllByReported(user);
 		userReportRepository.deleteAllByReporter(user);

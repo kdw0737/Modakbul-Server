@@ -78,5 +78,5 @@ apple:
     key: ${APPLE_LOGIN_KEY}
   client:
     id: ${APPLE_CLIENT_ID}
-  private:
-    key: ${APPLE_PRIVATE_KEY}
+  key:
+    path: ${APPLE_KEY_PATH}
