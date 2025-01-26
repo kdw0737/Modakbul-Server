@@ -50,9 +50,23 @@ Modakbul은 이러한 문제를 해결하기 위해, <br>
 
 | 모집글 작성 | 모집글 상세페이지 | 푸시 알림 목록 |
 |:------:|:------:|:------:|
-| <img src="https://github.com/user-attachments/assets/49e6172c-e16a-4d2f-9cd5-f4f8f70928f8" width="250"> | <img src="https://github.com/user-attachments/assets/e528a672-9e8b-4f37-b45b-c83f0a8a028d" width="250"> | <img src = "https://github.com/user-attachments/assets/80463dfb-65ef-496d-9407-6da15512d94a" width = "250">|
+| <img src="https://github.com/user-attachments/assets/49e6172c-e16a-4d2f-9cd5-f4f8f70928f8" width="260"> | <img src="https://github.com/user-attachments/assets/e528a672-9e8b-4f37-b45b-c83f0a8a028d" width="230"> | <img src = "https://github.com/user-attachments/assets/80463dfb-65ef-496d-9407-6da15512d94a" width = "250">|
 | · 모집글을 작성하는 화면입니다. | · 모집글의 세부정보를 확인할 수 있는 화면입니다. | · 앱 사용시 발생하는 알림들을 확인할 수 있는 화면입니다.  |
 
+<br /><br />
+
+| 카페 리뷰 | 나의 참여 요청 목록 | 신고하기 |
+|:------:|:------:|:------:|
+| <img src="https://github.com/user-attachments/assets/0cbb68e8-5d04-4ff3-b923-11a2d6b16635" width="250"> | <img src="https://github.com/user-attachments/assets/4412ee02-3a1f-465e-a814-ab35f85e4135" width="250"> | <img src = "https://github.com/user-attachments/assets/37b91e4b-f68e-45a5-8905-8f51cef14f53" width = "250">|
+| · 해당 카페의 정보를 제공하여 다른 사용자들이 카페를 선정할 때 도움을 받을 수 있습니다. | · 내가 신청했던 모임 참여 요청들을 취소할 수 있습니다. | · 불건전한 사용자 또는 채팅을 신고할 수 있습니다.  |
+
+<br /><br />
+
+| 채팅하기 | 소셜 로그인 |
+|:------:| :------:|
+|<img src="https://github.com/user-attachments/assets/7ec6b3ca-d35e-4a80-b4d2-bf041149b45c" width="250"> | <img src="https://github.com/user-attachments/assets/f3de9c80-7084-4c21-bbab-4b26246fe00f" width="250"> |
+| · 모집 신청자와 채팅을 통해 상세 일정을 조정할 수 있습니다. | · 소셜 로그인을 통해서 앱에 가입할 수 있습니다. |
+| [시연영상] (~~) |
 
 **추가 이미지 및 링크를 삽입하거나, 프로젝트의 GitHub 저장소와 관련된 정보를 하단에 추가할 수도 있습니다.**
 
