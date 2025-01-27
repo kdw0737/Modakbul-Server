@@ -3,7 +3,7 @@
 # 📣 소개
 스터디를 구할 때마다 한 명씩 팀원을 구하고, <br>
 장소와 시간을 설정하는 데 불편함을 느껴본 적이 있으신가요? <br>
-Modakbul은 이러한 문제를 해결하기 위해, <br>
+Modakbul은 이런 불편함을 해소하기 위해 <br>
 지정된 장소에 스터디 모집글을 올리고 <br>
 인원을 신청받아 더욱 편리하게 모집 과정을 진행할 수 있도록 하였습니다. 😊
 
@@ -66,7 +66,7 @@ Modakbul은 이러한 문제를 해결하기 위해, <br>
 |:------:| :------:|
 |<img src="https://github.com/user-attachments/assets/7ec6b3ca-d35e-4a80-b4d2-bf041149b45c" width="250"> | <img src="https://github.com/user-attachments/assets/f3de9c80-7084-4c21-bbab-4b26246fe00f" width="250"> |
 | · 모집 신청자와 채팅을 통해 상세 일정을 조정할 수 있습니다. | · 소셜 로그인을 통해서 앱에 가입할 수 있습니다. |
-| [시연영상] (~~) |
+| [시연영상] (https://youtube.com/shorts/yS-JKtszSnE?feature=share) | [시연영상] (https://youtube.com/shorts/GMy85LF-F8s?feature=share)
 
 **추가 이미지 및 링크를 삽입하거나, 프로젝트의 GitHub 저장소와 관련된 정보를 하단에 추가할 수도 있습니다.**
 
