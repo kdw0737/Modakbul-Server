@@ -11,9 +11,11 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 
 ## 📖 목차
 - [개요](#개요)
-- [배포 링크](#배포-링크)
+- [앱스토어 다운로드 링크](#앱스토어-다운로드-링크)
+- [스택](#스택)
+- [서버 아키텍처](#서버-아키텍처)
 - [기능](#기능)
-- [배포 링크](#배포-링크)
+- [앱스토어 배포 이미지](#앱스토어-배포-이미지)
 
 ---
 
@@ -70,7 +72,7 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 
 ---
 
-## 🐈 스택
+## 🏡 서버 아키텍처
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/68166f1f-36d0-463d-9c0d-5539ed95605f" width="600">
@@ -107,8 +109,10 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 |<img src="https://github.com/user-attachments/assets/7ec6b3ca-d35e-4a80-b4d2-bf041149b45c" width="250"> | <img src="https://github.com/user-attachments/assets/f3de9c80-7084-4c21-bbab-4b26246fe00f" width="250"> |
 | · 모집 신청자와 채팅을 통해 상세 일정을 조정할 수 있습니다. | · 소셜 로그인을 통해서 앱에 가입할 수 있습니다. |
 | [시연영상] (https://youtube.com/shorts/yS-JKtszSnE?feature=share) | [시연영상] (https://youtube.com/shorts/GMy85LF-F8s?feature=share)
+---
 
-**추가 이미지 및 링크를 삽입하거나, 프로젝트의 GitHub 저장소와 관련된 정보를 하단에 추가할 수도 있습니다.**
+**📱 앱스토어 배포 이미지**
+
 
 ![d](https://github.com/user-attachments/assets/bda65774-1aff-4295-97c4-ebd7d7127f63)
 ![dddd](https://github.com/user-attachments/assets/3a5b0933-7f4c-4952-845a-a48019bf76de)
