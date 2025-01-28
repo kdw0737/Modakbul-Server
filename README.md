@@ -40,7 +40,7 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 
 ## 🏡 서버 아키텍쳐
 
-<img src="https://github.com/user-attachments/assets/06ab509b-ce44-410e-bdd3-27e7183c95b6" width="500">
+<img src="https://github.com/user-attachments/assets/68166f1f-36d0-463d-9c0d-5539ed95605f" width="600">
 
 ---
 
