@@ -13,6 +13,7 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 - [개요](#개요)
 - [앱스토어 다운로드 링크](#앱스토어-다운로드-링크)
 - [스택](#스택)
+- [ERD](#ERD)
 - [서버 아키텍처](#서버-아키텍처)
 - [기능](#기능)
 - [앱스토어 배포 이미지](#앱스토어-배포-이미지)
@@ -69,6 +70,11 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
   <img src="https://img.shields.io/badge/intellij-000000?style=for-the-badge&logo=intellijidea&logoColor=white">
   <img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=black">
 </div>
+
+---
+
+## 💾 ERD
+![Image](https://github.com/user-attachments/assets/7ca052d6-2775-4f91-bcd6-90437b6f6254)
 
 ---
 
