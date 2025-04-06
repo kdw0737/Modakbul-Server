@@ -90,7 +90,7 @@ Modakbul은 이런 불편함을 해소하기 위해 <br>
 
 | 메인 화면 | 마이페이지 | 모집글 목록 |
 |:------:|:------:|:------:|
-| <img src="https://github.com/user-attachments/assets/316f313e-c011-4e0b-a4ad-81611e0f89e0" width="200"> | <img src="https://github.com/user-attachments/assets/ab8221c7-14d7-4739-bfa5-ce9dfd814218" width="250"> | <img src = "https://github.com/user-attachments/assets/72ca14d8-6205-479e-a96a-a72f34e9f000" width = "300">|
+| <img src="https://github.com/user-attachments/assets/316f313e-c011-4e0b-a4ad-81611e0f89e0" width="250"> | <img src="https://github.com/user-attachments/assets/ab8221c7-14d7-4739-bfa5-ce9dfd814218" width="250"> | <img src = "https://github.com/user-attachments/assets/72ca14d8-6205-479e-a96a-a72f34e9f000" width = "250">|
 | · 지도에 현재 모임이 이루어지고 있는 카페를 표시합니다. <br> · 모임의 개수에 따라 불의 크기가 달라지며, 카페 클릭 시 모임 게시글 확인이 가능합니다. | · 프로필 수정 및 화면에 보이는 다양한 목록을 확인할 수 있습니다. | · 해당 카페에서 모집중인 모집글들을 확인할 수 있습니다. |
 
 
